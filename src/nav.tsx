@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {View} from 'react-native';
+import {View, StatusBar} from 'react-native';
 
-import {Header, Icon} from 'react-native-elements';
+import {Icon} from 'react-native-elements';
 
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 
@@ -9,7 +9,8 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 
 import Home from './home';
-import Portfolio from './screens/Stack/portfolio';
+import Port from './screens/Stack/port';
+import Setting from './screens/Stack/setting';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -25,8 +26,12 @@ const MyTheme = {
   },
 };
 
-export default class Nav extends Component {
-  constructor(props) {
+interface IState {
+  dark: boolean;
+}
+
+export default class Nav extends Component<null, IState> {
+  constructor(props: any) {
     super(props);
     this.state = {
       dark: true,
@@ -67,7 +72,7 @@ export default class Nav extends Component {
       />
       <Stack.Screen
         name="Portfolio"
-        component={Portfolio}
+        component={Port}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
@@ -97,7 +102,7 @@ export default class Nav extends Component {
         />
         <Tab.Screen
           name="Portfolio"
-          component={Portfolio}
+          component={Port}
           options={{
             tabBarLabel: 'Portfolio',
             tabBarIcon: () => (
@@ -109,6 +114,20 @@ export default class Nav extends Component {
             ),
           }}
         />
+        <Tab.Screen
+          name="Setting"
+          component={Setting}
+          options={{
+            tabBarLabel: 'Settings',
+            tabBarIcon: () => (
+              <Icon
+                name="account-settings"
+                type="material-community"
+                color="#fff"
+              />
+            ),
+          }}
+        />
       </Tab.Navigator>
     );
   };
@@ -116,32 +135,11 @@ export default class Nav extends Component {
   render() {
     return (
       <View style={{flex: 1}}>
+        <StatusBar
+          barStyle="light-content"
+          backgroundColor={MyTheme.colors.background}
+        />
         <NavigationContainer theme={this.state.dark ? MyTheme : DefaultTheme}>
-          <Header
-            statusBarProps={{
-              backgroundColor: this.state.dark
-                ? MyTheme.colors.background
-                : DefaultTheme.colors.background,
-              barStyle: this.state.dark ? 'light-content' : 'dark-content',
-            }}
-            leftComponent={{
-              icon: 'home',
-              color: this.state.dark ? '#fff' : '#000',
-            }}
-            centerComponent={{
-              text: 'CryptoPortfolio',
-              style: {
-                fontWeight: 'bold',
-                color: this.state.dark ? '#fff' : '#000',
-              },
-            }}
-            rightComponent={this.bulb}
-            containerStyle={{
-              backgroundColor: this.state.dark
-                ? MyTheme.colors.background
-                : DefaultTheme.colors.background,
-            }}
-          />
           {this.createBottomTabs()}
         </NavigationContainer>
       </View>

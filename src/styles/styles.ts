@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
     marginBottom: 10,
   },
   profit: {
-    color: '#000080',
+    color: '#32CD32',
     fontWeight: 'bold',
     fontFamily: 'Hack',
   },
@@ -30,7 +30,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
-    marginBottom: 15,
+    marginBottom: 0,
     marginRight: 10,
   },
   input: {

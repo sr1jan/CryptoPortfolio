@@ -79,6 +79,7 @@ target 'CryptoPortfolio' do
 
   pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
 
+
   target 'CryptoPortfolioTests' do
     inherit! :complete
     # Pods for testing
