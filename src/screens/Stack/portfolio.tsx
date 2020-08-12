@@ -1,7 +1,6 @@
 import React from 'react';
 import {View, Text, Alert, TextInput, ScrollView} from 'react-native';
 import {Button, Overlay, Icon, ListItem} from 'react-native-elements';
-import {DefaultTheme} from '@react-navigation/native';
 import {styles} from '../../styles/styles';
 import {
   token_prop,
@@ -14,6 +13,8 @@ import {
 import {connect} from 'react-redux';
 import {addCoin, updatePrices} from '../../actions/port';
 
+import DisplayPL from '../../components/displayPL';
+import NewCoin from '../../components/newCoin';
 import {
   getCoinDetail,
   getCounter,
@@ -39,7 +40,6 @@ interface localState {
 class Portfolio extends React.Component<Props, localState> {
   constructor(props: Props) {
     super(props);
-    console.log(this.props);
     this.state = {
       visible: false,
     };
@@ -59,16 +59,24 @@ class Portfolio extends React.Component<Props, localState> {
 
   _interval: any;
 
-  async componentDidMount(): Promise<void> {
-    const counter: number | null | undefined = await getCounter();
-    const coinDetail: token_prop[] | null = await getCoinDetail();
-    if (counter !== null && counter !== undefined && coinDetail !== null) {
-      console.log('addCoin from componenetDidMount');
-      this.props.addCoin(coinDetail, counter);
-      // this.setState({counter: counter, token: coinDetail});
-    }
+  static getDerivedStateFromProps(nextProps: Props) {
+    console.log('next props', nextProps.token, nextProps.counter);
+    return null;
+  }
 
-    /* this.priceUpdate(); */
+  async componentDidMount(): Promise<void> {
+    try {
+      const counter: number | null | undefined = await getCounter();
+      const coinDetail: token_prop[] | null = await getCoinDetail();
+      if (counter !== null && counter !== undefined && coinDetail !== null) {
+        if (this.props.counter !== counter) {
+          this.props.addCoin(coinDetail, counter);
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+    this.priceUpdate();
   }
 
   componentWillUnmount() {
@@ -78,10 +86,6 @@ class Portfolio extends React.Component<Props, localState> {
   toggleOverlay = () => {
     this.setState({visible: !this.state.visible});
   };
-
-  numberWithCommas(x: number) {
-    return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
-  }
 
   async fetchData() {
     const response = await fetch(URL);
@@ -106,9 +110,8 @@ class Portfolio extends React.Component<Props, localState> {
       token_object.id = this.props.counter + 1;
       token_object.boughtVal = token_object.amount * token_object.price;
       this.props.addCoin([token_object], token_object.id);
-      console.log('coin after submit', this.props.token, this.props.counter);
-      this.newCoin(token_object);
       this.toggleOverlay();
+      await this.newCoin(token_object);
     }
   };
 
@@ -123,7 +126,6 @@ class Portfolio extends React.Component<Props, localState> {
     const name = token_object.coin + token_object.market;
     const idx = token_object.id - 1;
     const boughtVal = token_object.boughtVal;
-    // const token: token_prop[] = [...this.props.token];
     try {
       const curPrice = json[name].last;
       const curVal = curPrice * token_object.amount;
@@ -148,11 +150,7 @@ class Portfolio extends React.Component<Props, localState> {
         };
         this.props.updatePrices(token_object, idx);
       }
-      console.log(
-        'newCoin after profit/loss update',
-        this.props.token,
-        this.props.counter,
-      );
+      this.setState(this.state);
       try {
         await storeCounter(this.props.counter);
         await storeCoinDetail(this.props.token);
@@ -173,7 +171,6 @@ class Portfolio extends React.Component<Props, localState> {
         const name = token_object.coin + token_object.market;
         const curPrice = json[name].last;
         const curVal = curPrice * token_object.amount;
-        // const token = [...this.state.token];
         if (curVal > token_object.boughtVal) {
           const profit = curVal - token_object.boughtVal;
           const percent = (profit / token_object.boughtVal) * 100;
@@ -185,7 +182,8 @@ class Portfolio extends React.Component<Props, localState> {
             loss: 0,
           };
           this.props.updatePrices(token_object, idx);
-        } else {
+          this.setState(this.state);
+        } else if (curVal < token_object.boughtVal) {
           const loss = token_object.boughtVal - curVal;
           const percent = (loss / token_object.boughtVal) * 100;
           if (parseFloat(loss.toFixed(2)) === token_object.loss) return;
@@ -196,6 +194,9 @@ class Portfolio extends React.Component<Props, localState> {
             profit: 0,
           };
           this.props.updatePrices(token_object, idx);
+          this.setState(this.state);
+        } else {
+          return;
         }
       });
       try {
@@ -245,123 +246,23 @@ class Portfolio extends React.Component<Props, localState> {
     );
   };
 
-  displayPL = () => {
-    if (this.props.token.length === 0) return;
-    return (
-      <View>
-        {this.props.token.map((token, i) => (
-          <ListItem
-            key={i}
-            containerStyle={{backgroundColor: this.props.theme.background}}
-            title={token.coin.toUpperCase()}
-            titleStyle={{fontWeight: 'bold', color: this.props.theme.text}}
-            subtitle={token.market.toUpperCase()}
-            subtitleStyle={{color: this.props.theme.text}}
-            rightElement={
-              token.profit > 0 ? (
-                <View
-                  style={{
-                    justifyContent: 'space-between',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
-                  <Text
-                    style={{
-                      color: this.props.theme.text,
-                      fontWeight: 'bold',
-                    }}>
-                    +{this.numberWithCommas(token.profit)}{' '}
-                  </Text>
-                  <View
-                    style={{
-                      borderRadius: 3,
-                      borderWidth: 1,
-                      borderColor: styles.profit.color,
-                    }}>
-                    <Text
-                      style={{
-                        backgroundColor: styles.profit.color,
-                        color: this.props.theme.text,
-                        fontWeight: 'bold',
-                        padding: 6,
-                        fontSize: 14,
-                      }}>
-                      {token.percent.toFixed(2)}%
-                    </Text>
-                  </View>
-                </View>
-              ) : (
-                <View
-                  style={{
-                    justifyContent: 'space-between',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
-                  <Text
-                    style={{
-                      color: this.props.theme.text,
-                      fontWeight: 'bold',
-                    }}>
-                    {' '}
-                    -{this.numberWithCommas(token.loss)}{' '}
-                  </Text>
-                  <View
-                    style={{
-                      borderRadius: 3,
-                      borderWidth: 1,
-                      borderColor: styles.loss.color,
-                    }}>
-                    <Text
-                      style={{
-                        backgroundColor: styles.loss.color,
-                        color: this.props.theme.text,
-                        padding: 6,
-                        fontWeight: 'bold',
-                        fontSize: 14,
-                      }}>
-                      {token.percent.toFixed(2)}%
-                    </Text>
-                  </View>
-                </View>
-              )
-            }
-            bottomDivider
-          />
-        ))}
-      </View>
-    );
-  };
-
   render() {
     return (
       <View style={styles.container}>
         <ScrollView>
-          {this.displayPL()}
-          <ListItem
-            key="add"
-            containerStyle={{backgroundColor: this.props.theme.background}}
-            bottomDivider
-          />
+          {<DisplayPL theme={this.props.theme} token={this.props.token} />}
+          {
+            <NewCoin
+              theme={this.props.theme}
+              toggleOverlay={this.toggleOverlay}
+            />
+          }
         </ScrollView>
         <Overlay
           isVisible={this.state.visible}
           onBackdropPress={this.toggleOverlay}>
           {this.coinInput()}
         </Overlay>
-        <View style={styles.addBtn}>
-          <Icon
-            raised
-            reverse
-            name="add"
-            color={
-              this.props.theme.card === DefaultTheme.colors.card
-                ? '#000'
-                : this.props.theme.card
-            }
-            size={25}
-            onPress={this.toggleOverlay}
-          />
-        </View>
       </View>
     );
   }

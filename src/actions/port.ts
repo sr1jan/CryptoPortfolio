@@ -3,7 +3,7 @@ import {token_prop} from '../types';
 
 export const addCoin = (coinDetail: token_prop[], counter: number) => ({
   type: ADD_COIN,
-  coinDetail: coinDetail,
+  coinDetailList: coinDetail,
   counter: counter,
 });
 

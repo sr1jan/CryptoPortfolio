@@ -1,5 +1,11 @@
 import {ADD_COIN, UPDATE_PRICES, CLEAR_PORT} from '../actions/types';
-import {port_state, actionTypes, addCoinType, updatePriceType} from '../types';
+import {
+  port_state,
+  actionTypes,
+  addCoinType,
+  updatePriceType,
+  token_prop,
+} from '../types';
 
 const InitialState: port_state = {
   token: [],
@@ -14,6 +20,7 @@ const portReducer = (
     case ADD_COIN:
       const {coinDetailList, counter} = <addCoinType>action;
       return {
+        ...state,
         token: state.token.concat(coinDetailList),
         counter: counter,
       };
@@ -25,8 +32,9 @@ const portReducer = (
         token: state.token,
       };
     case CLEAR_PORT:
+      const empty: token_prop[] = [];
       return {
-        token: state.token.splice(0, state.token.length),
+        token: empty,
         counter: 0,
       };
     default:
