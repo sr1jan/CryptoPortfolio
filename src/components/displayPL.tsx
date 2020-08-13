@@ -1,20 +1,35 @@
 import React from 'react';
 import {View, Text} from 'react-native';
+import {connect} from 'react-redux';
 import {ListItem} from 'react-native-elements';
-import {theme_prop, token_prop} from '../types';
+import {theme_prop, token_prop, app_state} from '../types';
 import {styles} from '../styles/styles';
 
 interface Props {
   theme: theme_prop;
   token: token_prop[];
+  priceData: object;
 }
 
-export default function DisplayPL(props: Props) {
+function DisplayPL(props: Props) {
   function numberWithCommas(x: number) {
     return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
   }
 
-  if (props.token.length === 0) return;
+  function currencyConversion(amount: number, from: string, to: string) {
+    if (from !== 'usdt') return '';
+    const name = from + to;
+    let price: string;
+    try {
+      price = props.priceData[name].last;
+    } catch (e) {
+      return '';
+    }
+    const converted: number = amount * parseFloat(price);
+
+    return parseFloat(numberWithCommas(converted)).toFixed(2);
+  }
+
   return (
     <View>
       {props.token.map((token, i) => (
@@ -33,13 +48,31 @@ export default function DisplayPL(props: Props) {
                   flexDirection: 'row',
                   alignItems: 'center',
                 }}>
-                <Text
+                <View
                   style={{
-                    color: props.theme.text,
-                    fontWeight: 'bold',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                   }}>
-                  +{numberWithCommas(token.profit)}{' '}
-                </Text>
+                  <Text
+                    style={{
+                      color: props.theme.text,
+                      fontWeight: 'bold',
+                      marginRight: 4,
+                    }}>
+                    + {numberWithCommas(token.profit)}{' '}
+                  </Text>
+                  {token.market === 'usdt' && (
+                    <Text
+                      style={{
+                        color: styles.profit.color,
+                        fontWeight: '100',
+                        fontSize: 12,
+                        marginRight: 4,
+                      }}>
+                      ₹ {currencyConversion(token.profit, token.market, 'inr')}
+                    </Text>
+                  )}
+                </View>
                 <View
                   style={{
                     borderRadius: 3,
@@ -65,14 +98,28 @@ export default function DisplayPL(props: Props) {
                   flexDirection: 'row',
                   alignItems: 'center',
                 }}>
-                <Text
-                  style={{
-                    color: props.theme.text,
-                    fontWeight: 'bold',
-                  }}>
-                  {' '}
-                  -{numberWithCommas(token.loss)}{' '}
-                </Text>
+                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                  <Text
+                    style={{
+                      color: props.theme.text,
+                      fontWeight: 'bold',
+                      marginRight: 4,
+                    }}>
+                    {' '}
+                    - {numberWithCommas(token.loss)}
+                  </Text>
+                  {token.market === 'usdt' && (
+                    <Text
+                      style={{
+                        color: styles.loss.color,
+                        fontWeight: '100',
+                        fontSize: 12,
+                        marginRight: 4,
+                      }}>
+                      ₹ {currencyConversion(token.loss, token.market, 'inr')}
+                    </Text>
+                  )}
+                </View>
                 <View
                   style={{
                     borderRadius: 3,
@@ -99,3 +146,11 @@ export default function DisplayPL(props: Props) {
     </View>
   );
 }
+
+const mapStateToProps = (state: app_state) => {
+  return {
+    priceData: state.portReducer.priceData,
+  };
+};
+
+export default connect(mapStateToProps)(DisplayPL);

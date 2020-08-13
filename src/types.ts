@@ -21,10 +21,16 @@ export interface theme_prop {
 export interface port_state {
   token: token_prop[];
   counter: number;
+  priceData: object;
 }
 
 export interface app_state {
   portReducer: port_state;
+}
+
+export interface addPriceDataType {
+  type: string;
+  data: object;
 }
 
 export interface addCoinType {
@@ -43,4 +49,8 @@ export interface clearPortType {
   type: string;
 }
 
-export type actionTypes = addCoinType | clearPortType | updatePriceType;
+export type actionTypes =
+  | addCoinType
+  | clearPortType
+  | updatePriceType
+  | addPriceDataType;

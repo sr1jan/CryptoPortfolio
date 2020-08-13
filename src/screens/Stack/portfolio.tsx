@@ -1,6 +1,6 @@
 import React from 'react';
-import {View, Text, Alert, TextInput, ScrollView} from 'react-native';
-import {Button, Overlay, Icon, ListItem} from 'react-native-elements';
+import {View, Alert, TextInput, ScrollView} from 'react-native';
+import {Button, Overlay} from 'react-native-elements';
 import {styles} from '../../styles/styles';
 import {
   token_prop,
@@ -8,10 +8,11 @@ import {
   app_state,
   addCoinType,
   updatePriceType,
+  addPriceDataType,
 } from '../../types';
 
 import {connect} from 'react-redux';
-import {addCoin, updatePrices} from '../../actions/port';
+import {addCoin, updatePrices, addPriceData} from '../../actions/port';
 
 import DisplayPL from '../../components/displayPL';
 import NewCoin from '../../components/newCoin';
@@ -31,6 +32,7 @@ interface Props {
   counter: number;
   addCoin: (coinDetail: token_prop[], counter: number) => addCoinType;
   updatePrices: (coinDetail: token_prop, idx: number) => updatePriceType;
+  priceDataUpdate: (data: object) => addPriceDataType;
 }
 
 interface localState {
@@ -58,11 +60,6 @@ class Portfolio extends React.Component<Props, localState> {
   };
 
   _interval: any;
-
-  static getDerivedStateFromProps(nextProps: Props) {
-    console.log('next props', nextProps.token, nextProps.counter);
-    return null;
-  }
 
   async componentDidMount(): Promise<void> {
     try {
@@ -123,6 +120,7 @@ class Portfolio extends React.Component<Props, localState> {
       console.log('Could not fetch coin detail from the api', e);
       return;
     }
+    this.props.priceDataUpdate(json);
     const name = token_object.coin + token_object.market;
     const idx = token_object.id - 1;
     const boughtVal = token_object.boughtVal;
@@ -139,6 +137,7 @@ class Portfolio extends React.Component<Props, localState> {
           loss: 0,
         };
         this.props.updatePrices(token_object, idx);
+        this.setState(this.state);
       } else {
         const loss = boughtVal - curVal;
         const percent = (loss / boughtVal) * 100;
@@ -149,8 +148,8 @@ class Portfolio extends React.Component<Props, localState> {
           profit: 0,
         };
         this.props.updatePrices(token_object, idx);
+        this.setState(this.state);
       }
-      this.setState(this.state);
       try {
         await storeCounter(this.props.counter);
         await storeCoinDetail(this.props.token);
@@ -183,6 +182,7 @@ class Portfolio extends React.Component<Props, localState> {
           };
           this.props.updatePrices(token_object, idx);
           this.setState(this.state);
+          this.props.priceDataUpdate(json);
         } else if (curVal < token_object.boughtVal) {
           const loss = token_object.boughtVal - curVal;
           const percent = (loss / token_object.boughtVal) * 100;
@@ -195,6 +195,7 @@ class Portfolio extends React.Component<Props, localState> {
           };
           this.props.updatePrices(token_object, idx);
           this.setState(this.state);
+          this.props.priceDataUpdate(json);
         } else {
           return;
         }
@@ -211,7 +212,11 @@ class Portfolio extends React.Component<Props, localState> {
   coinInput = () => {
     let token_object = this.token_object;
     return (
-      <View style={{marginRight: 50, marginLeft: 50}}>
+      <View
+        style={{
+          marginRight: 50,
+          marginLeft: 50,
+        }}>
         <TextInput
           placeholder="Coin: BTC"
           onChangeText={value => (token_object.coin = value.toLowerCase())}
@@ -249,15 +254,23 @@ class Portfolio extends React.Component<Props, localState> {
   render() {
     return (
       <View style={styles.container}>
-        <ScrollView>
-          {<DisplayPL theme={this.props.theme} token={this.props.token} />}
-          {
+        {this.props.counter === 0 && (
+          <NewCoin
+            theme={this.props.theme}
+            toggleOverlay={this.toggleOverlay}
+            empty={true}
+          />
+        )}
+        {this.props.token.length !== 0 && (
+          <ScrollView>
+            <DisplayPL theme={this.props.theme} token={this.props.token} />
             <NewCoin
               theme={this.props.theme}
               toggleOverlay={this.toggleOverlay}
+              empty={false}
             />
-          }
-        </ScrollView>
+          </ScrollView>
+        )}
         <Overlay
           isVisible={this.state.visible}
           onBackdropPress={this.toggleOverlay}>
@@ -281,6 +294,7 @@ const mapDispatchToProps = (dispatch: any) => {
       dispatch(addCoin(coinDetail, counter)),
     updatePrices: (coinDetail: token_prop, idx: number) =>
       dispatch(updatePrices(coinDetail, idx)),
+    priceDataUpdate: (data: object) => dispatch(addPriceData(data)),
   };
 };
 

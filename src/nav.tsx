@@ -1,10 +1,7 @@
 import React, {Component} from 'react';
 import {View, StatusBar} from 'react-native';
-
 import {Icon} from 'react-native-elements';
-
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
-
 import {createStackNavigator} from '@react-navigation/stack';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 
@@ -81,10 +78,15 @@ export default class Nav extends Component<null, IState> {
   createBottomTabs = () => {
     return (
       <Tab.Navigator
+        activeColor="#fff"
+        inactiveColor="grey"
         barStyle={{
           backgroundColor: this.state.dark
             ? MyTheme.colors.card
             : DefaultTheme.colors.card,
+          justifyContent: 'center',
+          paddingBottom: 2,
+          paddingTop: 2,
         }}>
         <Tab.Screen
           name="Home"
@@ -92,11 +94,7 @@ export default class Nav extends Component<null, IState> {
           options={{
             tabBarLabel: 'Home',
             tabBarIcon: () => (
-              <Icon
-                name="home"
-                type="material-community"
-                color={this.state.dark ? '#fff' : '#000'}
-              />
+              <Icon name="home" type="font-awesome-5" color="#fff" />
             ),
           }}
         />
@@ -106,11 +104,7 @@ export default class Nav extends Component<null, IState> {
           options={{
             tabBarLabel: 'Portfolio',
             tabBarIcon: () => (
-              <Icon
-                name="cash-multiple"
-                type="material-community"
-                color={this.state.dark ? '#fff' : '#000'}
-              />
+              <Icon name="coins" type="font-awesome-5" color="#fff" />
             ),
           }}
         />
@@ -120,11 +114,7 @@ export default class Nav extends Component<null, IState> {
           options={{
             tabBarLabel: 'Settings',
             tabBarIcon: () => (
-              <Icon
-                name="account-settings"
-                type="material-community"
-                color="#fff"
-              />
+              <Icon name="user-cog" type="font-awesome-5" color="#fff" />
             ),
           }}
         />

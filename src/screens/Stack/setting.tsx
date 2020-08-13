@@ -1,12 +1,12 @@
 import React from 'react';
 import {View, Text, Alert} from 'react-native';
-import {useTheme} from '@react-navigation/native';
-import {Button, Overlay, Icon, ListItem} from 'react-native-elements';
+import {useTheme, useNavigation} from '@react-navigation/native';
+import {Icon} from 'react-native-elements';
 // import {styles} from '../../styles/styles';
 import {connect} from 'react-redux';
 
 import {clearPort} from '../../actions/port';
-import {clearPortType, app_state} from '../../types';
+import {clearPortType} from '../../types';
 import {deletePortfolio} from '../../helpers/asyncStorage';
 
 interface Props {
@@ -15,6 +15,7 @@ interface Props {
 
 function Setting(props: Props) {
   const {colors} = useTheme();
+  const navigation = useNavigation();
 
   const deleteData = async () => {
     try {
@@ -24,6 +25,7 @@ function Setting(props: Props) {
       return;
     }
     await deletePortfolio();
+    navigation.navigate('Portfolio');
   };
 
   const deleteConfirm = () => {
@@ -41,7 +43,12 @@ function Setting(props: Props) {
         alignItems: 'center',
         justifyContent: 'center',
       }}>
-      <Icon name="delete" size={150} color="#808080" onPress={deleteConfirm} />
+      <Icon
+        name="delete"
+        size={150}
+        color={colors.card}
+        onPress={deleteConfirm}
+      />
       <Text style={{fontWeight: '200', color: '#808080', padding: 5}}>
         Delete Portfolio
       </Text>
