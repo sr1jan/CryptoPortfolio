@@ -1,23 +1,42 @@
-import {UPDATE_PRICES, ADD_COIN, CLEAR_PORT, ADD_PRICE_DATA} from './types';
-import {token_prop} from '../types';
+import {
+  UPDATE_PRICES,
+  ADD_COIN,
+  CLEAR_PORT,
+  ADD_PRICE_DATA,
+  LOAD_DATA,
+} from './types';
+import {token_prop, totalPort} from '../types';
 
-export const addCoin = (coinDetail: token_prop[], counter: number) => ({
+export const addCoin = (coinDetail: token_prop, counter: number) => ({
   type: ADD_COIN,
-  coinDetailList: coinDetail,
+  coinDetail: coinDetail,
   counter: counter,
+});
+
+export const loadDataFromStorage = (
+  coinDetailList: token_prop[],
+  counter: number,
+  portData: totalPort,
+  marketData: object,
+) => ({
+  type: LOAD_DATA,
+  coinDetailList: coinDetailList,
+  storedCounter: counter,
+  portData: portData,
+  marketData: marketData,
 });
 
 export const updatePrices = (coinDetail: token_prop, idx: number) => ({
   type: UPDATE_PRICES,
-  coinDetail: coinDetail,
+  newCoinDetail: coinDetail,
   idx: idx,
-});
-
-export const clearPort = () => ({
-  type: CLEAR_PORT,
 });
 
 export const addPriceData = (data: object) => ({
   type: ADD_PRICE_DATA,
   data: data,
+});
+
+export const clearPort = () => ({
+  type: CLEAR_PORT,
 });

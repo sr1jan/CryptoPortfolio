@@ -5,8 +5,7 @@ export interface token_prop {
   amount: number;
   price: number;
   boughtVal: number;
-  profit: number;
-  loss: number;
+  returns: number;
   percent: number;
 }
 
@@ -18,10 +17,18 @@ export interface theme_prop {
   border: string;
 }
 
+export interface totalPort {
+  totalInvestment: number;
+  totalPortAmount: number;
+  totalPortPercent: number;
+}
+
 export interface port_state {
-  token: token_prop[];
   counter: number;
+  token: token_prop[];
   priceData: object;
+  currency: string;
+  inr: totalPort;
 }
 
 export interface app_state {
@@ -35,13 +42,21 @@ export interface addPriceDataType {
 
 export interface addCoinType {
   type: string;
-  coinDetailList: token_prop[];
+  coinDetail: token_prop;
   counter: number;
+}
+
+export interface loadDataType {
+  type: string;
+  coinDetailList: token_prop[];
+  storedCounter: number;
+  portData: totalPort;
+  marketData: object;
 }
 
 export interface updatePriceType {
   type: string;
-  coinDetail: token_prop;
+  newCoinDetail: token_prop;
   idx: number;
 }
 
@@ -53,4 +68,5 @@ export type actionTypes =
   | addCoinType
   | clearPortType
   | updatePriceType
-  | addPriceDataType;
+  | addPriceDataType
+  | loadDataType;

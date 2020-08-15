@@ -1,9 +1,14 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, FlatList, ListRenderItem} from 'react-native';
 import {connect} from 'react-redux';
 import {ListItem} from 'react-native-elements';
 import {theme_prop, token_prop, app_state} from '../types';
 import {styles} from '../styles/styles';
+import {
+  currencyConversion,
+  numberWithCommas,
+  valueDisplay,
+} from '../helpers/currency';
 
 interface Props {
   theme: theme_prop;
@@ -12,143 +17,87 @@ interface Props {
 }
 
 function DisplayPL(props: Props) {
-  function numberWithCommas(x: number) {
-    return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
-  }
-
-  function currencyConversion(amount: number, from: string, to: string) {
-    if (from !== 'usdt') return '';
-    const name = from + to;
-    let price: string;
-    try {
-      price = props.priceData[name].last;
-    } catch (e) {
-      return '';
-    }
-    const converted: number = amount * parseFloat(price);
-
-    return parseFloat(numberWithCommas(converted)).toFixed(2);
-  }
+  const keyExtractor = (item: token_prop, index: number) => index.toString();
+  const renderItem: ListRenderItem<token_prop> = ({item}) => (
+    <ListItem
+      containerStyle={{backgroundColor: props.theme.background}}
+      title={item.coin.toUpperCase()}
+      titleStyle={styles.coinTitle}
+      subtitle={item.market.toUpperCase()}
+      subtitleStyle={styles.coinSub}
+      rightElement={
+        item.returns >= 0 ? (
+          <View style={styles.coinView}>
+            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+              <Text style={styles.profit}>
+                + {numberWithCommas(item.returns)}
+              </Text>
+              {item.market === 'usdt' && (
+                <Text style={styles.profitConversion}>
+                  {valueDisplay(
+                    currencyConversion(
+                      item.returns,
+                      item.market,
+                      'inr',
+                      props.priceData,
+                    ),
+                  )}
+                </Text>
+              )}
+            </View>
+            <View style={styles.profitBox}>
+              <Text style={styles.profitPercent}>
+                {item.percent.toFixed(2)}%
+              </Text>
+            </View>
+          </View>
+        ) : (
+          <View style={styles.coinView}>
+            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+              <Text style={styles.loss}>
+                - {numberWithCommas(Math.abs(item.returns))}
+              </Text>
+              {item.market === 'usdt' && (
+                <Text style={styles.lossConversion}>
+                  {valueDisplay(
+                    Math.abs(
+                      currencyConversion(
+                        item.returns,
+                        item.market,
+                        'inr',
+                        props.priceData,
+                      ),
+                    ),
+                  )}
+                </Text>
+              )}
+            </View>
+            <View style={styles.lossBox}>
+              <Text style={styles.lossPercent}>
+                {Math.abs(item.percent).toFixed(2)}%
+              </Text>
+            </View>
+          </View>
+        )
+      }
+      topDivider
+    />
+  );
 
   return (
-    <View>
-      {props.token.map((token, i) => (
-        <ListItem
-          key={i}
-          containerStyle={{backgroundColor: props.theme.background}}
-          title={token.coin.toUpperCase()}
-          titleStyle={{fontWeight: 'bold', color: props.theme.text}}
-          subtitle={token.market.toUpperCase()}
-          subtitleStyle={{color: props.theme.text}}
-          rightElement={
-            token.profit > 0 ? (
-              <View
-                style={{
-                  justifyContent: 'space-between',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
-                <View
-                  style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Text
-                    style={{
-                      color: props.theme.text,
-                      fontWeight: 'bold',
-                      marginRight: 4,
-                    }}>
-                    + {numberWithCommas(token.profit)}{' '}
-                  </Text>
-                  {token.market === 'usdt' && (
-                    <Text
-                      style={{
-                        color: styles.profit.color,
-                        fontWeight: '100',
-                        fontSize: 12,
-                        marginRight: 4,
-                      }}>
-                      ₹ {currencyConversion(token.profit, token.market, 'inr')}
-                    </Text>
-                  )}
-                </View>
-                <View
-                  style={{
-                    borderRadius: 3,
-                    borderWidth: 1,
-                    borderColor: styles.profit.color,
-                  }}>
-                  <Text
-                    style={{
-                      backgroundColor: styles.profit.color,
-                      color: props.theme.text,
-                      fontWeight: 'bold',
-                      padding: 6,
-                      fontSize: 14,
-                    }}>
-                    {token.percent.toFixed(2)}%
-                  </Text>
-                </View>
-              </View>
-            ) : (
-              <View
-                style={{
-                  justifyContent: 'space-between',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                  <Text
-                    style={{
-                      color: props.theme.text,
-                      fontWeight: 'bold',
-                      marginRight: 4,
-                    }}>
-                    {' '}
-                    - {numberWithCommas(token.loss)}
-                  </Text>
-                  {token.market === 'usdt' && (
-                    <Text
-                      style={{
-                        color: styles.loss.color,
-                        fontWeight: '100',
-                        fontSize: 12,
-                        marginRight: 4,
-                      }}>
-                      ₹ {currencyConversion(token.loss, token.market, 'inr')}
-                    </Text>
-                  )}
-                </View>
-                <View
-                  style={{
-                    borderRadius: 3,
-                    borderWidth: 1,
-                    borderColor: styles.loss.color,
-                  }}>
-                  <Text
-                    style={{
-                      backgroundColor: styles.loss.color,
-                      color: props.theme.text,
-                      padding: 6,
-                      fontWeight: 'bold',
-                      fontSize: 14,
-                    }}>
-                    {token.percent.toFixed(2)}%
-                  </Text>
-                </View>
-              </View>
-            )
-          }
-          bottomDivider
-        />
-      ))}
+    <View style={{flex: 1}}>
+      <FlatList
+        keyExtractor={keyExtractor}
+        data={props.token}
+        renderItem={renderItem}
+      />
     </View>
   );
 }
 
 const mapStateToProps = (state: app_state) => {
   return {
+    token: state.portReducer.token,
     priceData: state.portReducer.priceData,
   };
 };

@@ -44,12 +44,21 @@ function Setting(props: Props) {
         justifyContent: 'center',
       }}>
       <Icon
-        name="delete"
-        size={150}
+        reverse
+        name="trash"
+        type="font-awesome-5"
+        size={90}
         color={colors.card}
         onPress={deleteConfirm}
       />
-      <Text style={{fontWeight: '200', color: '#808080', padding: 5}}>
+      <Text
+        style={{
+          fontWeight: '100',
+          color: '#fff',
+          marginTop: 15,
+          fontFamily: 'Hack',
+          letterSpacing: 3,
+        }}>
         Delete Portfolio
       </Text>
     </View>
