@@ -11,7 +11,6 @@ import {
   addPriceDataType,
   totalPort,
   loadDataType,
-  port_state,
 } from '../../types';
 
 import {connect} from 'react-redux';

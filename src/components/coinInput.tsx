@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default function CoinInput(props: Props) {
-  const token_object: token_prop = {
+  let token_object: token_prop = {
     id: 0,
     coin: '',
     market: '',
