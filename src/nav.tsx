@@ -5,7 +5,7 @@ import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 
-import Home from './home';
+import Home from './screens/Stack/home';
 import Port from './screens/Stack/port';
 import Setting from './screens/Stack/setting';
 
@@ -37,27 +37,6 @@ export default class Nav extends Component<null, IState> {
 
   changeTheme = () => {
     this.setState({dark: !this.state.dark});
-  };
-
-  bulb = () => {
-    return (
-      <View>
-        {this.state.dark ? (
-          <Icon
-            name="lightbulb-off-outline"
-            type="material-community"
-            color="#fff"
-            onPress={this.changeTheme}
-          />
-        ) : (
-          <Icon
-            name="lightbulb-on-outline"
-            type="material-community"
-            onPress={this.changeTheme}
-          />
-        )}
-      </View>
-    );
   };
 
   createHomeStack = () => (

@@ -22,7 +22,7 @@ export const storeCounter = async (num: number) => {
 export const getCoinDetail = async () => {
   try {
     const detail = await AsyncStorage.getItem('coins');
-    return JSON.parse(detail);
+    return detail !== null ? JSON.parse(detail) : null;
   } catch (e) {
     console.log('Could not get coin detail', e);
   }
@@ -49,7 +49,7 @@ export const storeMarketData = async (data: object) => {
 export const getMarketData = async () => {
   try {
     const data = await AsyncStorage.getItem('marketData');
-    return JSON.parse(data);
+    return data !== null ? JSON.parse(data) : null;
   } catch (e) {
     console.log('Could not retreive market data from local storage', e);
   }
@@ -67,7 +67,7 @@ export const storeTotalPort = async (portData: totalPort) => {
 export const getTotalPort = async () => {
   try {
     const data = await AsyncStorage.getItem('portData');
-    return JSON.parse(data);
+    return data !== null ? JSON.parse(data) : null;
   } catch (e) {
     console.log('Could not retrieve total port values from local storage', e);
   }

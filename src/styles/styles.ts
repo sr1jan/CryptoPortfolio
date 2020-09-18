@@ -137,4 +137,14 @@ export const styles = StyleSheet.create({
     borderWidth: 0.5,
     height: 40,
   },
+  loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    opacity: 0.6,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

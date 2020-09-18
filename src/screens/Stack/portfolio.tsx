@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Alert} from 'react-native';
+import {View, Alert, ActivityIndicator} from 'react-native';
 import {Overlay} from 'react-native-elements';
 import {styles} from '../../styles/styles';
 import {
@@ -57,6 +57,7 @@ interface Props {
 
 interface localState {
   visible: boolean;
+  loading: boolean;
 }
 
 class Portfolio extends React.Component<Props, localState> {
@@ -64,6 +65,7 @@ class Portfolio extends React.Component<Props, localState> {
     super(props);
     this.state = {
       visible: false,
+      loading: true,
     };
   }
 
@@ -72,33 +74,31 @@ class Portfolio extends React.Component<Props, localState> {
   async componentDidMount(): Promise<void> {
     try {
       const counter: number | null | undefined = await getCounter();
-      const coinDetailList: token_prop[] | null = await getCoinDetail();
-      const portData: totalPort | null = await getTotalPort();
-      const marketData: object | null = await getMarketData();
       if (
         counter !== null &&
         counter !== undefined &&
-        coinDetailList !== null &&
-        portData !== null &&
-        marketData !== null
-      )
-        if (this.props.counter !== counter) {
+        this.props.counter !== counter
+      ) {
+        const coinDetailList: token_prop[] | null = await getCoinDetail();
+        const portData: totalPort | null = await getTotalPort();
+        const marketData: object | null = await getMarketData();
+        if (
+          coinDetailList !== null &&
+          portData !== null &&
+          marketData !== null
+        ) {
           this.props.loadDataFromStorage(
             coinDetailList,
             counter,
             portData,
             marketData,
           );
-          try {
-            const json = await this.fetchData();
-            this.props.priceDataUpdate(json);
-          } catch (e) {
-            console.log('[didMount] Could not fetch priceData from api', e);
-          }
         }
+      }
     } catch (e) {
       console.log(e);
     }
+    this.setState({loading: !this.state.loading});
     this.priceUpdate();
   }
 
@@ -133,6 +133,7 @@ class Portfolio extends React.Component<Props, localState> {
       token_object.id = this.props.counter + 1;
       token_object.boughtVal = token_object.amount * token_object.price;
       this.toggleOverlay();
+      this.setState({loading: !this.state.loading});
       this.newCoin(token_object);
     }
   };
@@ -143,8 +144,9 @@ class Portfolio extends React.Component<Props, localState> {
       json = await this.fetchData();
       this.props.priceDataUpdate(json);
     } catch (e) {
+      this.setState({loading: !this.state.loading});
       Alert.alert(
-        'API ERROR',
+        'SERVER ERROR',
         'Failed to fetch data from the market, try again after sometime',
       );
       console.log('Could not fetch coin detail from the api', e);
@@ -162,7 +164,7 @@ class Portfolio extends React.Component<Props, localState> {
       percent: percent,
     };
     this.props.addCoin(token_object, token_object.id);
-    this.setState(this.state);
+    this.setState({loading: !this.state.loading});
     try {
       await storeCounter(this.props.counter);
       await storeCoinDetail(this.props.token);
@@ -214,11 +216,23 @@ class Portfolio extends React.Component<Props, localState> {
     return (
       <View style={styles.container}>
         <View style={{flex: 1}}>
-          <NewCoin
-            theme={this.props.theme}
-            toggleOverlay={this.toggleOverlay}
-          />
-          {this.props.counter > 0 && <DisplayPL theme={this.props.theme} />}
+          {!this.state.loading && !this.props.counter && (
+            <NewCoin
+              theme={this.props.theme}
+              toggleOverlay={this.toggleOverlay}
+            />
+          )}
+          {this.props.counter > 0 && (
+            <DisplayPL
+              theme={this.props.theme}
+              toggleOverlay={this.toggleOverlay}
+            />
+          )}
+          {this.state.loading && (
+            <View style={styles.loading}>
+              <ActivityIndicator size="large" color="#fff" />
+            </View>
+          )}
         </View>
         <Overlay
           isVisible={this.state.visible}

@@ -9,11 +9,13 @@ import {
   numberWithCommas,
   valueDisplay,
 } from '../helpers/currency';
+import PortHeader from '../components/portHeader';
 
 interface Props {
   theme: theme_prop;
   token: token_prop[];
   priceData: object;
+  toggleOverlay: () => void;
 }
 
 function DisplayPL(props: Props) {
@@ -86,6 +88,7 @@ function DisplayPL(props: Props) {
 
   return (
     <View style={{flex: 1}}>
+      <PortHeader toggleOverlay={props.toggleOverlay} />
       <FlatList
         keyExtractor={keyExtractor}
         data={props.token}

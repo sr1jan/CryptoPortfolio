@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import {useNavigation, useTheme} from '@react-navigation/native';
 
-import {styles} from './styles/styles';
+import {styles} from '../../styles/styles';
 
 function Home() {
   const navigation = useNavigation();

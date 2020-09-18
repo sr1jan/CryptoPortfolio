@@ -30,7 +30,7 @@ function Setting(props: Props) {
 
   const deleteConfirm = () => {
     Alert.alert('Are you sure?', 'All of your data will be deleted.', [
-      {text: 'Sure', onPress: async () => await deleteData()},
+      {text: 'Delete', onPress: async () => await deleteData()},
       {text: 'Cancel', style: 'cancel'},
     ]);
   };
