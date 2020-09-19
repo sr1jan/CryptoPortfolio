@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, TextInput} from 'react-native';
-import {Button, Input, Icon} from 'react-native-elements';
+import {Button} from 'react-native-elements';
 import {token_prop} from '../types';
 
 interface Props {
