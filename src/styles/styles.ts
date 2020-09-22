@@ -137,6 +137,16 @@ export const styles = StyleSheet.create({
     borderWidth: 0.5,
     height: 40,
   },
+  coinInput: {
+    textAlign: 'center',
+    fontSize: 25,
+    fontFamily: 'monospace',
+    color: '#fff',
+    // borderColor: '#fff',
+    // borderWidth: 0.3,
+    // borderRadius: 3,
+    // paddingHorizontal: 50,
+  },
   loading: {
     position: 'absolute',
     left: 0,

@@ -3,20 +3,20 @@ export function numberWithCommas(x: number): string {
   return num.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
 }
 
-export function currencyConversion(
-  amount: number,
-  from: string,
-  to: string,
-  priceData: object,
-): number {
-  if (from !== 'usdt') return null;
+export function currencyConversion({
+  amount,
+  from,
+  to,
+  priceData,
+}: {
+  amount: number;
+  from: string;
+  to: string;
+  priceData: object;
+}): number {
   const name = from + to;
   let price: string;
-  try {
-    price = priceData[name].last;
-  } catch (e) {
-    return null;
-  }
+  price = priceData[name].last;
   const converted: number = amount * parseFloat(price);
   return converted;
 }

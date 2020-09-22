@@ -1,6 +1,6 @@
 import React from 'react';
-import {View, Alert, ActivityIndicator} from 'react-native';
-import {Overlay} from 'react-native-elements';
+import {View, Modal, Alert, ActivityIndicator} from 'react-native';
+import {} from 'react-native-elements';
 import {styles} from '../../styles/styles';
 import {
   token_prop,
@@ -35,7 +35,7 @@ import {
   getMarketData,
 } from '../../helpers/asyncStorage';
 
-import {coins} from '../../data/coins';
+import {pairs} from '../../data/pairs';
 const URL = 'https://api.wazirx.com/api/v2/tickers';
 
 interface Props {
@@ -106,6 +106,17 @@ class Portfolio extends React.Component<Props, localState> {
     clearInterval(this._interval);
   }
 
+  shouldComponentUpdate(nextProps: Props, nextState: localState) {
+    const counterChanged = !(this.props.counter === nextProps.counter);
+    const totalPortChanged = !(
+      this.props.inr.totalPortAmount === nextProps.inr.totalPortAmount
+    );
+    const isLoading = !(this.state.loading === nextState.loading);
+    const isVisible = !(this.state.visible === nextState.visible);
+
+    return counterChanged || totalPortChanged || isLoading || isVisible;
+  }
+
   toggleOverlay = () => {
     this.setState({visible: !this.state.visible});
   };
@@ -124,7 +135,7 @@ class Portfolio extends React.Component<Props, localState> {
       token_object.market === ''
     ) {
       Alert.alert('Error', 'Please fill in all the required details');
-    } else if (coins.indexOf(token_object.coin + token_object.market) === -1) {
+    } else if (pairs.indexOf(token_object.coin + token_object.market) === -1) {
       Alert.alert(
         'Error',
         'Could not find the specified coin/market. Please try something else.',
@@ -234,11 +245,19 @@ class Portfolio extends React.Component<Props, localState> {
             </View>
           )}
         </View>
-        <Overlay
-          isVisible={this.state.visible}
-          onBackdropPress={this.toggleOverlay}>
-          {<CoinInput submit={this.submit} token={this.props.token} />}
-        </Overlay>
+        <Modal
+          visible={this.state.visible}
+          onRequestClose={this.toggleOverlay}
+          animationType="slide"
+          statusBarTranslucent={true}>
+          {
+            <CoinInput
+              submit={this.submit}
+              token={this.props.token}
+              toggleOverlay={this.toggleOverlay}
+            />
+          }
+        </Modal>
       </View>
     );
   }

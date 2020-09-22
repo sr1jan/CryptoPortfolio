@@ -1,4 +1,4 @@
-export const coins = [
+export const pairs = [
   'btcinr',
   'xrpinr',
   'ethinr',

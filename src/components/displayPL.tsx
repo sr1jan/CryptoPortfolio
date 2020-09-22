@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {View, Text, FlatList, ListRenderItem} from 'react-native';
 import {connect} from 'react-redux';
 import {ListItem} from 'react-native-elements';
@@ -19,6 +19,8 @@ interface Props {
 }
 
 function DisplayPL(props: Props) {
+  const flatList = useRef(null);
+
   const keyExtractor = (item: token_prop, index: number) => index.toString();
   const renderItem: ListRenderItem<token_prop> = ({item}) => (
     <ListItem
@@ -37,12 +39,12 @@ function DisplayPL(props: Props) {
               {item.market === 'usdt' && (
                 <Text style={styles.profitConversion}>
                   {valueDisplay(
-                    currencyConversion(
-                      item.returns,
-                      item.market,
-                      'inr',
-                      props.priceData,
-                    ),
+                    currencyConversion({
+                      amount: item.returns,
+                      from: item.market,
+                      to: 'inr',
+                      priceData: props.priceData,
+                    }),
                   )}
                 </Text>
               )}
@@ -63,12 +65,12 @@ function DisplayPL(props: Props) {
                 <Text style={styles.lossConversion}>
                   {valueDisplay(
                     Math.abs(
-                      currencyConversion(
-                        item.returns,
-                        item.market,
-                        'inr',
-                        props.priceData,
-                      ),
+                      currencyConversion({
+                        amount: item.returns,
+                        from: item.market,
+                        to: 'inr',
+                        priceData: props.priceData,
+                      }),
                     ),
                   )}
                 </Text>
@@ -93,6 +95,11 @@ function DisplayPL(props: Props) {
         keyExtractor={keyExtractor}
         data={props.token}
         renderItem={renderItem}
+        initialNumToRender={6}
+        ref={flatList}
+        onContentSizeChange={() =>
+          flatList.current.scrollToEnd({animated: true})
+        }
       />
     </View>
   );

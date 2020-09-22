@@ -52,18 +52,18 @@ const portReducer = (
         port.cap = coinDetail.boughtVal;
         port.returns = coinDetail.returns;
       } else if (coinDetail.market === 'usdt') {
-        port.cap = currencyConversion(
-          coinDetail.boughtVal,
-          'usdt',
-          'inr',
-          state.priceData,
-        );
-        port.returns = currencyConversion(
-          coinDetail.returns,
-          'usdt',
-          'inr',
-          state.priceData,
-        );
+        port.cap = currencyConversion({
+          amount: coinDetail.boughtVal,
+          from: 'usdt',
+          to: 'inr',
+          priceData: state.priceData,
+        });
+        port.returns = currencyConversion({
+          amount: coinDetail.returns,
+          from: 'usdt',
+          to: 'inr',
+          priceData: state.priceData,
+        });
       }
       return {
         ...state,
@@ -81,7 +81,7 @@ const portReducer = (
       };
     case UPDATE_PRICES:
       const {newCoinDetail, idx} = <updatePriceType>action;
-      let newTotalReturns: number;
+      let newTotalReturns: number = state.inr.totalPortAmount;
       const newReturns = newCoinDetail.returns;
       const oldReturns = state.token[idx].returns;
       const diff = Math.abs(Math.abs(newReturns) - Math.abs(oldReturns));
@@ -91,7 +91,12 @@ const portReducer = (
         } else if (newCoinDetail.market === 'usdt') {
           newTotalReturns =
             state.inr.totalPortAmount +
-            currencyConversion(diff, 'usdt', 'inr', state.priceData);
+            currencyConversion({
+              amount: diff,
+              from: 'usdt',
+              to: 'inr',
+              priceData: state.priceData,
+            });
         }
       } else {
         if (newCoinDetail.market === 'inr') {
@@ -99,7 +104,12 @@ const portReducer = (
         } else if (newCoinDetail.market === 'usdt') {
           newTotalReturns =
             state.inr.totalPortAmount -
-            currencyConversion(diff, 'usdt', 'inr', state.priceData);
+            currencyConversion({
+              amount: diff,
+              from: 'usdt',
+              to: 'inr',
+              priceData: state.priceData,
+            });
         }
       }
       state.token[idx] = newCoinDetail;
