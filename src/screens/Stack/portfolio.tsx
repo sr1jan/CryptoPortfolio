@@ -1,6 +1,5 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Modal, Alert, ActivityIndicator} from 'react-native';
-import {} from 'react-native-elements';
 import {styles} from '../../styles/styles';
 import {
   token_prop,
@@ -55,79 +54,60 @@ interface Props {
   ) => loadDataType;
 }
 
-interface localState {
-  visible: boolean;
-  loading: boolean;
-}
+const Portfolio = (props: Props) => {
+  const [visible, setVisible] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
-class Portfolio extends React.Component<Props, localState> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      visible: false,
-      loading: true,
-    };
-  }
-
-  _interval: any;
-
-  async componentDidMount(): Promise<void> {
-    try {
-      const counter: number | null | undefined = await getCounter();
-      if (
-        counter !== null &&
-        counter !== undefined &&
-        this.props.counter !== counter
-      ) {
-        const coinDetailList: token_prop[] | null = await getCoinDetail();
-        const portData: totalPort | null = await getTotalPort();
-        const marketData: object | null = await getMarketData();
-        if (
-          coinDetailList !== null &&
-          portData !== null &&
-          marketData !== null
-        ) {
-          this.props.loadDataFromStorage(
-            coinDetailList,
-            counter,
-            portData,
-            marketData,
-          );
-        }
+  useEffect(() => {
+    const _interval = setInterval(async () => {
+      let json: object;
+      try {
+        json = await fetchData();
+      } catch (e) {
+        console.log(e);
+        return;
       }
-    } catch (e) {
-      console.log(e);
-    }
-    this.setState({loading: !this.state.loading});
-    this.priceUpdate();
-  }
+      props.token.map(token_object => {
+        const idx = token_object.id - 1;
+        const name = token_object.coin + token_object.market;
+        const curPrice = json[name].last;
+        const curVal = curPrice * token_object.amount;
+        const returns = curVal - token_object.boughtVal;
+        if (returns.toFixed(2) === token_object.returns.toFixed(2)) return;
+        const percent = (returns / token_object.boughtVal) * 100;
+        token_object = {
+          ...token_object,
+          returns: returns,
+          percent: percent,
+        };
+        props.updatePrices(token_object, idx);
+        props.priceDataUpdate(json);
+      });
+      try {
+        await storeCoinDetail(props.token);
+        await storeTotalPort(props.inr);
+        await storeMarketData(props.priceData);
+      } catch (e) {
+        console.log(e);
+      }
+    }, 10000);
 
-  componentWillUnmount() {
-    clearInterval(this._interval);
-  }
+    return () => {
+      clearInterval(_interval);
+    };
+  }, [props.token.length]);
 
-  shouldComponentUpdate(nextProps: Props, nextState: localState) {
-    const counterChanged = !(this.props.counter === nextProps.counter);
-    const totalPortChanged = !(
-      this.props.inr.totalPortAmount === nextProps.inr.totalPortAmount
-    );
-    const isLoading = !(this.state.loading === nextState.loading);
-    const isVisible = !(this.state.visible === nextState.visible);
-
-    return counterChanged || totalPortChanged || isLoading || isVisible;
-  }
-
-  toggleOverlay = () => {
-    this.setState({visible: !this.state.visible});
+  const toggleOverlay = () => {
+    setVisible(!visible);
   };
 
-  async fetchData() {
+  const fetchData = async () => {
     const response = await fetch(URL);
     const json = await response.json();
     return json;
-  }
+  };
 
-  submit = async (token_object: token_prop) => {
+  const submit = async (token_object: token_prop) => {
     if (
       token_object.amount === 0 ||
       token_object.price === 0 ||
@@ -141,21 +121,21 @@ class Portfolio extends React.Component<Props, localState> {
         'Could not find the specified coin/market. Please try something else.',
       );
     } else {
-      token_object.id = this.props.counter + 1;
+      token_object.id = props.counter + 1;
       token_object.boughtVal = token_object.amount * token_object.price;
-      this.toggleOverlay();
-      this.setState({loading: !this.state.loading});
-      this.newCoin(token_object);
+      toggleOverlay();
+      setLoading(!loading);
+      newCoin(token_object);
     }
   };
 
-  newCoin = async (token_object: token_prop) => {
+  const newCoin = async (token_object: token_prop) => {
     let json: object;
     try {
-      json = await this.fetchData();
-      this.props.priceDataUpdate(json);
+      json = await fetchData();
+      props.priceDataUpdate(json);
     } catch (e) {
-      this.setState({loading: !this.state.loading});
+      setLoading(!loading);
       Alert.alert(
         'SERVER ERROR',
         'Failed to fetch data from the market, try again after sometime',
@@ -174,94 +154,49 @@ class Portfolio extends React.Component<Props, localState> {
       returns: returns,
       percent: percent,
     };
-    this.props.addCoin(token_object, token_object.id);
-    this.setState({loading: !this.state.loading});
+    props.addCoin(token_object, token_object.id);
+    setLoading(!loading);
     try {
-      await storeCounter(this.props.counter);
-      await storeCoinDetail(this.props.token);
-      await storeTotalPort(this.props.inr);
-      await storeMarketData(this.props.priceData);
+      await storeCounter(props.counter);
+      await storeCoinDetail(props.token);
+      await storeTotalPort(props.inr);
+      await storeMarketData(props.priceData);
     } catch (e) {
       console.log('Could not store newCoin in local storage', e);
     }
   };
 
-  priceUpdate = () => {
-    this._interval = setInterval(async () => {
-      if (this.props.token.length === 0) return;
-      let json: object;
-      try {
-        json = await this.fetchData();
-      } catch (e) {
-        console.log(e);
-        return;
-      }
-      this.props.token.map(token_object => {
-        const idx = token_object.id - 1;
-        const name = token_object.coin + token_object.market;
-        const curPrice = json[name].last;
-        const curVal = curPrice * token_object.amount;
-        const returns = curVal - token_object.boughtVal;
-        if (returns.toFixed(2) === token_object.returns.toFixed(2)) return;
-        const percent = (returns / token_object.boughtVal) * 100;
-        token_object = {
-          ...token_object,
-          returns: returns,
-          percent: percent,
-        };
-        this.props.updatePrices(token_object, idx);
-        this.setState(this.state);
-        this.props.priceDataUpdate(json);
-      });
-      try {
-        await storeCoinDetail(this.props.token);
-        await storeTotalPort(this.props.inr);
-        await storeMarketData(this.props.priceData);
-      } catch (e) {
-        console.log(e);
-      }
-    }, 10000);
-  };
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <View style={{flex: 1}}>
-          {!this.state.loading && !this.props.counter && (
-            <NewCoin
-              theme={this.props.theme}
-              toggleOverlay={this.toggleOverlay}
-            />
-          )}
-          {this.props.counter > 0 && (
-            <DisplayPL
-              theme={this.props.theme}
-              toggleOverlay={this.toggleOverlay}
-            />
-          )}
-          {this.state.loading && (
-            <View style={styles.loading}>
-              <ActivityIndicator size="large" color="#fff" />
-            </View>
-          )}
-        </View>
-        <Modal
-          visible={this.state.visible}
-          onRequestClose={this.toggleOverlay}
-          animationType="slide"
-          statusBarTranslucent={true}>
-          {
-            <CoinInput
-              submit={this.submit}
-              token={this.props.token}
-              toggleOverlay={this.toggleOverlay}
-            />
-          }
-        </Modal>
+  return (
+    <View style={styles.container}>
+      <View style={{flex: 1}}>
+        {!loading && !props.counter && (
+          <NewCoin theme={props.theme} toggleOverlay={toggleOverlay} />
+        )}
+        {props.counter > 0 && (
+          <DisplayPL theme={props.theme} toggleOverlay={toggleOverlay} />
+        )}
+        {loading && (
+          <View style={styles.loading}>
+            <ActivityIndicator size="large" color="#fff" />
+          </View>
+        )}
       </View>
-    );
-  }
-}
+      <Modal
+        visible={visible}
+        onRequestClose={toggleOverlay}
+        animationType="slide"
+        statusBarTranslucent={true}>
+        {
+          <CoinInput
+            submit={submit}
+            token={props.token}
+            toggleOverlay={toggleOverlay}
+          />
+        }
+      </Modal>
+    </View>
+  );
+};
 
 const mapStateToProps = (state: app_state) => {
   return {

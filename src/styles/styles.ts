@@ -1,5 +1,13 @@
 import {StyleSheet} from 'react-native';
 
+let MyTheme = {
+  primary: '#3c3c3d',
+  background: '#222831',
+  card: '#393e46',
+  text: '#fff',
+  border: 'rgb(199, 199, 204)',
+};
+
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -15,10 +23,17 @@ export const styles = StyleSheet.create({
   },
   addCoinContainer: {
     backgroundColor: '#393e46',
-    paddingTop: 8,
-    paddingBottom: 8,
-    justifyContent: 'center',
+    paddingTop: 2,
+    paddingBottom: 6,
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  addCoinLeftComponent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 10,
+    marginTop: 10,
   },
   addCoinText: {
     fontSize: 11,
@@ -28,6 +43,7 @@ export const styles = StyleSheet.create({
     color: '#fff',
     textAlign: 'left',
     letterSpacing: 1,
+    marginLeft: 10,
   },
   grText: {
     color: '#fff',
@@ -54,8 +70,14 @@ export const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: 'bold',
     letterSpacing: 0.5,
-    paddingRight: 3,
-    paddingLeft: 3,
+    paddingHorizontal: 3,
+  },
+  coinList: {
+    backgroundColor: MyTheme.background,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 13,
   },
   coinView: {
     justifyContent: 'space-between',
@@ -64,12 +86,13 @@ export const styles = StyleSheet.create({
   },
   coinTitle: {
     color: '#fff',
-    fontWeight: 'bold',
     fontFamily: 'Recursive',
+    fontSize: 18,
     letterSpacing: 1,
   },
   coinSub: {
-    color: '#fff',
+    color: 'grey',
+    fontSize: 12,
     fontWeight: '100',
     fontFamily: 'Recursive',
     letterSpacing: 1,
@@ -77,7 +100,6 @@ export const styles = StyleSheet.create({
   profit: {
     color: '#fff',
     fontFamily: 'Recursive',
-    fontWeight: 'bold',
     marginRight: 4,
   },
   profitConversion: {
@@ -89,7 +111,6 @@ export const styles = StyleSheet.create({
   profitPercent: {
     backgroundColor: '#32CD32',
     color: '#fff',
-    fontWeight: 'bold',
     padding: 6,
     fontSize: 14,
   },
@@ -101,7 +122,6 @@ export const styles = StyleSheet.create({
   loss: {
     color: '#fff',
     fontFamily: 'Recursive',
-    fontWeight: 'bold',
     marginRight: 4,
   },
   lossConversion: {
@@ -113,7 +133,6 @@ export const styles = StyleSheet.create({
   lossPercent: {
     backgroundColor: '#c52a0d',
     color: '#fff',
-    fontWeight: 'bold',
     padding: 6,
     fontSize: 14,
   },

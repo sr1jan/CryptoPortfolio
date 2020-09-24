@@ -1,27 +1,233 @@
-import React from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
-import {useNavigation, useTheme} from '@react-navigation/native';
+import React, {useEffect} from 'react';
+import {View, Text, StyleSheet} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {connect} from 'react-redux';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+/* import {Icon} from 'react-native-elements'; */
 
 import {styles} from '../../styles/styles';
+import {totalPort, app_state, token_prop, loadDataType} from '../../types';
+import {loadDataFromStorage} from '../../actions/port';
 
-function Home() {
-  const navigation = useNavigation();
-  const {colors} = useTheme();
+import {valueDisplay} from '../../helpers/currency';
 
-  return (
-    <View style={styles.mainContent}>
-      <Text style={{...styles.title, color: colors.text}}>
-        {' '}
-        Welcome to the CryptoPortfolio{' '}
-      </Text>
-      <TouchableOpacity onPress={() => navigation.navigate('Portfolio')}>
-        <Text style={{...styles.androidButtonText, color: colors.text}}>
-          {' '}
-          Go to my Portfolio{' '}
-        </Text>
-      </TouchableOpacity>
-    </View>
-  );
+import {
+  getCoinDetail,
+  getCounter,
+  getTotalPort,
+  getMarketData,
+} from '../../helpers/asyncStorage';
+
+interface Props {
+  counter: number;
+  inr: totalPort;
+  loadDataFromStorage: (
+    coinDetailList: token_prop[],
+    counter: number,
+    portData: totalPort,
+    marketData: object,
+  ) => loadDataType;
 }
 
-export default Home;
+const Home = (props: Props) => {
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    async function retrieveLocalData() {
+      try {
+        const counter: number | null | undefined = await getCounter();
+        if (
+          counter !== null &&
+          counter !== undefined &&
+          props.counter !== counter
+        ) {
+          const coinDetailList: token_prop[] | null = await getCoinDetail();
+          const portData: totalPort | null = await getTotalPort();
+          const marketData: object | null = await getMarketData();
+          if (
+            coinDetailList !== null &&
+            portData !== null &&
+            marketData !== null
+          ) {
+            props.loadDataFromStorage(
+              coinDetailList,
+              counter,
+              portData,
+              marketData,
+            );
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    retrieveLocalData();
+  }, []);
+
+  const Profit = () => {
+    return (
+      <View style={localStyles.grContainer}>
+        <Text style={localStyles.grProfitAmount}>
+          {valueDisplay(props.inr.totalPortAmount)}
+        </Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'flex-end',
+          }}>
+          {/* <View style={{marginRight: 3}}> */}
+          {/*   <Icon */}
+          {/*     name="long-arrow-alt-up" */}
+          {/*     type="font-awesome-5" */}
+          {/*     color="#fff" */}
+          {/*     size={55} */}
+          {/*   /> */}
+          {/* </View> */}
+          <View style={styles.profitBox}>
+            <Text style={localStyles.grProfitPercent}>
+              {props.inr.totalPortPercent.toFixed(2)}%
+            </Text>
+          </View>
+        </View>
+      </View>
+    );
+  };
+
+  const Loss = () => {
+    return (
+      <View style={localStyles.grContainer}>
+        <Text style={localStyles.grLossAmount}>
+          {valueDisplay(Math.abs(props.inr.totalPortAmount))}
+        </Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'flex-end',
+          }}>
+          {/* <View style={{marginRight: 3}}> */}
+          {/*   <Icon */}
+          {/*     name="long-arrow-alt-down" */}
+          {/*     type="font-awesome-5" */}
+          {/*     color="#fff" */}
+          {/*     size={55} */}
+          {/*   /> */}
+          {/* </View> */}
+          <View style={styles.lossBox}>
+            <Text style={localStyles.grLossPercent}>
+              {Math.abs(props.inr.totalPortPercent).toFixed(2)}%
+            </Text>
+          </View>
+        </View>
+      </View>
+    );
+  };
+
+  if (props.counter > 0) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center'}}>
+        <View style={{flex: 1, alignItems: 'center'}}>
+          {Math.sign(props.inr.totalPortAmount) === 1 ? <Profit /> : <Loss />}
+        </View>
+        <View
+          style={{
+            height: 0.8,
+            width: '100%',
+            backgroundColor: 'black',
+            marginVertical: 5,
+          }}
+        />
+        <View style={{flex: 2}}>
+          {/* <Text style={{color: '#fff'}}>Test</Text> */}
+        </View>
+      </View>
+    );
+  } else {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: '#222831',
+        }}>
+        <Text style={{color: 'grey', fontFamily: 'monospace'}}>
+          Your portofolio is empty!
+        </Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Portfolio')}>
+          <View
+            style={{
+              borderWidth: 0.5,
+              backgroundColor: '#393e46',
+              margin: 4,
+              padding: 7,
+            }}>
+            <Text style={{color: 'grey', fontFamily: 'monospace'}}>
+              Add Coin
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+};
+
+const localStyles = StyleSheet.create({
+  grContainer: {
+    ...styles.grContainer,
+    alignItems: 'center',
+  },
+  grProfitAmount: {
+    ...styles.grAmount,
+    color: '#32CD32',
+    fontSize: 50,
+    letterSpacing: 1,
+  },
+  grProfitPercent: {
+    ...styles.grPercent,
+    backgroundColor: '#32CD32',
+    fontSize: 50,
+    paddingHorizontal: 25,
+    letterSpacing: 1,
+  },
+  grLossAmount: {
+    ...styles.grAmount,
+    color: '#c52a0d',
+    fontSize: 60,
+    letterSpacing: 1,
+  },
+  grLossPercent: {
+    ...styles.grPercent,
+    backgroundColor: '#c52a0d',
+    fontSize: 60,
+    paddingHorizontal: 25,
+    letterSpacing: 1,
+  },
+});
+
+const mapStateToProps = (state: app_state) => {
+  return {
+    counter: state.portReducer.counter,
+    inr: state.portReducer.inr,
+  };
+};
+
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    loadDataFromStorage: (
+      coinDetailList: token_prop[],
+      counter: number,
+      portData: totalPort,
+      marketData: object,
+    ) =>
+      dispatch(
+        loadDataFromStorage(coinDetailList, counter, portData, marketData),
+      ),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Home);
