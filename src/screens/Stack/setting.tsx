@@ -51,16 +51,6 @@ function Setting(props: Props) {
         color={colors.card}
         onPress={deleteConfirm}
       />
-      <Text
-        style={{
-          fontWeight: '100',
-          color: '#fff',
-          marginTop: 15,
-          fontFamily: 'Hack',
-          letterSpacing: 3,
-        }}>
-        Delete Portfolio
-      </Text>
     </View>
   );
 }

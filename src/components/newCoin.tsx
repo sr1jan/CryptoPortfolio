@@ -24,16 +24,6 @@ function NewCoin(props: Props) {
         color={props.theme.card}
         onPress={props.toggleOverlay}
       />
-      <Text
-        style={{
-          fontWeight: '100',
-          color: '#fff',
-          marginTop: 15,
-          fontFamily: 'Hack',
-          letterSpacing: 3,
-        }}>
-        Add a new coin
-      </Text>
     </View>
   );
 }

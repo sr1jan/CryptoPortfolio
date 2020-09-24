@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Text, StyleSheet, ActivityIndicator} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {connect} from 'react-redux';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -31,6 +31,7 @@ interface Props {
 
 const Home = (props: Props) => {
   const navigation = useNavigation();
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     async function retrieveLocalData() {
@@ -57,6 +58,7 @@ const Home = (props: Props) => {
             );
           }
         }
+        setLoading(false);
       } catch (e) {
         console.log(e);
       }
@@ -124,7 +126,13 @@ const Home = (props: Props) => {
     );
   };
 
-  if (props.counter > 0) {
+  if (loading) {
+    return (
+      <View style={styles.loading}>
+        <ActivityIndicator size="large" color="#fff" />
+      </View>
+    );
+  } else if (props.counter > 0) {
     return (
       <View style={{flex: 1, justifyContent: 'center'}}>
         <View style={{flex: 1, alignItems: 'center'}}>
@@ -152,21 +160,26 @@ const Home = (props: Props) => {
           alignItems: 'center',
           backgroundColor: '#222831',
         }}>
-        <Text style={{color: 'grey', fontFamily: 'monospace'}}>
+        <Text style={{color: '#fff', fontFamily: 'monospace'}}>
           Your portofolio is empty!
         </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Portfolio')}>
-          <View
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Portfolio')}
+          style={{
+            borderRadius: 3,
+            backgroundColor: '#393e46',
+            marginTop: 5,
+          }}>
+          <Text
             style={{
-              borderWidth: 0.5,
-              backgroundColor: '#393e46',
-              margin: 4,
-              padding: 7,
+              color: '#fff',
+              fontFamily: 'monospace',
+              fontSize: 13,
+              paddingVertical: 5,
+              paddingHorizontal: 10,
             }}>
-            <Text style={{color: 'grey', fontFamily: 'monospace'}}>
-              Add Coin
-            </Text>
-          </View>
+            Add Coin
+          </Text>
         </TouchableOpacity>
       </View>
     );
@@ -188,7 +201,7 @@ const localStyles = StyleSheet.create({
     ...styles.grPercent,
     backgroundColor: '#32CD32',
     fontSize: 50,
-    paddingHorizontal: 25,
+    paddingHorizontal: 15,
     letterSpacing: 1,
   },
   grLossAmount: {
@@ -201,7 +214,7 @@ const localStyles = StyleSheet.create({
     ...styles.grPercent,
     backgroundColor: '#c52a0d',
     fontSize: 60,
-    paddingHorizontal: 25,
+    paddingHorizontal: 15,
     letterSpacing: 1,
   },
 });

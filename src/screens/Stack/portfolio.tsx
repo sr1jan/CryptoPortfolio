@@ -9,29 +9,19 @@ import {
   updatePriceType,
   addPriceDataType,
   totalPort,
-  loadDataType,
 } from '../../types';
 
 import {connect} from 'react-redux';
-import {
-  addCoin,
-  updatePrices,
-  addPriceData,
-  loadDataFromStorage,
-} from '../../actions/port';
+import {addCoin, updatePrices, addPriceData} from '../../actions/port';
 
 import CoinInput from '../../components/coinInput';
 import DisplayPL from '../../components/displayPL';
 import NewCoin from '../../components/newCoin';
 import {
-  getCoinDetail,
-  getCounter,
   storeCoinDetail,
   storeCounter,
-  getTotalPort,
   storeTotalPort,
   storeMarketData,
-  getMarketData,
 } from '../../helpers/asyncStorage';
 
 import {pairs} from '../../data/pairs';
@@ -46,25 +36,30 @@ interface Props {
   addCoin: (coinDetail: token_prop, counter: number) => addCoinType;
   updatePrices: (coinDetail: token_prop, idx: number) => updatePriceType;
   priceDataUpdate: (data: object) => addPriceDataType;
-  loadDataFromStorage: (
-    coinDetailList: token_prop[],
-    counter: number,
-    portData: totalPort,
-    marketData: object,
-  ) => loadDataType;
 }
 
 const Portfolio = (props: Props) => {
   const [visible, setVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
+  const toggleOverlay = () => {
+    setVisible(!visible);
+  };
+
+  const fetchData = async () => {
+    const response = await fetch(URL);
+    const json = await response.json();
+    return json;
+  };
+
   useEffect(() => {
+    if (props.counter < 1) return;
     const _interval = setInterval(async () => {
       let json: object;
       try {
         json = await fetchData();
       } catch (e) {
-        console.log(e);
+        console.log(e, 'location: useEffect portfolio');
         return;
       }
       props.token.map(token_object => {
@@ -83,29 +78,22 @@ const Portfolio = (props: Props) => {
         props.updatePrices(token_object, idx);
         props.priceDataUpdate(json);
       });
-      try {
-        await storeCoinDetail(props.token);
-        await storeTotalPort(props.inr);
-        await storeMarketData(props.priceData);
-      } catch (e) {
-        console.log(e);
-      }
     }, 10000);
 
     return () => {
       clearInterval(_interval);
     };
-  }, [props.token.length]);
+  }, [props.counter]);
 
-  const toggleOverlay = () => {
-    setVisible(!visible);
-  };
-
-  const fetchData = async () => {
-    const response = await fetch(URL);
-    const json = await response.json();
-    return json;
-  };
+  useEffect(() => {
+    const storeData = async () => {
+      await storeCounter(props.counter);
+      await storeCoinDetail(props.token);
+      await storeTotalPort(props.inr);
+      await storeMarketData(props.priceData);
+    };
+    storeData();
+  }, [props.counter]);
 
   const submit = async (token_object: token_prop) => {
     if (
@@ -124,8 +112,8 @@ const Portfolio = (props: Props) => {
       token_object.id = props.counter + 1;
       token_object.boughtVal = token_object.amount * token_object.price;
       toggleOverlay();
-      setLoading(!loading);
-      newCoin(token_object);
+      setLoading(true);
+      await newCoin(token_object);
     }
   };
 
@@ -135,7 +123,7 @@ const Portfolio = (props: Props) => {
       json = await fetchData();
       props.priceDataUpdate(json);
     } catch (e) {
-      setLoading(!loading);
+      setLoading(false);
       Alert.alert(
         'SERVER ERROR',
         'Failed to fetch data from the market, try again after sometime',
@@ -155,15 +143,7 @@ const Portfolio = (props: Props) => {
       percent: percent,
     };
     props.addCoin(token_object, token_object.id);
-    setLoading(!loading);
-    try {
-      await storeCounter(props.counter);
-      await storeCoinDetail(props.token);
-      await storeTotalPort(props.inr);
-      await storeMarketData(props.priceData);
-    } catch (e) {
-      console.log('Could not store newCoin in local storage', e);
-    }
+    setLoading(false);
   };
 
   return (
@@ -214,15 +194,6 @@ const mapDispatchToProps = (dispatch: any) => {
     updatePrices: (coinDetail: token_prop, idx: number) =>
       dispatch(updatePrices(coinDetail, idx)),
     priceDataUpdate: (data: object) => dispatch(addPriceData(data)),
-    loadDataFromStorage: (
-      coinDetailList: token_prop[],
-      counter: number,
-      portData: totalPort,
-      marketData: object,
-    ) =>
-      dispatch(
-        loadDataFromStorage(coinDetailList, counter, portData, marketData),
-      ),
   };
 };
 

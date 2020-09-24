@@ -30,7 +30,7 @@ const DropDownList = (props: Props) => {
 
   const ItemSeparator = () => {
     return (
-      <View style={{height: 0.4, width: '100%', backgroundColor: 'grey'}} />
+      <View style={{height: 0.7, width: '100%', backgroundColor: '#000'}} />
     );
   };
 
