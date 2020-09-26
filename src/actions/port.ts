@@ -4,6 +4,7 @@ import {
   CLEAR_PORT,
   ADD_PRICE_DATA,
   LOAD_DATA,
+  DELETE_COIN,
 } from './types';
 import {token_prop, totalPort} from '../types';
 
@@ -35,6 +36,11 @@ export const updatePrices = (coinDetail: token_prop, idx: number) => ({
 export const addPriceData = (data: object) => ({
   type: ADD_PRICE_DATA,
   data: data,
+});
+
+export const deleteCoin = (index: number) => ({
+  type: DELETE_COIN,
+  index: index,
 });
 
 export const clearPort = () => ({

@@ -1,8 +1,8 @@
 import React from 'react';
-import {View, Text, Alert} from 'react-native';
+import {View, Alert} from 'react-native';
 import {useTheme, useNavigation} from '@react-navigation/native';
-import {Icon} from 'react-native-elements';
-// import {styles} from '../../styles/styles';
+import {BorderlessButton} from 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
 
 import {clearPort} from '../../actions/port';
@@ -43,14 +43,9 @@ function Setting(props: Props) {
         alignItems: 'center',
         justifyContent: 'center',
       }}>
-      <Icon
-        reverse
-        name="trash"
-        type="font-awesome-5"
-        size={90}
-        color={colors.card}
-        onPress={deleteConfirm}
-      />
+      <BorderlessButton onPress={deleteConfirm}>
+        <Icon name="delete-forever" size={200} color={colors.card} />
+      </BorderlessButton>
     </View>
   );
 }

@@ -1,11 +1,12 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import {Icon} from 'react-native-elements';
-import {app_state, totalPort} from '../types';
 import {connect} from 'react-redux';
-import {valueDisplay} from '../helpers/currency';
-import {styles} from '../styles/styles';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import {BorderlessButton} from 'react-native-gesture-handler';
 
+import {styles} from '../styles/styles';
+import {valueDisplay} from '../helpers/currency';
+import {app_state, totalPort} from '../types';
 interface Props {
   toggleOverlay: () => void;
   inr: totalPort;
@@ -26,12 +27,7 @@ function PortHeader(props: Props) {
             alignItems: 'flex-end',
           }}>
           <View style={{marginRight: 3}}>
-            <Icon
-              name="long-arrow-alt-up"
-              type="font-awesome-5"
-              color="#fff"
-              size={15}
-            />
+            <Icon name="trending-up" color="#fff" size={15} />
           </View>
           <View style={styles.profitBox}>
             <Text style={localStyles.grProfitPercent}>
@@ -56,12 +52,7 @@ function PortHeader(props: Props) {
             alignItems: 'flex-end',
           }}>
           <View style={{marginRight: 3}}>
-            <Icon
-              name="long-arrow-alt-down"
-              type="font-awesome-5"
-              color="#fff"
-              size={15}
-            />
+            <Icon name="trending-down" color="#fff" size={15} />
           </View>
           <View style={styles.lossBox}>
             <Text style={localStyles.grLossPercent}>
@@ -73,30 +64,16 @@ function PortHeader(props: Props) {
     );
   };
 
-  const GrossReturns = () => {
-    return (
-      <View style={{justifyContent: 'center', alignItems: 'flex-end'}}>
-        <Text style={styles.grText}>Gross Returns</Text>
-      </View>
-    );
-  };
-
   return (
     <View style={styles.addCoinContainer}>
       <View style={{alignSelf: 'flex-start'}}>
-        <View style={styles.addCoinLeftComponent}>
-          <Icon
-            name="plus-circle"
-            type="font-awesome-5"
-            size={28}
-            color="#fff"
-            onPress={props.toggleOverlay}
-          />
-          <Text style={styles.addCoinText}>add a new coin</Text>
-        </View>
+        <BorderlessButton onPress={props.toggleOverlay}>
+          <View style={styles.addCoinLeftComponent}>
+            <Icon name="add-circle" size={35} color="#fff" />
+          </View>
+        </BorderlessButton>
       </View>
       <View style={{alignSelf: 'flex-end', marginRight: 10}}>
-        {<GrossReturns />}
         {Math.sign(props.inr.totalPortAmount) === 1 ? <Profit /> : <Loss />}
       </View>
     </View>

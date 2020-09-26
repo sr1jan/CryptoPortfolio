@@ -7,6 +7,10 @@ export interface token_prop {
   boughtVal: number;
   returns: number;
   percent: number;
+  inr: {
+    cap: number;
+    returns: number;
+  };
 }
 
 export interface theme_prop {
@@ -60,6 +64,11 @@ export interface updatePriceType {
   idx: number;
 }
 
+export interface deleteCoinType {
+  type: string;
+  index: number;
+}
+
 export interface clearPortType {
   type: string;
 }
@@ -69,4 +78,5 @@ export type actionTypes =
   | clearPortType
   | updatePriceType
   | addPriceDataType
-  | loadDataType;
+  | loadDataType
+  | deleteCoinType;

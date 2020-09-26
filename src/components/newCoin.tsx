@@ -1,12 +1,11 @@
 import React from 'react';
-import {View, Text} from 'react-native';
-import {Icon} from 'react-native-elements';
-import {theme_prop, app_state, totalPort} from '../types';
+import {View} from 'react-native';
 import {connect} from 'react-redux';
+import {BorderlessButton} from 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import {styles} from '../styles/styles';
-
+import {app_state, totalPort} from '../types';
 interface Props {
-  theme: theme_prop;
   toggleOverlay: () => void;
   empty: boolean;
   inr: totalPort;
@@ -16,14 +15,9 @@ interface Props {
 function NewCoin(props: Props) {
   return (
     <View style={styles.mainContent}>
-      <Icon
-        reverse
-        name="plus"
-        type="font-awesome-5"
-        size={90}
-        color={props.theme.card}
-        onPress={props.toggleOverlay}
-      />
+      <BorderlessButton onPress={props.toggleOverlay}>
+        <Icon name="add-circle" size={200} color="#393e46" />
+      </BorderlessButton>
     </View>
   );
 }

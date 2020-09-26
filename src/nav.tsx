@@ -6,7 +6,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 
 import Home from './screens/Stack/home';
-import Port from './screens/Stack/port';
+import Portfolio from './screens/Stack/portfolio';
 import Setting from './screens/Stack/setting';
 
 const Stack = createStackNavigator();
@@ -48,7 +48,7 @@ export default class Nav extends Component<null, IState> {
       />
       <Stack.Screen
         name="Portfolio"
-        component={Port}
+        component={Portfolio}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
@@ -72,18 +72,26 @@ export default class Nav extends Component<null, IState> {
           component={Home}
           options={{
             tabBarLabel: 'Home',
-            tabBarIcon: () => (
-              <Icon name="home" type="font-awesome-5" color="#fff" />
+            tabBarIcon: ({focused}) => (
+              <Icon
+                name="home"
+                type="font-awesome-5"
+                color={focused ? '#fff' : 'grey'}
+              />
             ),
           }}
         />
         <Tab.Screen
           name="Portfolio"
-          component={Port}
+          component={Portfolio}
           options={{
             tabBarLabel: 'Portfolio',
-            tabBarIcon: () => (
-              <Icon name="coins" type="font-awesome-5" color="#fff" />
+            tabBarIcon: ({focused}) => (
+              <Icon
+                name="coins"
+                type="font-awesome-5"
+                color={focused ? '#fff' : 'grey'}
+              />
             ),
           }}
         />
@@ -92,8 +100,12 @@ export default class Nav extends Component<null, IState> {
           component={Setting}
           options={{
             tabBarLabel: 'Settings',
-            tabBarIcon: () => (
-              <Icon name="user-cog" type="font-awesome-5" color="#fff" />
+            tabBarIcon: ({focused}) => (
+              <Icon
+                name="user-cog"
+                type="font-awesome-5"
+                color={focused ? '#fff' : 'grey'}
+              />
             ),
           }}
         />

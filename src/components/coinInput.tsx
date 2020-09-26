@@ -1,14 +1,15 @@
 import React, {useState} from 'react';
-import {View, Text, TextInput} from 'react-native';
-import {Icon} from 'react-native-elements';
-import {token_prop} from '../types';
-import {styles} from '../styles/styles';
+import {View, Text} from 'react-native';
 import {
-  TouchableHighlight,
-  TouchableOpacity,
+  RectButton,
+  BorderlessButton,
   gestureHandlerRootHOC,
+  TextInput,
 } from 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
+import {styles} from '../styles/styles';
+import {token_prop} from '../types';
 import {coins} from '../data/coins';
 import {markets} from '../data/markets';
 import DropDownList from './searchableList';
@@ -31,6 +32,7 @@ const CoinInput = (props: Props) => {
     boughtVal: 0,
     returns: 0,
     percent: 0,
+    inr: {cap: 0, returns: 0},
   });
 
   const setCoin = (value: string) => {
@@ -45,21 +47,14 @@ const CoinInput = (props: Props) => {
   return (
     <View
       style={{
-        flex: 1,
-        justifyContent: 'center',
+        ...styles.mainContent,
         alignItems: 'stretch',
         backgroundColor: '#393e46',
       }}>
       <View style={{alignSelf: 'flex-end', marginRight: 30, marginBottom: 10}}>
-        <TouchableOpacity onPress={props.toggleOverlay}>
-          <Icon
-            name="window-close"
-            size={30}
-            type="material-community"
-            // color="#222831"
-            color="grey"
-          />
-        </TouchableOpacity>
+        <BorderlessButton onPress={props.toggleOverlay}>
+          <Icon name="close" size={30} color="grey" />
+        </BorderlessButton>
       </View>
 
       <View style={{justifyContent: 'center'}}>
@@ -67,6 +62,7 @@ const CoinInput = (props: Props) => {
           value={token_object.coin.toUpperCase()}
           placeholder="Coin: BTC"
           placeholderTextColor="grey"
+          keyboardType="visible-password"
           autoCapitalize="characters"
           onFocus={() => showCoins(true)}
           onChangeText={value => {
@@ -90,6 +86,7 @@ const CoinInput = (props: Props) => {
           value={token_object.market.toUpperCase()}
           placeholder="Market: USDT"
           placeholderTextColor="grey"
+          keyboardType="visible-password"
           autoCapitalize="characters"
           onFocus={() => showMarkets(true)}
           onChangeText={value => {
@@ -127,26 +124,13 @@ const CoinInput = (props: Props) => {
       <View
         style={{
           alignSelf: 'center',
-          marginTop: 10,
+          marginTop: 15,
         }}>
-        <TouchableHighlight
-          underlayColor="grey"
-          onPress={() => props.submit(tobj)}
-          style={{
-            backgroundColor: '#222831',
-            borderRadius: 3,
-          }}>
-          <Text
-            style={{
-              color: '#fff',
-              fontSize: 20,
-              fontFamily: 'monospace',
-              paddingVertical: 10,
-              paddingHorizontal: 50,
-            }}>
-            Submit
-          </Text>
-        </TouchableHighlight>
+        <RectButton
+          style={{backgroundColor: '#fff', borderRadius: 3}}
+          onPress={() => props.submit(tobj)}>
+          <Text style={styles.submitText}>Submit</Text>
+        </RectButton>
       </View>
     </View>
   );

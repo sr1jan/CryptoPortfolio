@@ -3,7 +3,6 @@ import {View, Modal, Alert, ActivityIndicator} from 'react-native';
 import {styles} from '../../styles/styles';
 import {
   token_prop,
-  theme_prop,
   app_state,
   addCoinType,
   updatePriceType,
@@ -24,11 +23,12 @@ import {
   storeMarketData,
 } from '../../helpers/asyncStorage';
 
+import {currencyConversion} from '../../helpers/currency';
+
 import {pairs} from '../../data/pairs';
 const URL = 'https://api.wazirx.com/api/v2/tickers';
 
 interface Props {
-  theme: theme_prop;
   token: token_prop[];
   counter: number;
   inr: totalPort;
@@ -53,6 +53,16 @@ const Portfolio = (props: Props) => {
   };
 
   useEffect(() => {
+    const storeData = async () => {
+      await storeCounter(props.counter);
+      await storeCoinDetail(props.token);
+      await storeTotalPort(props.inr);
+      await storeMarketData(props.priceData);
+    };
+    storeData();
+  }, [props.counter]);
+
+  useEffect(() => {
     if (props.counter < 1) return;
     const _interval = setInterval(async () => {
       let json: object;
@@ -62,18 +72,29 @@ const Portfolio = (props: Props) => {
         console.log(e, 'location: useEffect portfolio');
         return;
       }
-      props.token.map(token_object => {
-        const idx = token_object.id - 1;
+      props.token.map((token_object, idx) => {
         const name = token_object.coin + token_object.market;
         const curPrice = json[name].last;
         const curVal = curPrice * token_object.amount;
         const returns = curVal - token_object.boughtVal;
         if (returns.toFixed(2) === token_object.returns.toFixed(2)) return;
         const percent = (returns / token_object.boughtVal) * 100;
+        let inrReturns = 0;
+        if (token_object.market === 'inr') {
+          inrReturns = returns;
+        } else {
+          inrReturns = currencyConversion({
+            amount: returns,
+            from: 'usdt',
+            to: 'inr',
+            priceData: json,
+          });
+        }
         token_object = {
           ...token_object,
           returns: returns,
           percent: percent,
+          inr: {...token_object.inr, returns: inrReturns},
         };
         props.updatePrices(token_object, idx);
         props.priceDataUpdate(json);
@@ -83,16 +104,6 @@ const Portfolio = (props: Props) => {
     return () => {
       clearInterval(_interval);
     };
-  }, [props.counter]);
-
-  useEffect(() => {
-    const storeData = async () => {
-      await storeCounter(props.counter);
-      await storeCoinDetail(props.token);
-      await storeTotalPort(props.inr);
-      await storeMarketData(props.priceData);
-    };
-    storeData();
   }, [props.counter]);
 
   const submit = async (token_object: token_prop) => {
@@ -128,7 +139,6 @@ const Portfolio = (props: Props) => {
         'SERVER ERROR',
         'Failed to fetch data from the market, try again after sometime',
       );
-      console.log('Could not fetch coin detail from the api', e);
       return;
     }
     const name = token_object.coin + token_object.market;
@@ -137,10 +147,32 @@ const Portfolio = (props: Props) => {
     const curVal = curPrice * token_object.amount;
     const returns = curVal - boughtVal;
     const percent = (returns / boughtVal) * 100;
+    const inr = {
+      cap: 0,
+      returns: 0,
+    };
+    if (token_object.market === 'inr') {
+      inr.cap = boughtVal;
+      inr.returns = returns;
+    } else {
+      inr.cap = currencyConversion({
+        amount: boughtVal,
+        from: token_object.market,
+        to: 'inr',
+        priceData: json,
+      });
+      inr.returns = currencyConversion({
+        amount: returns,
+        from: token_object.market,
+        to: 'inr',
+        priceData: json,
+      });
+    }
     token_object = {
       ...token_object,
       returns: returns,
       percent: percent,
+      inr: inr,
     };
     props.addCoin(token_object, token_object.id);
     setLoading(false);
@@ -150,11 +182,9 @@ const Portfolio = (props: Props) => {
     <View style={styles.container}>
       <View style={{flex: 1}}>
         {!loading && !props.counter && (
-          <NewCoin theme={props.theme} toggleOverlay={toggleOverlay} />
+          <NewCoin toggleOverlay={toggleOverlay} />
         )}
-        {props.counter > 0 && (
-          <DisplayPL theme={props.theme} toggleOverlay={toggleOverlay} />
-        )}
+        {props.counter > 0 && <DisplayPL toggleOverlay={toggleOverlay} />}
         {loading && (
           <View style={styles.loading}>
             <ActivityIndicator size="large" color="#fff" />

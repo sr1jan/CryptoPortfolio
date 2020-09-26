@@ -4,6 +4,7 @@ import {
   CLEAR_PORT,
   ADD_PRICE_DATA,
   LOAD_DATA,
+  DELETE_COIN,
 } from '../actions/types';
 import {
   port_state,
@@ -15,7 +16,6 @@ import {
   loadDataType,
   totalPort,
 } from '../types';
-import {currencyConversion} from '../helpers/currency';
 
 const InitialState: port_state = {
   counter: 0,
@@ -45,73 +45,34 @@ const portReducer = (
         inr: portData,
         priceData: marketData,
       };
+
     case ADD_COIN:
       const {coinDetail, counter} = <addCoinType>action;
-      const port = {cap: 0, returns: 0};
-      if (coinDetail.market === 'inr') {
-        port.cap = coinDetail.boughtVal;
-        port.returns = coinDetail.returns;
-      } else if (coinDetail.market === 'usdt') {
-        port.cap = currencyConversion({
-          amount: coinDetail.boughtVal,
-          from: 'usdt',
-          to: 'inr',
-          priceData: state.priceData,
-        });
-        port.returns = currencyConversion({
-          amount: coinDetail.returns,
-          from: 'usdt',
-          to: 'inr',
-          priceData: state.priceData,
-        });
-      }
       return {
         ...state,
         token: state.token.concat(coinDetail),
         counter: counter,
         inr: {
           ...state.inr,
-          totalInvestment: state.inr.totalInvestment + port.cap,
-          totalPortAmount: state.inr.totalPortAmount + port.returns,
+          totalInvestment: state.inr.totalInvestment + coinDetail.inr.cap,
+          totalPortAmount: state.inr.totalPortAmount + coinDetail.inr.returns,
           totalPortPercent:
-            ((state.inr.totalPortAmount + port.returns) /
-              (state.inr.totalInvestment + port.cap)) *
+            ((state.inr.totalPortAmount + coinDetail.inr.returns) /
+              (state.inr.totalInvestment + coinDetail.inr.cap)) *
             100,
         },
       };
+
     case UPDATE_PRICES:
       const {newCoinDetail, idx} = <updatePriceType>action;
       let newTotalReturns: number = state.inr.totalPortAmount;
-      const newReturns = newCoinDetail.returns;
-      const oldReturns = state.token[idx].returns;
+      const newReturns = newCoinDetail.inr.returns;
+      const oldReturns = state.token[idx].inr.returns;
       const diff = Math.abs(Math.abs(newReturns) - Math.abs(oldReturns));
-      if (newReturns > oldReturns) {
-        if (newCoinDetail.market === 'inr') {
-          newTotalReturns = state.inr.totalPortAmount + diff;
-        } else if (newCoinDetail.market === 'usdt') {
-          newTotalReturns =
-            state.inr.totalPortAmount +
-            currencyConversion({
-              amount: diff,
-              from: 'usdt',
-              to: 'inr',
-              priceData: state.priceData,
-            });
-        }
-      } else {
-        if (newCoinDetail.market === 'inr') {
-          newTotalReturns = state.inr.totalPortAmount - diff;
-        } else if (newCoinDetail.market === 'usdt') {
-          newTotalReturns =
-            state.inr.totalPortAmount -
-            currencyConversion({
-              amount: diff,
-              from: 'usdt',
-              to: 'inr',
-              priceData: state.priceData,
-            });
-        }
-      }
+      if (newReturns > oldReturns)
+        newTotalReturns = state.inr.totalPortAmount + diff;
+      else newTotalReturns = state.inr.totalPortAmount - diff;
+
       state.token[idx] = newCoinDetail;
       return {
         ...state,
@@ -122,12 +83,34 @@ const portReducer = (
           totalPortPercent: (newTotalReturns / state.inr.totalInvestment) * 100,
         },
       };
+
     case ADD_PRICE_DATA:
       const {data} = <addPriceDataType>action;
       return {
         ...state,
         priceData: data,
       };
+
+    case DELETE_COIN:
+      const {index} = action;
+      const coin = state.token[index];
+      const inr = state.inr;
+      const newPort = inr.totalInvestment - coin.inr.cap;
+      const newPortReturns = inr.totalPortAmount - coin.inr.returns;
+      const newPortPercent = (newPortReturns / newPort) * 100;
+      state.token.splice(index, 1);
+      return {
+        ...state,
+        token: state.token,
+        counter: state.counter - 1,
+        inr: {
+          ...state.inr,
+          totalInvestment: newPort,
+          totalPortAmount: newPortReturns,
+          totalPortPercent: newPortPercent,
+        },
+      };
+
     case CLEAR_PORT:
       const tokensEmpty: token_prop[] = [];
       const totalPortEmpty: totalPort = {
@@ -142,6 +125,7 @@ const portReducer = (
         priceData: {},
         currency: '',
       };
+
     default:
       return state;
   }

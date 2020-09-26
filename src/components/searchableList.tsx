@@ -1,6 +1,7 @@
 import React from 'react';
-import {View, Text, FlatList} from 'react-native';
-import {TouchableHighlight} from 'react-native-gesture-handler';
+import {View, Text} from 'react-native';
+import {FlatList, RectButton} from 'react-native-gesture-handler';
+import {styles} from '../styles/styles';
 
 interface Props {
   value: string;
@@ -11,45 +12,29 @@ interface Props {
 const DropDownList = (props: Props) => {
   const Item = ({title}: {title: string}) => {
     return (
-      <TouchableHighlight onPress={() => props.setValue(title)}>
-        <View style={{backgroundColor: '#222831'}}>
-          <Text
-            style={{
-              fontFamily: 'monospace',
-              fontSize: 16,
-              color: '#fff',
-              padding: 3,
-              textAlign: 'center',
-            }}>
-            {title.toUpperCase()}
-          </Text>
+      <RectButton onPress={() => props.setValue(title)}>
+        <View accessible style={styles.dropDownView}>
+          <Text style={styles.dropDownText}>{title.toUpperCase()}</Text>
         </View>
-      </TouchableHighlight>
+      </RectButton>
     );
   };
 
-  const ItemSeparator = () => {
-    return (
-      <View style={{height: 0.7, width: '100%', backgroundColor: '#000'}} />
-    );
-  };
-
-  const keyExtractor = (item: string, index: number) => index.toString();
   const results = props.data.filter(val => val.startsWith(props.value));
   return (
     <View style={{alignSelf: 'stretch'}}>
       <FlatList
-        keyExtractor={keyExtractor}
+        keyExtractor={index => index.toString()}
         data={results}
+        getItemLayout={(data, index) => ({
+          length: 31,
+          offset: 31 * index,
+          index,
+        })}
         initialNumToRender={3}
         renderItem={({item}) => <Item title={item} />}
-        ItemSeparatorComponent={ItemSeparator}
-        style={{
-          height: 85,
-          borderTopWidth: 0.2,
-          borderColor: 'grey',
-          paddingHorizontal: 50,
-        }}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        style={styles.dropDownBox}
       />
     </View>
   );

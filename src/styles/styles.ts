@@ -1,6 +1,6 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet, I18nManager} from 'react-native';
 
-let MyTheme = {
+export const MyTheme = {
   primary: '#3c3c3d',
   background: '#222831',
   card: '#393e46',
@@ -21,10 +21,21 @@ export const styles = StyleSheet.create({
     fontSize: 22,
     marginBottom: 10,
   },
+  addCoinHomeText: {
+    color: 'grey',
+    fontFamily: 'monospace',
+    fontSize: 13,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+  },
+  addCoinHomeTouchable: {
+    borderRadius: 3,
+    backgroundColor: '#393e46',
+    marginTop: 8,
+  },
   addCoinContainer: {
     backgroundColor: '#393e46',
-    paddingTop: 2,
-    paddingBottom: 6,
+    paddingVertical: 8,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -33,28 +44,8 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: 10,
-    marginTop: 10,
-  },
-  addCoinText: {
-    fontSize: 11,
-    fontWeight: 'bold',
-    fontFamily: 'Recursive',
-    fontStyle: 'italic',
-    color: '#fff',
-    textAlign: 'left',
-    letterSpacing: 1,
-    marginLeft: 10,
-  },
-  grText: {
-    color: '#fff',
-    textAlign: 'left',
-    letterSpacing: 1.8,
-    fontWeight: 'bold',
-    fontSize: 9,
-    fontFamily: 'Recursive',
   },
   grContainer: {
-    flexDirection: 'column',
     alignItems: 'flex-end',
   },
   grAmount: {
@@ -77,12 +68,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 13,
-  },
-  coinView: {
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'center',
+    height: 70,
   },
   coinTitle: {
     color: '#fff',
@@ -97,6 +83,11 @@ export const styles = StyleSheet.create({
     fontFamily: 'Recursive',
     letterSpacing: 1,
   },
+  coinView: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   profit: {
     color: '#fff',
     fontFamily: 'Recursive',
@@ -105,7 +96,7 @@ export const styles = StyleSheet.create({
   profitConversion: {
     color: '#32CD32',
     fontWeight: '100',
-    fontSize: 12,
+    fontSize: 10,
     marginRight: 4,
   },
   profitPercent: {
@@ -127,7 +118,7 @@ export const styles = StyleSheet.create({
   lossConversion: {
     color: '#c52a0d',
     fontWeight: '100',
-    fontSize: 12,
+    fontSize: 10,
     marginRight: 4,
   },
   lossPercent: {
@@ -161,10 +152,29 @@ export const styles = StyleSheet.create({
     fontSize: 25,
     fontFamily: 'monospace',
     color: '#fff',
-    // borderColor: '#fff',
-    // borderWidth: 0.3,
-    // borderRadius: 3,
-    // paddingHorizontal: 50,
+  },
+  dropDownBox: {
+    height: 85,
+    paddingHorizontal: 50,
+  },
+  dropDownView: {
+    height: 30,
+    backgroundColor: '#222831',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dropDownText: {
+    fontFamily: 'monospace',
+    fontSize: 14,
+    color: '#fff',
+    textAlign: 'center',
+  },
+  submitText: {
+    color: '#000',
+    fontSize: 20,
+    fontFamily: 'monospace',
+    paddingVertical: 5,
+    paddingHorizontal: 30,
   },
   loading: {
     position: 'absolute',
@@ -175,5 +185,28 @@ export const styles = StyleSheet.create({
     opacity: 0.6,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  separator: {
+    height: 1,
+    width: '100%',
+    backgroundColor: '#000',
+  },
+  rightAction: {
+    alignItems: 'center',
+    flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
+    backgroundColor: '#dd2c00',
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  leftAction: {
+    flex: 1,
+    backgroundColor: '#388e3c',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    flexDirection: I18nManager.isRTL ? 'row' : 'row-reverse',
+  },
+  actionIcon: {
+    width: 30,
+    marginHorizontal: 10,
   },
 });
