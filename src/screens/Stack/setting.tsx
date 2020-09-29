@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Alert} from 'react-native';
-import {useTheme, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
+import {useTheme} from 'react-native-paper';
 import {BorderlessButton} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
@@ -44,7 +45,7 @@ function Setting(props: Props) {
         justifyContent: 'center',
       }}>
       <BorderlessButton onPress={deleteConfirm}>
-        <Icon name="delete-forever" size={200} color={colors.card} />
+        <Icon name="delete-forever" size={200} color={colors.accent} />
       </BorderlessButton>
     </View>
   );

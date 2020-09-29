@@ -32,7 +32,11 @@ export interface port_state {
   token: token_prop[];
   priceData: object;
   currency: string;
-  inr: totalPort;
+  inr: {
+    totalInvestment: number;
+    totalPortAmount: number;
+    totalPortPercent: number;
+  };
 }
 
 export interface app_state {

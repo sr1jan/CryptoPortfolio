@@ -3,9 +3,9 @@ import {View, Text} from 'react-native';
 import {
   RectButton,
   BorderlessButton,
-  gestureHandlerRootHOC,
   TextInput,
 } from 'react-native-gesture-handler';
+import {useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import {styles} from '../styles/styles';
@@ -16,11 +16,11 @@ import DropDownList from './searchableList';
 
 interface Props {
   submit: (token_object: token_prop) => void;
-  token: token_prop[];
-  toggleOverlay: () => void;
+  toggleModal: () => void;
 }
 
 const CoinInput = (props: Props) => {
+  const {colors} = useTheme();
   const [coinsVisible, showCoins] = useState<boolean>(false);
   const [marketsVisible, showMarkets] = useState<boolean>(false);
   const [token_object, setTokenObj] = useState<token_prop>({
@@ -36,11 +36,11 @@ const CoinInput = (props: Props) => {
   });
 
   const setCoin = (value: string) => {
-    setTokenObj({...token_object, coin: value.toLowerCase()});
+    setTokenObj({...token_object, coin: value.toUpperCase()});
   };
 
   const setMarket = (value: string) => {
-    setTokenObj({...token_object, market: value.toLowerCase()});
+    setTokenObj({...token_object, market: value.toUpperCase()});
   };
 
   const tobj = token_object;
@@ -49,28 +49,26 @@ const CoinInput = (props: Props) => {
       style={{
         ...styles.mainContent,
         alignItems: 'stretch',
-        backgroundColor: '#393e46',
+        backgroundColor: colors.background,
       }}>
       <View style={{alignSelf: 'flex-end', marginRight: 30, marginBottom: 10}}>
-        <BorderlessButton onPress={props.toggleOverlay}>
-          <Icon name="close" size={30} color="grey" />
+        <BorderlessButton onPress={props.toggleModal}>
+          <Icon name="close" size={30} color={colors.accent} />
         </BorderlessButton>
       </View>
 
       <View style={{justifyContent: 'center'}}>
         <TextInput
-          value={token_object.coin.toUpperCase()}
+          value={token_object.coin}
           placeholder="Coin: BTC"
           placeholderTextColor="grey"
           keyboardType="visible-password"
-          autoCapitalize="characters"
           onFocus={() => showCoins(true)}
           onChangeText={value => {
-            setTokenObj({...token_object, coin: value.toLowerCase()});
-            tobj.coin = token_object.coin;
+            setTokenObj({...token_object, coin: value});
           }}
           onEndEditing={() => showCoins(false)}
-          style={styles.coinInput}
+          style={{...styles.coinInput, color: colors.text}}
         />
         {coinsVisible && (
           <DropDownList
@@ -81,59 +79,71 @@ const CoinInput = (props: Props) => {
         )}
       </View>
 
-      <View style={{justifyContent: 'center'}}>
-        <TextInput
-          value={token_object.market.toUpperCase()}
-          placeholder="Market: USDT"
-          placeholderTextColor="grey"
-          keyboardType="visible-password"
-          autoCapitalize="characters"
-          onFocus={() => showMarkets(true)}
-          onChangeText={value => {
-            setTokenObj({...token_object, market: value.toLowerCase()});
-            tobj.market = token_object.market;
-          }}
-          onEndEditing={() => showMarkets(false)}
-          style={styles.coinInput}
-        />
-        {marketsVisible && (
-          <DropDownList
+      {!coinsVisible && (
+        <View style={{justifyContent: 'center'}}>
+          <TextInput
             value={token_object.market}
-            data={markets}
-            setValue={setMarket}
+            placeholder="Market: USDT"
+            placeholderTextColor="grey"
+            keyboardType="visible-password"
+            onFocus={() => showMarkets(true)}
+            onChangeText={value => {
+              setTokenObj({...token_object, market: value});
+            }}
+            onEndEditing={() => showMarkets(false)}
+            style={{...styles.coinInput, color: colors.text}}
           />
-        )}
-      </View>
+          {marketsVisible && (
+            <DropDownList
+              value={token_object.market}
+              data={markets}
+              setValue={setMarket}
+            />
+          )}
+        </View>
+      )}
 
-      <TextInput
-        placeholder="Amount: 0.0131"
-        placeholderTextColor="grey"
-        onChangeText={value => (tobj.amount = parseFloat(value))}
-        style={styles.coinInput}
-        keyboardType="numeric"
-      />
+      {!coinsVisible && !marketsVisible && (
+        <View>
+          <TextInput
+            placeholder="Amount: 0.0131"
+            placeholderTextColor="grey"
+            onChangeText={value => (tobj.amount = parseFloat(value))}
+            onEndEditing={() =>
+              setTokenObj({...token_object, amount: tobj.amount})
+            }
+            style={{...styles.coinInput, color: colors.text}}
+            keyboardType="numeric"
+          />
 
-      <TextInput
-        placeholder="Price: 7500"
-        placeholderTextColor="grey"
-        onChangeText={value => (tobj.price = parseFloat(value))}
-        style={styles.coinInput}
-        keyboardType="numeric"
-      />
+          <TextInput
+            placeholder="Price: 7500"
+            placeholderTextColor="grey"
+            onChangeText={value => (tobj.price = parseFloat(value))}
+            onEndEditing={() =>
+              setTokenObj({...token_object, price: tobj.price})
+            }
+            style={{...styles.coinInput, color: colors.text}}
+            keyboardType="numeric"
+          />
 
-      <View
-        style={{
-          alignSelf: 'center',
-          marginTop: 15,
-        }}>
-        <RectButton
-          style={{backgroundColor: '#fff', borderRadius: 3}}
-          onPress={() => props.submit(tobj)}>
-          <Text style={styles.submitText}>Submit</Text>
-        </RectButton>
-      </View>
+          <View
+            style={{
+              alignSelf: 'center',
+              marginTop: 15,
+            }}>
+            <RectButton
+              style={{backgroundColor: colors.accent, borderRadius: 3}}
+              onPress={() => props.submit(tobj)}>
+              <Text style={{...styles.submitText, color: colors.text}}>
+                Submit
+              </Text>
+            </RectButton>
+          </View>
+        </View>
+      )}
     </View>
   );
 };
 
-export default gestureHandlerRootHOC(CoinInput);
+export default CoinInput;

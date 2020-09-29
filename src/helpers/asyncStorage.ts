@@ -73,6 +73,19 @@ export const getTotalPort = async () => {
   }
 };
 
+export const storeTheme = async (type: string) => {
+  try {
+    await AsyncStorage.setItem('theme', type);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const getStoredTheme = async () => {
+  const theme = await AsyncStorage.getItem('theme');
+  return theme !== null ? theme : 'dark';
+};
+
 export const deletePortfolio = async () => {
   const keys = ['counter', 'coins', 'portData', 'marketData'];
   try {

@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, ActivityIndicator} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
+import {useTheme, ActivityIndicator} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import {connect} from 'react-redux';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -71,6 +72,7 @@ const Loss = ({props}, {props: Props}) => {
 };
 
 const Home = (props: Props) => {
+  const theme = useTheme();
   const navigation = useNavigation();
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -110,7 +112,7 @@ const Home = (props: Props) => {
   if (loading) {
     return (
       <View style={styles.loading}>
-        <ActivityIndicator size="large" color="#fff" />
+        <ActivityIndicator size="small" color={theme.colors.onSurface} />
       </View>
     );
   } else if (props.counter > 0) {
@@ -121,7 +123,14 @@ const Home = (props: Props) => {
         ) : (
           <Loss props={props} />
         )}
-        <View style={{...styles.separator, marginTop: 20}} />
+        <View
+          style={{
+            ...styles.separator,
+            marginVertical: 20,
+            height: 1,
+            backgroundColor: theme.colors.onSurface,
+          }}
+        />
         <View style={{...styles.mainContent, flex: 2}}>
           <Text style={{color: 'grey'}}>Something interesting!</Text>
         </View>
@@ -129,15 +138,28 @@ const Home = (props: Props) => {
     );
   } else {
     return (
-      <View style={{...styles.mainContent, backgroundColor: '#222831'}}>
+      <View
+        style={{
+          ...styles.mainContent,
+          backgroundColor: theme.colors.background,
+        }}>
         <Text
-          style={{color: 'grey', fontFamily: 'monospace', letterSpacing: 0.8}}>
+          style={{
+            color: theme.colors.text,
+            fontFamily: 'monospace',
+            letterSpacing: 0.8,
+          }}>
           Your portofolio is empty!
         </Text>
         <TouchableOpacity
           onPress={() => navigation.navigate('Portfolio')}
-          style={styles.addCoinHomeTouchable}>
-          <Text style={styles.addCoinHomeText}>Add Coin</Text>
+          style={{
+            ...styles.addCoinHomeTouchable,
+            backgroundColor: theme.colors.accent,
+          }}>
+          <Text style={{...styles.addCoinHomeText, color: theme.colors.text}}>
+            Add Coin
+          </Text>
         </TouchableOpacity>
       </View>
     );
@@ -152,26 +174,26 @@ const localStyles = StyleSheet.create({
   grProfitAmount: {
     ...styles.grAmount,
     color: '#32CD32',
-    fontSize: 60,
+    fontSize: 50,
     letterSpacing: 1,
   },
   grProfitPercent: {
     ...styles.grPercent,
     backgroundColor: '#32CD32',
-    fontSize: 60,
+    fontSize: 50,
     paddingHorizontal: 15,
     letterSpacing: 1,
   },
   grLossAmount: {
     ...styles.grAmount,
     color: '#c52a0d',
-    fontSize: 60,
+    fontSize: 50,
     letterSpacing: 1,
   },
   grLossPercent: {
     ...styles.grPercent,
     backgroundColor: '#c52a0d',
-    fontSize: 60,
+    fontSize: 50,
     paddingHorizontal: 15,
     letterSpacing: 1,
   },

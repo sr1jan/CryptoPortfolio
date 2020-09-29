@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Text} from 'react-native';
+import {useTheme} from 'react-native-paper';
 import {styles} from '../styles/styles';
 import {token_prop} from '../types';
 import {
@@ -15,11 +16,14 @@ export const Profit = ({
   item: token_prop;
   priceData: object;
 }) => {
+  const {colors} = useTheme();
   return (
     <View style={styles.coinView}>
       <View style={{justifyContent: 'center', alignItems: 'flex-end'}}>
-        <Text style={styles.profit}>+ {numberWithCommas(item.returns)}</Text>
-        {item.market === 'usdt' && (
+        <Text style={{...styles.profit, color: colors.text}}>
+          + {numberWithCommas(item.returns)}
+        </Text>
+        {item.market !== 'inr' && (
           <Text style={styles.profitConversion}>
             {valueDisplay(
               currencyConversion({
@@ -46,13 +50,14 @@ export const Loss = ({
   item: token_prop;
   priceData: object;
 }) => {
+  const {colors} = useTheme();
   return (
     <View style={styles.coinView}>
       <View style={{justifyContent: 'center', alignItems: 'flex-end'}}>
-        <Text style={styles.loss}>
+        <Text style={{...styles.loss, color: colors.text}}>
           - {numberWithCommas(Math.abs(item.returns))}
         </Text>
-        {item.market === 'usdt' && (
+        {item.market !== 'inr' && (
           <Text style={styles.lossConversion}>
             {valueDisplay(
               Math.abs(

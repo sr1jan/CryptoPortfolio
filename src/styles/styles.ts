@@ -1,13 +1,5 @@
 import {StyleSheet, I18nManager} from 'react-native';
 
-export const MyTheme = {
-  primary: '#3c3c3d',
-  background: '#222831',
-  card: '#393e46',
-  text: '#fff',
-  border: 'rgb(199, 199, 204)',
-};
-
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -47,6 +39,7 @@ export const styles = StyleSheet.create({
   },
   grContainer: {
     alignItems: 'flex-end',
+    marginBottom: 2,
   },
   grAmount: {
     fontSize: 11,
@@ -64,7 +57,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 3,
   },
   coinList: {
-    backgroundColor: MyTheme.background,
+    backgroundColor: '#222831',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -159,7 +152,7 @@ export const styles = StyleSheet.create({
   },
   dropDownView: {
     height: 30,
-    backgroundColor: '#222831',
+    backgroundColor: '#393e46',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -170,11 +163,11 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   },
   submitText: {
-    color: '#000',
-    fontSize: 20,
+    color: '#fff',
+    fontSize: 18,
     fontFamily: 'monospace',
-    paddingVertical: 5,
-    paddingHorizontal: 30,
+    paddingVertical: 8,
+    paddingHorizontal: 35,
   },
   loading: {
     position: 'absolute',

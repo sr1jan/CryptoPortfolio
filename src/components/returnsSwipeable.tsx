@@ -12,7 +12,7 @@ export const SwipeableReturns = props => {
   const dispatch = useDispatch();
 
   const deleteCoin = async (index: number) => {
-    await swipeRef.current.close();
+    swipeRef.current.close();
     dispatch({type: 'DELETE_COIN', index: index});
   };
 
@@ -21,7 +21,7 @@ export const SwipeableReturns = props => {
       'Are you sure?',
       'This coin will be permanently deleted from your portfolio.',
       [
-        {text: 'Delete', onPress: () => deleteCoin(props.index)},
+        {text: 'Delete', onPress: async () => deleteCoin(props.index)},
         {
           text: 'Cancel',
           style: 'cancel',

@@ -3,6 +3,7 @@ import {View, Text, StyleSheet} from 'react-native';
 import {connect} from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {BorderlessButton} from 'react-native-gesture-handler';
+import {useTheme} from 'react-native-paper';
 
 import {styles} from '../styles/styles';
 import {valueDisplay} from '../helpers/currency';
@@ -14,6 +15,7 @@ interface Props {
 }
 
 function PortHeader(props: Props) {
+  const theme = useTheme();
   const Profit = () => {
     return (
       <View style={styles.grContainer}>
@@ -27,7 +29,7 @@ function PortHeader(props: Props) {
             alignItems: 'flex-end',
           }}>
           <View style={{marginRight: 3}}>
-            <Icon name="trending-up" color="#fff" size={15} />
+            <Icon name="trending-up" color="#32CD32" size={15} />
           </View>
           <View style={styles.profitBox}>
             <Text style={localStyles.grProfitPercent}>
@@ -52,7 +54,7 @@ function PortHeader(props: Props) {
             alignItems: 'flex-end',
           }}>
           <View style={{marginRight: 3}}>
-            <Icon name="trending-down" color="#fff" size={15} />
+            <Icon name="trending-down" color="#c52a0d" size={15} />
           </View>
           <View style={styles.lossBox}>
             <Text style={localStyles.grLossPercent}>
@@ -65,11 +67,15 @@ function PortHeader(props: Props) {
   };
 
   return (
-    <View style={styles.addCoinContainer}>
+    <View
+      style={{
+        ...styles.addCoinContainer,
+        backgroundColor: theme.colors.surface,
+      }}>
       <View style={{alignSelf: 'flex-start'}}>
         <BorderlessButton onPress={props.toggleOverlay}>
           <View style={styles.addCoinLeftComponent}>
-            <Icon name="add-circle" size={35} color="#fff" />
+            <Icon name="add-circle" size={35} color={theme.colors.text} />
           </View>
         </BorderlessButton>
       </View>

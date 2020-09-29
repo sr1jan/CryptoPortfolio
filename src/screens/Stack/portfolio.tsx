@@ -1,5 +1,7 @@
-import React, {useState, useEffect} from 'react';
-import {View, Modal, Alert, ActivityIndicator} from 'react-native';
+import React, {useState, useEffect, useContext} from 'react';
+import {View} from 'react-native';
+import {Modal, Portal, useTheme, ActivityIndicator} from 'react-native-paper';
+
 import {styles} from '../../styles/styles';
 import {
   token_prop,
@@ -22,11 +24,9 @@ import {
   storeTotalPort,
   storeMarketData,
 } from '../../helpers/asyncStorage';
+import {AddNewCoin, UpdateCoins} from '../../helpers/coinOperations';
 
-import {currencyConversion} from '../../helpers/currency';
-
-import {pairs} from '../../data/pairs';
-const URL = 'https://api.wazirx.com/api/v2/tickers';
+import {CoinInputContext} from '../../context/coinInputContext';
 
 interface Props {
   token: token_prop[];
@@ -39,18 +39,9 @@ interface Props {
 }
 
 const Portfolio = (props: Props) => {
-  const [visible, setVisible] = useState<boolean>(false);
+  const theme = useTheme();
+  const {toggleModal, coinInputModal} = useContext(CoinInputContext);
   const [loading, setLoading] = useState<boolean>(false);
-
-  const toggleOverlay = () => {
-    setVisible(!visible);
-  };
-
-  const fetchData = async () => {
-    const response = await fetch(URL);
-    const json = await response.json();
-    return json;
-  };
 
   useEffect(() => {
     const storeData = async () => {
@@ -64,40 +55,12 @@ const Portfolio = (props: Props) => {
 
   useEffect(() => {
     if (props.counter < 1) return;
+
     const _interval = setInterval(async () => {
-      let json: object;
-      try {
-        json = await fetchData();
-      } catch (e) {
-        console.log(e, 'location: useEffect portfolio');
-        return;
-      }
-      props.token.map((token_object, idx) => {
-        const name = token_object.coin + token_object.market;
-        const curPrice = json[name].last;
-        const curVal = curPrice * token_object.amount;
-        const returns = curVal - token_object.boughtVal;
-        if (returns.toFixed(2) === token_object.returns.toFixed(2)) return;
-        const percent = (returns / token_object.boughtVal) * 100;
-        let inrReturns = 0;
-        if (token_object.market === 'inr') {
-          inrReturns = returns;
-        } else {
-          inrReturns = currencyConversion({
-            amount: returns,
-            from: 'usdt',
-            to: 'inr',
-            priceData: json,
-          });
-        }
-        token_object = {
-          ...token_object,
-          returns: returns,
-          percent: percent,
-          inr: {...token_object.inr, returns: inrReturns},
-        };
-        props.updatePrices(token_object, idx);
-        props.priceDataUpdate(json);
+      UpdateCoins({
+        token: props.token,
+        priceDataUpdate: props.priceDataUpdate,
+        updatePrices: props.updatePrices,
       });
     }, 10000);
 
@@ -107,103 +70,40 @@ const Portfolio = (props: Props) => {
   }, [props.counter]);
 
   const submit = async (token_object: token_prop) => {
-    if (
-      token_object.amount === 0 ||
-      token_object.price === 0 ||
-      token_object.coin === '' ||
-      token_object.market === ''
-    ) {
-      Alert.alert('Error', 'Please fill in all the required details');
-    } else if (pairs.indexOf(token_object.coin + token_object.market) === -1) {
-      Alert.alert(
-        'Error',
-        'Could not find the specified coin/market. Please try something else.',
-      );
-    } else {
-      token_object.id = props.counter + 1;
-      token_object.boughtVal = token_object.amount * token_object.price;
-      toggleOverlay();
-      setLoading(true);
-      await newCoin(token_object);
-    }
-  };
-
-  const newCoin = async (token_object: token_prop) => {
-    let json: object;
-    try {
-      json = await fetchData();
-      props.priceDataUpdate(json);
-    } catch (e) {
-      setLoading(false);
-      Alert.alert(
-        'SERVER ERROR',
-        'Failed to fetch data from the market, try again after sometime',
-      );
-      return;
-    }
-    const name = token_object.coin + token_object.market;
-    const boughtVal = token_object.boughtVal;
-    const curPrice = json[name].last;
-    const curVal = curPrice * token_object.amount;
-    const returns = curVal - boughtVal;
-    const percent = (returns / boughtVal) * 100;
-    const inr = {
-      cap: 0,
-      returns: 0,
-    };
-    if (token_object.market === 'inr') {
-      inr.cap = boughtVal;
-      inr.returns = returns;
-    } else {
-      inr.cap = currencyConversion({
-        amount: boughtVal,
-        from: token_object.market,
-        to: 'inr',
-        priceData: json,
-      });
-      inr.returns = currencyConversion({
-        amount: returns,
-        from: token_object.market,
-        to: 'inr',
-        priceData: json,
-      });
-    }
-    token_object = {
-      ...token_object,
-      returns: returns,
-      percent: percent,
-      inr: inr,
-    };
-    props.addCoin(token_object, token_object.id);
-    setLoading(false);
+    await AddNewCoin({
+      token_object: token_object,
+      counter: props.counter,
+      setLoading: setLoading,
+      priceDataUpdate: props.priceDataUpdate,
+      addCoin: props.addCoin,
+      toggleModal: toggleModal,
+      priceData: props.priceData,
+    });
   };
 
   return (
     <View style={styles.container}>
       <View style={{flex: 1}}>
-        {!loading && !props.counter && (
-          <NewCoin toggleOverlay={toggleOverlay} />
+        {!loading && !props.counter && <NewCoin />}
+        {props.counter > 0 && (
+          <DisplayPL token={props.token} priceData={props.priceData} />
         )}
-        {props.counter > 0 && <DisplayPL toggleOverlay={toggleOverlay} />}
         {loading && (
           <View style={styles.loading}>
-            <ActivityIndicator size="large" color="#fff" />
+            <ActivityIndicator size="small" color={theme.colors.onSurface} />
           </View>
         )}
       </View>
-      <Modal
-        visible={visible}
-        onRequestClose={toggleOverlay}
-        animationType="slide"
-        statusBarTranslucent={true}>
-        {
-          <CoinInput
-            submit={submit}
-            token={props.token}
-            toggleOverlay={toggleOverlay}
-          />
-        }
-      </Modal>
+      {coinInputModal && (
+        <Portal>
+          <Modal
+            visible={coinInputModal}
+            onDismiss={toggleModal}
+            contentContainerStyle={{flex: 1}}>
+            <CoinInput submit={submit} toggleModal={toggleModal} />
+          </Modal>
+        </Portal>
+      )}
     </View>
   );
 };
