@@ -21,7 +21,7 @@ const DisplayPL = (props: Props) => {
 
   const Row = ({item}: {item: token_prop}) => {
     return (
-      <View style={{...styles.coinList, backgroundColor: colors.accent}}>
+      <View style={{...styles.coinList, backgroundColor: colors.surface}}>
         <View style={{marginLeft: 10, alignItems: 'flex-start'}}>
           <Text style={{...styles.coinTitle, color: colors.text}}>
             {item.coin.toUpperCase()}
@@ -65,9 +65,7 @@ const DisplayPL = (props: Props) => {
         })}
         initialNumToRender={10}
         ItemSeparatorComponent={() => (
-          <View
-            style={{...styles.separator, backgroundColor: colors.onSurface}}
-          />
+          <View style={{...styles.separator, backgroundColor: '#000'}} />
         )}
         ref={flatList}
         onContentSizeChange={() => {

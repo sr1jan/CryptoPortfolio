@@ -1,12 +1,23 @@
-import React from 'react';
-import {View, Text} from 'react-native';
+import React, {useEffect} from 'react';
+import {View, Text, BackHandler} from 'react-native';
 import {BorderlessButton} from 'react-native-gesture-handler';
 import {TextInput, useTheme} from 'react-native-paper';
 import {SearchCoinContext} from '../context/searchCoinContext';
 
 export const SearchBar = ({toggleSearchBar}: {toggleSearchBar: () => void}) => {
-  const {colors} = useTheme();
+  const {colors, dark} = useTheme();
   const {changeQuery, query} = React.useContext(SearchCoinContext);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        toggleSearchBar();
+        return true;
+      },
+    );
+    return () => backHandler.remove();
+  }, []);
 
   return (
     <View
@@ -20,7 +31,7 @@ export const SearchBar = ({toggleSearchBar}: {toggleSearchBar: () => void}) => {
         <BorderlessButton onPress={() => changeQuery('')}>
           <Text
             style={{
-              color: colors.error,
+              color: colors.accent,
               fontSize: 12,
               fontFamily: 'Hack',
               fontWeight: '100',
@@ -37,6 +48,8 @@ export const SearchBar = ({toggleSearchBar}: {toggleSearchBar: () => void}) => {
         value={query}
         onChangeText={q => changeQuery(q)}
         mode="outlined"
+        selectionColor={colors.onSurface}
+        theme={{colors: {primary: dark ? colors.primary : '#000'}}}
         onEndEditing={toggleSearchBar}
         style={{
           width: 70,

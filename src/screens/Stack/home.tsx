@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import {useTheme, ActivityIndicator} from 'react-native-paper';
+import {useTheme, ActivityIndicator, Surface} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import {connect} from 'react-redux';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -118,21 +118,19 @@ const Home = (props: Props) => {
   } else if (props.counter > 0) {
     return (
       <View style={{...styles.mainContent, justifyContent: 'space-around'}}>
-        {Math.sign(props.inr.totalPortAmount) === 1 ? (
-          <Profit props={props} />
-        ) : (
-          <Loss props={props} />
-        )}
-        <View
-          style={{
-            ...styles.separator,
-            marginVertical: 20,
-            height: 1,
-            backgroundColor: theme.colors.onSurface,
-          }}
-        />
+        <Surface
+          style={{...styles.surface, backgroundColor: theme.colors.surface}}>
+          {Math.sign(props.inr.totalPortAmount) === 1 ? (
+            <Profit props={props} />
+          ) : (
+            <Loss props={props} />
+          )}
+        </Surface>
         <View style={{...styles.mainContent, flex: 2}}>
-          <Text style={{color: 'grey'}}>Something interesting!</Text>
+          <Surface
+            style={{...styles.surface, backgroundColor: theme.colors.surface}}>
+            <Text style={{color: 'grey'}}>Something interesting!</Text>
+          </Surface>
         </View>
       </View>
     );

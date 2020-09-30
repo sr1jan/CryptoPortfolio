@@ -44,9 +44,7 @@ const DropDownList = (props: Props) => {
         initialNumToRender={3}
         renderItem={({item}) => <Item title={item} />}
         ItemSeparatorComponent={() => (
-          <View
-            style={{...styles.separator, backgroundColor: colors.onSurface}}
-          />
+          <View style={{...styles.separator, backgroundColor: '#000'}} />
         )}
         style={styles.dropDownBox}
       />

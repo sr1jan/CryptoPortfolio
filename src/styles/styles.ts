@@ -202,4 +202,13 @@ export const styles = StyleSheet.create({
     width: 30,
     marginHorizontal: 10,
   },
+  surface: {
+    marginTop: 8,
+    padding: 2,
+    height: '35%',
+    width: '96%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 6,
+  },
 });

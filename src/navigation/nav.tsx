@@ -27,7 +27,7 @@ const MyRNTheme = {
   },
 };
 
-const MyPaperTheme = {
+const MyPaperDarkTheme = {
   ...PaperDarkTheme,
   dark: true,
   colors: {
@@ -71,7 +71,7 @@ export default function Nav() {
     setCoinInputModal(coinInputModal => !coinInputModal);
   };
 
-  const paperTheme = theme === 'dark' ? MyPaperTheme : PaperDefaultTheme;
+  const paperTheme = theme === 'dark' ? MyPaperDarkTheme : PaperDefaultTheme;
   const rnTheme = theme === 'dark' ? MyRNTheme : RNDefaultTheme;
 
   return (

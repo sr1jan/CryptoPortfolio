@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {View, Text} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, Text, BackHandler} from 'react-native';
 import {
   RectButton,
   BorderlessButton,
@@ -34,6 +34,17 @@ const CoinInput = (props: Props) => {
     percent: 0,
     inr: {cap: 0, returns: 0},
   });
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        props.toggleModal();
+        return true;
+      },
+    );
+    return () => backHandler.remove();
+  }, []);
 
   const setCoin = (value: string) => {
     setTokenObj({...token_object, coin: value.toUpperCase()});
