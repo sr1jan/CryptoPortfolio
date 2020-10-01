@@ -1,4 +1,5 @@
 import React, {useState, useLayoutEffect, useEffect} from 'react';
+import {StatusBar} from 'react-native';
 import {
   NavigationContainer,
   DefaultTheme as RNDefaultTheme,
@@ -88,6 +89,15 @@ export default function Nav() {
         <SearchCoinContext.Provider value={{changeQuery, query}}>
           <PaperProvider theme={paperTheme}>
             <NavigationContainer theme={rnTheme}>
+              <StatusBar
+                backgroundColor={
+                  theme === 'dark'
+                    ? MyPaperDarkTheme.colors.background
+                    : MyPaperLightTheme.colors.background
+                }
+                barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
+                animated={true}
+              />
               <HomeStack />
             </NavigationContainer>
           </PaperProvider>
