@@ -82,7 +82,8 @@ const Portfolio = (props: Props) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={{...styles.container, backgroundColor: theme.colors.background}}>
       <View style={{flex: 1}}>
         {!loading && !props.counter && <NewCoin />}
         {props.counter > 0 && (

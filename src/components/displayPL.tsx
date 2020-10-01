@@ -19,7 +19,7 @@ const DisplayPL = (props: Props) => {
   const {colors} = useTheme();
   const flatList = useRef(null);
 
-  const Row = ({item}: {item: token_prop}) => {
+  const Row = ({item, index}: {item: token_prop; index: number}) => {
     return (
       <Surface
         style={{
@@ -29,9 +29,10 @@ const DisplayPL = (props: Props) => {
           height: 70,
           width: '95%',
           justifyContent: 'space-between',
-          backgroundColor: colors.surface,
-          marginVertical: 5,
+          backgroundColor: colors.accent,
           marginHorizontal: 10,
+          marginBottom: 5,
+          marginTop: index > 0 ? 5 : 10,
         }}>
         <View style={{marginLeft: 10, alignItems: 'flex-start'}}>
           <Text style={{...styles.coinTitle, color: colors.text}}>
@@ -55,7 +56,7 @@ const DisplayPL = (props: Props) => {
   const renderItem = ({item, index}: {item: token_prop; index: number}) => {
     return (
       <SwipeableReturns index={index}>
-        <Row item={item} />
+        <Row item={item} index={index} />
       </SwipeableReturns>
     );
   };
