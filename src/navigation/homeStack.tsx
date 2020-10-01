@@ -97,7 +97,7 @@ export const HomeStack = () => {
                 <React.Fragment>
                   {!showSearchBar ? (
                     <Appbar.Action
-                      icon="database-search"
+                      icon="magnify"
                       size={25}
                       color={colors.onSurface}
                       onPress={() => toggleSearchBar(!showSearchBar)}

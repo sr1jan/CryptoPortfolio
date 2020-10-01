@@ -124,7 +124,7 @@ const Home = (props: Props) => {
         <Surface
           style={{
             ...styles.surface,
-            backgroundColor: colors.surface,
+            backgroundColor: colors.accent,
             height: '33%',
             elevation: 2,
           }}>
@@ -138,7 +138,7 @@ const Home = (props: Props) => {
         <Surface
           style={{
             ...styles.surface,
-            backgroundColor: colors.surface,
+            backgroundColor: colors.accent,
             height: '60%',
             elevation: 2,
           }}>
