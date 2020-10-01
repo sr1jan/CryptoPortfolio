@@ -3,6 +3,7 @@ import {View, Text, BackHandler} from 'react-native';
 import {BorderlessButton} from 'react-native-gesture-handler';
 import {TextInput, useTheme} from 'react-native-paper';
 import {SearchCoinContext} from '../context/searchCoinContext';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export const SearchBar = ({toggleSearchBar}: {toggleSearchBar: () => void}) => {
   const {colors, dark} = useTheme();
@@ -28,18 +29,10 @@ export const SearchBar = ({toggleSearchBar}: {toggleSearchBar: () => void}) => {
         marginLeft: 35,
       }}>
       {query !== '' && (
-        <BorderlessButton onPress={() => changeQuery('')}>
-          <Text
-            style={{
-              color: colors.accent,
-              fontSize: 12,
-              fontFamily: 'Hack',
-              fontWeight: '100',
-              marginRight: 3,
-              textDecorationLine: 'underline',
-            }}>
-            clear
-          </Text>
+        <BorderlessButton
+          onPress={() => changeQuery('')}
+          style={{marginRight: 3, marginTop: 3}}>
+          <Icon name="close" color={colors.accent} size={20} />
         </BorderlessButton>
       )}
       <TextInput

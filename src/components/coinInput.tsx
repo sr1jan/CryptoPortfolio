@@ -72,7 +72,8 @@ const CoinInput = (props: Props) => {
         <TextInput
           value={token_object.coin}
           placeholder="Coin: BTC"
-          placeholderTextColor="grey"
+          placeholderTextColor={colors.placeholder}
+          selectionColor={colors.text}
           keyboardType="visible-password"
           onFocus={() => showCoins(true)}
           onChangeText={value => {
@@ -95,7 +96,8 @@ const CoinInput = (props: Props) => {
           <TextInput
             value={token_object.market}
             placeholder="Market: USDT"
-            placeholderTextColor="grey"
+            placeholderTextColor={colors.placeholder}
+            selectionColor={colors.text}
             keyboardType="visible-password"
             onFocus={() => showMarkets(true)}
             onChangeText={value => {
@@ -118,7 +120,8 @@ const CoinInput = (props: Props) => {
         <View>
           <TextInput
             placeholder="Amount: 0.0131"
-            placeholderTextColor="grey"
+            placeholderTextColor={colors.placeholder}
+            selectionColor={colors.text}
             onChangeText={value => (tobj.amount = parseFloat(value))}
             onEndEditing={() =>
               setTokenObj({...token_object, amount: tobj.amount})
@@ -129,7 +132,8 @@ const CoinInput = (props: Props) => {
 
           <TextInput
             placeholder="Price: 7500"
-            placeholderTextColor="grey"
+            placeholderTextColor={colors.placeholder}
+            selectionColor={colors.text}
             onChangeText={value => (tobj.price = parseFloat(value))}
             onEndEditing={() =>
               setTokenObj({...token_object, price: tobj.price})
@@ -144,6 +148,7 @@ const CoinInput = (props: Props) => {
               marginTop: 15,
             }}>
             <RectButton
+              underlayColor={colors.text}
               style={{backgroundColor: colors.accent, borderRadius: 3}}
               onPress={() => props.submit(tobj)}>
               <Text style={{...styles.submitText, color: colors.text}}>

@@ -49,6 +49,7 @@ export const AddNewCoin = async (props: AddCoinProps) => {
       token_object.boughtVal = token_object.amount * token_object.price;
       props.toggleModal();
       props.setLoading(true);
+      await newCoin();
     }
   };
 
@@ -110,8 +111,7 @@ export const AddNewCoin = async (props: AddCoinProps) => {
     props.setLoading(false);
   };
 
-  await submit();
-  await newCoin();
+  submit();
 };
 
 export const UpdateCoins = async (props: UpdateCoinProps) => {

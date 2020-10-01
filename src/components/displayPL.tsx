@@ -1,7 +1,7 @@
 import React, {useRef, useContext} from 'react';
 import {View, Text} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
-import {useTheme} from 'react-native-paper';
+import {useTheme, Surface} from 'react-native-paper';
 import {token_prop} from '../types';
 import {styles} from '../styles/styles';
 
@@ -21,7 +21,18 @@ const DisplayPL = (props: Props) => {
 
   const Row = ({item}: {item: token_prop}) => {
     return (
-      <View style={{...styles.coinList, backgroundColor: colors.surface}}>
+      <Surface
+        style={{
+          ...styles.surface,
+          flexDirection: 'row',
+          elevation: 2,
+          height: 70,
+          width: '95%',
+          justifyContent: 'space-between',
+          backgroundColor: colors.surface,
+          marginVertical: 5,
+          marginHorizontal: 10,
+        }}>
         <View style={{marginLeft: 10, alignItems: 'flex-start'}}>
           <Text style={{...styles.coinTitle, color: colors.text}}>
             {item.coin.toUpperCase()}
@@ -37,7 +48,7 @@ const DisplayPL = (props: Props) => {
             <Loss item={item} priceData={props.priceData} />
           )}
         </View>
-      </View>
+      </Surface>
     );
   };
 
@@ -59,14 +70,14 @@ const DisplayPL = (props: Props) => {
         data={results}
         renderItem={renderItem}
         getItemLayout={(data, index) => ({
-          length: 71,
-          offset: 71 * index,
+          length: 70,
+          offset: 70 * index,
           index,
         })}
         initialNumToRender={10}
-        ItemSeparatorComponent={() => (
-          <View style={{...styles.separator, backgroundColor: '#000'}} />
-        )}
+        /* ItemSeparatorComponent={() => ( */
+        /*   <View style={{...styles.separator, backgroundColor: '#000'}} /> */
+        /* )} */
         ref={flatList}
         onContentSizeChange={() => {
           query === '' &&

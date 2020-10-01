@@ -13,11 +13,10 @@ export const BottomTabs = () => {
 
   return (
     <Tab.Navigator
-      shifting={true}
       activeColor={theme.colors.text}
       inactiveColor="grey"
       barStyle={{
-        backgroundColor: theme.colors.surface,
+        backgroundColor: theme.colors.accent,
         justifyContent: 'center',
         paddingBottom: 2,
         paddingTop: 2,

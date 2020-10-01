@@ -15,7 +15,7 @@ import {SearchCoinContext} from '../context/searchCoinContext';
 import {ThemeContext} from '../context/themeContext';
 import {HomeStack} from './homeStack';
 
-const MyRNTheme = {
+const MyRNDarkTheme = {
   dark: true,
   colors: {
     ...RNDefaultTheme.colors,
@@ -24,6 +24,14 @@ const MyRNTheme = {
     card: '#393e46',
     text: '#fff',
     border: 'rgb(199, 199, 204)',
+  },
+};
+
+const MyPaperLightTheme = {
+  ...PaperDefaultTheme,
+  colors: {
+    ...PaperDefaultTheme.colors,
+    accent: '#e0e0e0',
   },
 };
 
@@ -71,8 +79,8 @@ export default function Nav() {
     setCoinInputModal(coinInputModal => !coinInputModal);
   };
 
-  const paperTheme = theme === 'dark' ? MyPaperDarkTheme : PaperDefaultTheme;
-  const rnTheme = theme === 'dark' ? MyRNTheme : RNDefaultTheme;
+  const paperTheme = theme === 'dark' ? MyPaperDarkTheme : MyPaperLightTheme;
+  const rnTheme = theme === 'dark' ? MyRNDarkTheme : RNDefaultTheme;
 
   return (
     <ThemeContext.Provider value={{toggleTheme, theme}}>

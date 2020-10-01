@@ -33,11 +33,17 @@ export const SwipeableReturns = props => {
 
   const renderRightActions = (progress, dragX) => {
     const scale = dragX.interpolate({
-      inputRange: [0, 50, 100, 101],
+      inputRange: [0, 55, 105, 106],
       outputRange: [-20, 0, 0, 1],
     });
     return (
-      <RectButton style={styles.rightAction}>
+      <RectButton
+        style={{
+          ...styles.rightAction,
+          marginVertical: 5,
+          marginHorizontal: 10,
+          width: '95%',
+        }}>
         <AnimatedIcon
           name="delete-forever"
           size={30}
@@ -51,7 +57,7 @@ export const SwipeableReturns = props => {
   return (
     <Swipeable
       ref={swipeRef}
-      friction={1.5}
+      friction={1.2}
       onSwipeableRightOpen={deleteDialog}
       renderRightActions={renderRightActions}
       rightThreshold={150}

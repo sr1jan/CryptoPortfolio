@@ -4,10 +4,12 @@ import {useTheme, ActivityIndicator, Surface} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import {connect} from 'react-redux';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {styles} from '../../styles/styles';
 import {totalPort, app_state, token_prop, loadDataType} from '../../types';
 import {loadDataFromStorage} from '../../actions/port';
+import {ReturnsGraph} from '../../components/returnsGraph';
 
 import {valueDisplay} from '../../helpers/currency';
 
@@ -72,9 +74,10 @@ const Loss = ({props}, {props: Props}) => {
 };
 
 const Home = (props: Props) => {
-  const theme = useTheme();
+  const {colors} = useTheme();
   const navigation = useNavigation();
   const [loading, setLoading] = useState<boolean>(true);
+  const [graphType, setGraphType] = useState<'line' | 'bar'>('line');
 
   useEffect(() => {
     async function retrieveLocalData() {
@@ -112,26 +115,63 @@ const Home = (props: Props) => {
   if (loading) {
     return (
       <View style={styles.loading}>
-        <ActivityIndicator size="small" color={theme.colors.onSurface} />
+        <ActivityIndicator size="small" color={colors.onSurface} />
       </View>
     );
   } else if (props.counter > 0) {
     return (
-      <View style={{...styles.mainContent, justifyContent: 'space-around'}}>
+      <View style={{...styles.mainContent, justifyContent: 'space-evenly'}}>
         <Surface
-          style={{...styles.surface, backgroundColor: theme.colors.surface}}>
+          style={{
+            ...styles.surface,
+            backgroundColor: colors.surface,
+            height: '33%',
+            elevation: 2,
+          }}>
           {Math.sign(props.inr.totalPortAmount) === 1 ? (
             <Profit props={props} />
           ) : (
             <Loss props={props} />
           )}
         </Surface>
-        <View style={{...styles.mainContent, flex: 2}}>
-          <Surface
-            style={{...styles.surface, backgroundColor: theme.colors.surface}}>
-            <Text style={{color: 'grey'}}>Something interesting!</Text>
-          </Surface>
-        </View>
+
+        <Surface
+          style={{
+            ...styles.surface,
+            backgroundColor: colors.surface,
+            height: '60%',
+            elevation: 2,
+          }}>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              alignSelf: 'flex-end',
+            }}>
+            <View style={{marginRight: 5}}>
+              <TouchableOpacity onPress={() => setGraphType('line')}>
+                <Icon
+                  name="chart-line"
+                  color={
+                    graphType === 'line' ? colors.onSurface : colors.placeholder
+                  }
+                  size={25}
+                />
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity onPress={() => setGraphType('bar')}>
+              <Icon
+                name="chart-bar"
+                color={
+                  graphType === 'bar' ? colors.onSurface : colors.placeholder
+                }
+                size={25}
+              />
+            </TouchableOpacity>
+          </View>
+
+          <ReturnsGraph graphType={graphType} />
+        </Surface>
       </View>
     );
   } else {
@@ -139,11 +179,11 @@ const Home = (props: Props) => {
       <View
         style={{
           ...styles.mainContent,
-          backgroundColor: theme.colors.background,
+          backgroundColor: colors.background,
         }}>
         <Text
           style={{
-            color: theme.colors.text,
+            color: colors.placeholder,
             fontFamily: 'monospace',
             letterSpacing: 0.8,
           }}>
@@ -153,9 +193,9 @@ const Home = (props: Props) => {
           onPress={() => navigation.navigate('Portfolio')}
           style={{
             ...styles.addCoinHomeTouchable,
-            backgroundColor: theme.colors.accent,
+            backgroundColor: colors.accent,
           }}>
-          <Text style={{...styles.addCoinHomeText, color: theme.colors.text}}>
+          <Text style={{...styles.addCoinHomeText, color: colors.text}}>
             Add Coin
           </Text>
         </TouchableOpacity>
@@ -172,26 +212,26 @@ const localStyles = StyleSheet.create({
   grProfitAmount: {
     ...styles.grAmount,
     color: '#32CD32',
-    fontSize: 50,
+    fontSize: 45,
     letterSpacing: 1,
   },
   grProfitPercent: {
     ...styles.grPercent,
     backgroundColor: '#32CD32',
-    fontSize: 50,
-    paddingHorizontal: 15,
+    fontSize: 45,
+    paddingHorizontal: 10,
     letterSpacing: 1,
   },
   grLossAmount: {
     ...styles.grAmount,
     color: '#c52a0d',
-    fontSize: 50,
+    fontSize: 45,
     letterSpacing: 1,
   },
   grLossPercent: {
     ...styles.grPercent,
     backgroundColor: '#c52a0d',
-    fontSize: 50,
+    fontSize: 45,
     paddingHorizontal: 15,
     letterSpacing: 1,
   },

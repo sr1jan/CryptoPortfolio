@@ -13,6 +13,13 @@ export const styles = StyleSheet.create({
     fontSize: 22,
     marginBottom: 10,
   },
+  surface: {
+    padding: 5,
+    width: '95%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 6,
+  },
   addCoinHomeText: {
     color: 'grey',
     fontFamily: 'monospace',
@@ -39,7 +46,7 @@ export const styles = StyleSheet.create({
   },
   grContainer: {
     alignItems: 'flex-end',
-    marginBottom: 2,
+    marginBottom: 20,
   },
   grAmount: {
     fontSize: 11,
@@ -57,7 +64,6 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 3,
   },
   coinList: {
-    backgroundColor: '#222831',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -182,14 +188,13 @@ export const styles = StyleSheet.create({
   separator: {
     height: 1,
     width: '100%',
-    backgroundColor: '#000',
   },
   rightAction: {
     alignItems: 'center',
     flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
     backgroundColor: '#dd2c00',
-    flex: 1,
     justifyContent: 'flex-end',
+    height: 70,
   },
   leftAction: {
     flex: 1,
@@ -201,14 +206,5 @@ export const styles = StyleSheet.create({
   actionIcon: {
     width: 30,
     marginHorizontal: 10,
-  },
-  surface: {
-    marginTop: 8,
-    padding: 2,
-    height: '35%',
-    width: '96%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    elevation: 6,
   },
 });

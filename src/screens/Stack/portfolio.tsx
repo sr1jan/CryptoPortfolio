@@ -57,7 +57,7 @@ const Portfolio = (props: Props) => {
     if (props.counter < 1) return;
 
     const _interval = setInterval(async () => {
-      UpdateCoins({
+      await UpdateCoins({
         token: props.token,
         priceDataUpdate: props.priceDataUpdate,
         updatePrices: props.updatePrices,
@@ -70,7 +70,7 @@ const Portfolio = (props: Props) => {
   }, [props.counter]);
 
   const submit = async (token_object: token_prop) => {
-    await AddNewCoin({
+    AddNewCoin({
       token_object: token_object,
       counter: props.counter,
       setLoading: setLoading,

@@ -24,7 +24,7 @@ export const HomeStack = () => {
     state => state.portReducer.counter,
   );
   const [showSearchBar, toggleSearchBar] = useState(false);
-  const {colors} = useTheme();
+  const {colors, dark} = useTheme();
   const {toggleModal} = useContext(CoinInputContext);
   const {toggleTheme, theme} = useContext(ThemeContext);
 
@@ -109,7 +109,7 @@ export const HomeStack = () => {
                   )}
                   <Appbar.Action
                     icon="plus-circle"
-                    size={25}
+                    size={32}
                     color={colors.onSurface}
                     onPress={toggleModal}
                   />
