@@ -1,5 +1,5 @@
-import React, {useState, useLayoutEffect, useEffect} from 'react';
-import {StatusBar} from 'react-native';
+import React, {useState} from 'react';
+import {useSelector} from 'react-redux';
 import {
   NavigationContainer,
   DefaultTheme as RNDefaultTheme,
@@ -10,10 +10,9 @@ import {
   DefaultTheme as PaperDefaultTheme,
 } from 'react-native-paper';
 
-import {getStoredTheme, storeTheme} from '../helpers/asyncStorage';
+import {app_state} from '../types';
 import {CoinInputContext} from '../context/coinInputContext';
 import {SearchCoinContext} from '../context/searchCoinContext';
-import {ThemeContext} from '../context/themeContext';
 import {HomeStack} from './homeStack';
 
 const MyRNDarkTheme = {
@@ -51,28 +50,9 @@ const MyPaperDarkTheme = {
 };
 
 export default function Nav() {
-  const [theme, setTheme] = useState<string>('dark');
+  const theme = useSelector<app_state>(state => state.portReducer.theme);
   const [coinInputModal, setCoinInputModal] = useState<boolean>(false);
   const [query, setQuery] = useState<string>('');
-
-  useLayoutEffect(() => {
-    const type = async () => {
-      const defaultTheme = await getStoredTheme();
-      setTheme(defaultTheme);
-    };
-    type();
-  }, []);
-
-  useEffect(() => {
-    const storeLocalTheme = async () => {
-      await storeTheme(theme);
-    };
-    storeLocalTheme();
-  }, [theme]);
-
-  const toggleTheme = async () => {
-    setTheme(type => (type === 'dark' ? 'light' : 'dark'));
-  };
 
   const changeQuery = q => setQuery(q);
 
@@ -84,25 +64,14 @@ export default function Nav() {
   const rnTheme = theme === 'dark' ? MyRNDarkTheme : RNDefaultTheme;
 
   return (
-    <ThemeContext.Provider value={{toggleTheme, theme}}>
-      <CoinInputContext.Provider value={{toggleModal, coinInputModal}}>
-        <SearchCoinContext.Provider value={{changeQuery, query}}>
-          <PaperProvider theme={paperTheme}>
-            <NavigationContainer theme={rnTheme}>
-              <StatusBar
-                backgroundColor={
-                  theme === 'dark'
-                    ? MyPaperDarkTheme.colors.background
-                    : MyPaperLightTheme.colors.background
-                }
-                barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
-                animated={true}
-              />
-              <HomeStack />
-            </NavigationContainer>
-          </PaperProvider>
-        </SearchCoinContext.Provider>
-      </CoinInputContext.Provider>
-    </ThemeContext.Provider>
+    <CoinInputContext.Provider value={{toggleModal, coinInputModal}}>
+      <SearchCoinContext.Provider value={{changeQuery, query}}>
+        <PaperProvider theme={paperTheme}>
+          <NavigationContainer theme={rnTheme}>
+            <HomeStack />
+          </NavigationContainer>
+        </PaperProvider>
+      </SearchCoinContext.Provider>
+    </CoinInputContext.Provider>
   );
 }

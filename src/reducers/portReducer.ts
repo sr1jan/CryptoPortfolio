@@ -4,6 +4,7 @@ import {
   CLEAR_PORT,
   ADD_PRICE_DATA,
   LOAD_DATA,
+  SET_THEME,
   DELETE_COIN,
 } from '../actions/types';
 import {
@@ -14,6 +15,8 @@ import {
   updatePriceType,
   token_prop,
   loadDataType,
+  deleteCoinType,
+  setTheme,
   totalPort,
 } from '../types';
 
@@ -22,6 +25,7 @@ const InitialState: port_state = {
   token: [],
   priceData: {},
   currency: 'inr',
+  theme: 'dark',
   inr: {
     totalInvestment: 0,
     totalPortAmount: 0,
@@ -92,7 +96,7 @@ const portReducer = (
       };
 
     case DELETE_COIN:
-      const {index} = action;
+      const {index} = <deleteCoinType>action;
       const coin = state.token[index];
       const inr = state.inr;
       const newPort = inr.totalInvestment - coin.inr.cap;
@@ -111,6 +115,13 @@ const portReducer = (
         },
       };
 
+    case SET_THEME:
+      const {theme} = <setTheme>action;
+      return {
+        ...state,
+        theme: theme,
+      };
+
     case CLEAR_PORT:
       const tokensEmpty: token_prop[] = [];
       const totalPortEmpty: totalPort = {
@@ -119,6 +130,7 @@ const portReducer = (
         totalPortPercent: 0,
       };
       return {
+        ...state,
         token: tokensEmpty,
         counter: 0,
         inr: totalPortEmpty,

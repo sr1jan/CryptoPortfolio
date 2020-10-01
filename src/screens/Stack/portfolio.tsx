@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {View} from 'react-native';
-import {Modal, Portal, useTheme, ActivityIndicator} from 'react-native-paper';
+import {Modal, Portal, useTheme} from 'react-native-paper';
 
 import {styles} from '../../styles/styles';
 import {
@@ -15,6 +15,7 @@ import {
 import {connect} from 'react-redux';
 import {addCoin, updatePrices, addPriceData} from '../../actions/port';
 
+import Loading from '../../components/loading';
 import CoinInput from '../../components/coinInput';
 import DisplayPL from '../../components/displayPL';
 import NewCoin from '../../components/newCoin';
@@ -42,16 +43,6 @@ const Portfolio = (props: Props) => {
   const theme = useTheme();
   const {toggleModal, coinInputModal} = useContext(CoinInputContext);
   const [loading, setLoading] = useState<boolean>(false);
-
-  useEffect(() => {
-    const storeData = async () => {
-      await storeCounter(props.counter);
-      await storeCoinDetail(props.token);
-      await storeTotalPort(props.inr);
-      await storeMarketData(props.priceData);
-    };
-    storeData();
-  }, [props.counter]);
 
   useEffect(() => {
     if (props.counter < 1) return;
@@ -89,11 +80,7 @@ const Portfolio = (props: Props) => {
         {props.counter > 0 && (
           <DisplayPL token={props.token} priceData={props.priceData} />
         )}
-        {loading && (
-          <View style={styles.loading}>
-            <ActivityIndicator size="small" color={theme.colors.onSurface} />
-          </View>
-        )}
+        {loading && <Loading />}
       </View>
       {coinInputModal && (
         <Portal>

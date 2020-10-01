@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, StatusBar} from 'react-native';
 import {useTheme, ActivityIndicator, Surface} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import {connect} from 'react-redux';
@@ -7,8 +7,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {styles} from '../../styles/styles';
-import {totalPort, app_state, token_prop, loadDataType} from '../../types';
-import {loadDataFromStorage} from '../../actions/port';
+import {totalPort, app_state, token_prop} from '../../types';
 import {ReturnsGraph} from '../../components/returnsGraph';
 
 import {valueDisplay} from '../../helpers/currency';
@@ -23,12 +22,6 @@ import {
 interface Props {
   counter: number;
   inr: totalPort;
-  loadDataFromStorage: (
-    coinDetailList: token_prop[],
-    counter: number,
-    portData: totalPort,
-    marketData: object,
-  ) => loadDataType;
 }
 
 const Profit = ({props}: {props: Props}) => {
@@ -74,53 +67,23 @@ const Loss = ({props}, {props: Props}) => {
 };
 
 const Home = (props: Props) => {
-  const {colors} = useTheme();
+  const {colors, dark} = useTheme();
   const navigation = useNavigation();
-  const [loading, setLoading] = useState<boolean>(true);
   const [graphType, setGraphType] = useState<'line' | 'bar'>('line');
 
-  useEffect(() => {
-    async function retrieveLocalData() {
-      try {
-        const counter: number | null | undefined = await getCounter();
-        if (
-          counter !== null &&
-          counter !== undefined &&
-          props.counter !== counter
-        ) {
-          const coinDetailList: token_prop[] | null = await getCoinDetail();
-          const portData: totalPort | null = await getTotalPort();
-          const marketData: object | null = await getMarketData();
-          if (
-            coinDetailList !== null &&
-            portData !== null &&
-            marketData !== null
-          ) {
-            props.loadDataFromStorage(
-              coinDetailList,
-              counter,
-              portData,
-              marketData,
-            );
-          }
-        }
-        setLoading(false);
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    retrieveLocalData();
-  }, []);
-
-  if (loading) {
+  if (props.counter > 0) {
     return (
-      <View style={styles.loading}>
-        <ActivityIndicator size="small" color={colors.onSurface} />
-      </View>
-    );
-  } else if (props.counter > 0) {
-    return (
-      <View style={{...styles.mainContent, justifyContent: 'space-evenly'}}>
+      <View
+        style={{
+          ...styles.mainContent,
+          justifyContent: 'space-evenly',
+          backgroundColor: colors.background,
+        }}>
+        <StatusBar
+          backgroundColor={colors.background}
+          barStyle={dark ? 'light-content' : 'dark-content'}
+          animated={true}
+        />
         <Surface
           style={{
             ...styles.surface,
@@ -181,6 +144,11 @@ const Home = (props: Props) => {
           ...styles.mainContent,
           backgroundColor: colors.background,
         }}>
+        <StatusBar
+          backgroundColor={colors.background}
+          barStyle={dark ? 'light-content' : 'dark-content'}
+          animated={true}
+        />
         <Text
           style={{
             color: colors.placeholder,
@@ -244,21 +212,4 @@ const mapStateToProps = (state: app_state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    loadDataFromStorage: (
-      coinDetailList: token_prop[],
-      counter: number,
-      portData: totalPort,
-      marketData: object,
-    ) =>
-      dispatch(
-        loadDataFromStorage(coinDetailList, counter, portData, marketData),
-      ),
-  };
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Home);
+export default connect(mapStateToProps)(Home);

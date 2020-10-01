@@ -4,6 +4,7 @@ import {
   CLEAR_PORT,
   ADD_PRICE_DATA,
   LOAD_DATA,
+  SET_THEME,
   DELETE_COIN,
 } from './types';
 import {token_prop, totalPort} from '../types';
@@ -41,6 +42,11 @@ export const addPriceData = (data: object) => ({
 export const deleteCoin = (index: number) => ({
   type: DELETE_COIN,
   index: index,
+});
+
+export const setTheme = (theme: string) => ({
+  type: SET_THEME,
+  theme: theme,
 });
 
 export const clearPort = () => ({

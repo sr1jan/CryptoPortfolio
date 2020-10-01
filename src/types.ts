@@ -1,3 +1,7 @@
+export interface app_state {
+  portReducer: port_state;
+}
+
 export interface token_prop {
   id: number;
   coin: string;
@@ -32,15 +36,12 @@ export interface port_state {
   token: token_prop[];
   priceData: object;
   currency: string;
+  theme: string;
   inr: {
     totalInvestment: number;
     totalPortAmount: number;
     totalPortPercent: number;
   };
-}
-
-export interface app_state {
-  portReducer: port_state;
 }
 
 export interface addPriceDataType {
@@ -73,6 +74,11 @@ export interface deleteCoinType {
   index: number;
 }
 
+export interface setTheme {
+  type: string;
+  theme: string;
+}
+
 export interface clearPortType {
   type: string;
 }
@@ -83,4 +89,5 @@ export type actionTypes =
   | updatePriceType
   | addPriceDataType
   | loadDataType
-  | deleteCoinType;
+  | deleteCoinType
+  | setTheme;

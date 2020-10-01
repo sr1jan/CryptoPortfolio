@@ -1,6 +1,6 @@
 import React, {useContext, useState} from 'react';
 import {View} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Appbar, useTheme} from 'react-native-paper';
 import {BorderlessButton} from 'react-native-gesture-handler';
@@ -17,6 +17,7 @@ import {ThemeContext} from '../context/themeContext';
 const Stack = createStackNavigator();
 
 export const HomeStack = () => {
+  const dispatch = useDispatch();
   const returns: number = useSelector<app_state>(
     state => state.portReducer.inr.totalPortAmount,
   );
@@ -26,7 +27,6 @@ export const HomeStack = () => {
   const [showSearchBar, toggleSearchBar] = useState(false);
   const {colors, dark} = useTheme();
   const {toggleModal} = useContext(CoinInputContext);
-  const {toggleTheme, theme} = useContext(ThemeContext);
 
   const setSearchBar = () => {
     toggleSearchBar(!showSearchBar);
@@ -59,14 +59,20 @@ export const HomeStack = () => {
                   <Icon name="cogs" size={25} color={colors.onSurface} />
                 </BorderlessButton>
               )}
+              {title === 'Settings' && <Appbar.Content title="Settings" />}
               {title !== 'Home' && <Appbar.Content title="" />}
               {title === 'Home' && returns === 0 && (
                 <React.Fragment>
                   <Appbar.Content title="" />
                   <Appbar.Action
-                    icon={theme === 'dark' ? 'lighthouse' : 'lighthouse-on'}
+                    icon={dark ? 'lighthouse' : 'lighthouse-on'}
                     color={colors.onSurface}
-                    onPress={toggleTheme}
+                    onPress={() =>
+                      dispatch({
+                        type: 'SET_THEME',
+                        theme: dark ? 'light' : 'dark',
+                      })
+                    }
                   />
                 </React.Fragment>
               )}
@@ -87,9 +93,14 @@ export const HomeStack = () => {
                     }
                   />
                   <Appbar.Action
-                    icon={theme === 'dark' ? 'lighthouse' : 'lighthouse-on'}
+                    icon={dark ? 'lighthouse' : 'lighthouse-on'}
                     color={colors.onSurface}
-                    onPress={toggleTheme}
+                    onPress={() =>
+                      dispatch({
+                        type: 'SET_THEME',
+                        theme: dark ? 'light' : 'dark',
+                      })
+                    }
                   />
                 </React.Fragment>
               )}

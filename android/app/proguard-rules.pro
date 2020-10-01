@@ -14,3 +14,6 @@
 
 # svg
 -keep public class com.horcrux.svg.** {*;}
+
+# [react-native-background-fetch]
+-keep class com.transistorsoft.rnbackgroundfetch.HeadlessTask { *; }
