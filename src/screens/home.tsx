@@ -95,7 +95,7 @@ export default function Home() {
           style={{
             ...styles.surface,
             backgroundColor: colors.accent,
-            height: '30%',
+            height: '29%',
           }}>
           {Math.sign(inr.totalPortAmount) === 1 ? (
             <Profit inr={inr} />
@@ -108,26 +108,28 @@ export default function Home() {
           style={{
             ...styles.surface,
             backgroundColor: colors.accent,
-            height: '63%',
+            height: '65%',
           }}>
           <View
             style={{
               flexDirection: 'row',
-              alignSelf: 'flex-end',
+              alignSelf: 'flex-start',
               marginBottom: 5,
             }}>
-            <View style={{marginRight: 5}}>
-              <TouchableOpacity onPress={() => setGraphType('line')}>
-                <Icon
-                  name="chart-line"
-                  color={
-                    graphType === 'line' ? colors.onSurface : colors.placeholder
-                  }
-                  size={25}
-                />
-              </TouchableOpacity>
-            </View>
-            <TouchableOpacity onPress={() => setGraphType('bar')}>
+            <TouchableOpacity
+              onPress={() => setGraphType('line')}
+              style={{marginHorizontal: 2}}>
+              <Icon
+                name="chart-line"
+                color={
+                  graphType === 'line' ? colors.onSurface : colors.placeholder
+                }
+                size={25}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setGraphType('bar')}
+              style={{marginHorizontal: 2}}>
               <Icon
                 name="chart-bar"
                 color={

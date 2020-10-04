@@ -1,8 +1,7 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {View} from 'react-native';
-import {Modal, Portal, useTheme} from 'react-native-paper';
+import {useTheme} from 'react-native-paper';
 
-import {styles} from '../styles/styles';
 import {
   token_prop,
   app_state,
@@ -11,22 +10,17 @@ import {
   addPriceDataType,
   totalPort,
 } from '../types';
+import {styles} from '../styles/styles';
 
-import {connect} from 'react-redux';
+import {connect, useDispatch} from 'react-redux';
 import {addCoin, updatePrices, addPriceData} from '../actions/port';
 
 import Loading from '../components/loading';
 import CoinInput from '../components/coinInput';
 import DisplayPL from '../components/displayPL';
 import NewCoin from '../components/newCoin';
-import {
-  storeCoinDetail,
-  storeCounter,
-  storeTotalPort,
-  storeMarketData,
-} from '../helpers/asyncStorage';
-import {AddNewCoin, UpdateCoins} from '../helpers/coinOperations';
 
+import {AddNewCoin, UpdateCoins} from '../helpers/coinOperations';
 import {CoinInputContext} from '../context/coinInputContext';
 
 interface Props {
@@ -40,6 +34,7 @@ interface Props {
 }
 
 const Portfolio = (props: Props) => {
+  const dispatch = useDispatch();
   const theme = useTheme();
   const {toggleModal, coinInputModal} = useContext(CoinInputContext);
   const [loading, setLoading] = useState<boolean>(false);
@@ -60,6 +55,12 @@ const Portfolio = (props: Props) => {
     };
   }, [props.counter]);
 
+  useEffect(() => {
+    if (props.counter > 0) return;
+    dispatch({type: 'DELETE_RETURNS'});
+    dispatch({type: 'CLEAR_PORT'});
+  }, [props.counter]);
+
   const submit = async (token_object: token_prop) => {
     AddNewCoin({
       token_object: token_object,
@@ -76,17 +77,11 @@ const Portfolio = (props: Props) => {
     <View
       style={{...styles.container, backgroundColor: theme.colors.background}}>
       <View style={{flex: 1}}>
-        {!loading && !props.counter && <NewCoin />}
+        {!loading && !props.counter && !coinInputModal && <NewCoin />}
         {props.counter > 0 && <DisplayPL token={props.token} />}
         {loading && <Loading />}
       </View>
-      {coinInputModal && (
-        <Portal>
-          <Modal visible={coinInputModal} onDismiss={toggleModal}>
-            <CoinInput submit={submit} toggleModal={toggleModal} />
-          </Modal>
-        </Portal>
-      )}
+      {coinInputModal && <CoinInput submit={submit} />}
     </View>
   );
 };

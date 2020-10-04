@@ -6,10 +6,15 @@ import {useNavigation} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import {AlertModal} from './alertModal';
+
 export const DeletePorfolioButton = () => {
   const dispatch = useDispatch();
   const {colors} = useTheme();
   const navigation = useNavigation();
+  const [visible, toggleAlert] = useState(true);
+
+  const setAlert = () => toggleAlert(!visible);
 
   const deleteData = async () => {
     await dispatch({type: 'CLEAR_PORT'});
@@ -18,11 +23,21 @@ export const DeletePorfolioButton = () => {
   };
 
   const deleteConfirm = () => {
+    /* return ( */
+    /*   <AlertModal */
+    /*     title="Are you sure?" */
+    /*     description="All of your data will be deleted" */
+    /*     act={deleteData} */
+    /*     suppress={setAlert} */
+    /*     visible={visible} */
+    /*   /> */
+    /* ); */
     Alert.alert('Are you sure?', 'All of your data will be deleted.', [
       {text: 'Delete', onPress: async () => await deleteData()},
       {text: 'Cancel', style: 'cancel'},
     ]);
   };
+
   return (
     <TouchableOpacity onPress={deleteConfirm}>
       <Icon name="delete-forever" size={40} color={colors.notification} />

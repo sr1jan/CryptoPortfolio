@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {FlatList, RectButton} from 'react-native-gesture-handler';
 import {styles} from '../styles/styles';
@@ -15,25 +15,25 @@ const DropDownList = (props: Props) => {
 
   const Item = ({title}: {title: string}) => {
     return (
-      <RectButton onPress={() => props.setValue(title)}>
-        <View
-          accessible
-          style={{...styles.dropDownView, backgroundColor: colors.accent}}>
-          <Text style={{...styles.dropDownText, color: colors.text}}>
-            {title.toUpperCase()}
-          </Text>
-        </View>
-      </RectButton>
+      <TouchableOpacity
+        onPress={() => props.setValue(title)}
+        style={{...styles.dropDownView, backgroundColor: colors.background}}>
+        <Text style={{...styles.dropDownText, color: colors.text}}>
+          {title.toUpperCase()}
+        </Text>
+      </TouchableOpacity>
     );
   };
 
-  const results = props.data.filter(val =>
-    val.startsWith(props.value.toLowerCase()),
-  );
+  const results =
+    props.value !== ''
+      ? props.data.filter(val => val.startsWith(props.value.toLowerCase()))
+      : props.data;
 
   return (
     <View style={{alignSelf: 'stretch'}}>
       <FlatList
+        keyboardShouldPersistTaps="handled"
         keyExtractor={index => index.toString()}
         data={results}
         getItemLayout={(data, index) => ({

@@ -42,6 +42,7 @@ export const SwipeableReturns = props => {
           ...styles.rightAction,
           marginVertical: 5,
           marginHorizontal: 10,
+          marginTop: props.index > 0 ? 5 : 10,
           width: '95%',
         }}>
         <AnimatedIcon
