@@ -1,77 +1,84 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, StatusBar} from 'react-native';
-import {useTheme, ActivityIndicator, Surface} from 'react-native-paper';
+import {View, StyleSheet, StatusBar} from 'react-native';
+import {useSelector, useDispatch} from 'react-redux';
+import {useTheme, ActivityIndicator, Surface, Text} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
-import {connect} from 'react-redux';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import {styles} from '../../styles/styles';
-import {totalPort, app_state, token_prop} from '../../types';
-import {ReturnsGraph} from '../../components/returnsGraph';
+import {styles} from '../styles/styles';
+import {totalPort, app_state, token_prop} from '../types';
+import {ReturnsGraph} from '../components/returnsGraph';
 
-import {valueDisplay} from '../../helpers/currency';
+import {valueDisplay} from '../helpers/currency';
 
-import {
-  getCoinDetail,
-  getCounter,
-  getTotalPort,
-  getMarketData,
-} from '../../helpers/asyncStorage';
-
-interface Props {
-  counter: number;
-  inr: totalPort;
-}
-
-const Profit = ({props}: {props: Props}) => {
+const Profit = ({inr}: {inr: totalPort}) => {
   return (
     <View style={localStyles.grContainer}>
       <Text
         style={localStyles.grProfitAmount}
         adjustsFontSizeToFit
         numberOfLines={1}>
-        {valueDisplay(props.inr.totalPortAmount)}
+        {valueDisplay(inr.totalPortAmount)}
       </Text>
       <View style={styles.profitBox}>
         <Text
           style={localStyles.grProfitPercent}
           adjustsFontSizeToFit
           numberOfLines={1}>
-          {props.inr.totalPortPercent.toFixed(2)}%
+          {inr.totalPortPercent.toFixed(2)}%
         </Text>
       </View>
     </View>
   );
 };
 
-const Loss = ({props}, {props: Props}) => {
+const Loss = ({inr}, {inr: totalPort}) => {
   return (
     <View style={localStyles.grContainer}>
       <Text
         style={localStyles.grLossAmount}
         adjustsFontSizeToFit
         numberOfLines={1}>
-        {valueDisplay(Math.abs(props.inr.totalPortAmount))}
+        {valueDisplay(Math.abs(inr.totalPortAmount))}
       </Text>
       <View style={styles.lossBox}>
         <Text
           style={localStyles.grLossPercent}
           adjustsFontSizeToFit
           numberOfLines={1}>
-          {Math.abs(props.inr.totalPortPercent).toFixed(2)}%
+          {Math.abs(inr.totalPortPercent).toFixed(2)}%
         </Text>
       </View>
     </View>
   );
 };
 
-const Home = (props: Props) => {
+export default function Home() {
+  const dispatch = useDispatch();
+  const counter: any = useSelector<app_state>(
+    state => state.portReducer.counter,
+  );
+  const inr: any = useSelector<app_state>(state => state.portReducer.inr);
   const {colors, dark} = useTheme();
   const navigation = useNavigation();
   const [graphType, setGraphType] = useState<'line' | 'bar'>('line');
 
-  if (props.counter > 0) {
+  useEffect(() => {
+    dispatch({type: 'SET_CURRENCY', currency: 'inr'});
+  }, []);
+
+  useEffect(() => {
+    if (counter < 1) return;
+    const date = new Date();
+    dispatch({
+      type: 'ADD_RETURNS',
+      value: inr.totalPortAmount,
+      time: date.toString().slice(0, 24),
+    });
+  }, [inr.totalPortAmount]);
+
+  if (counter > 0) {
     return (
       <View
         style={{
@@ -88,13 +95,12 @@ const Home = (props: Props) => {
           style={{
             ...styles.surface,
             backgroundColor: colors.accent,
-            height: '33%',
-            elevation: 2,
+            height: '30%',
           }}>
-          {Math.sign(props.inr.totalPortAmount) === 1 ? (
-            <Profit props={props} />
+          {Math.sign(inr.totalPortAmount) === 1 ? (
+            <Profit inr={inr} />
           ) : (
-            <Loss props={props} />
+            <Loss inr={inr} />
           )}
         </Surface>
 
@@ -102,14 +108,13 @@ const Home = (props: Props) => {
           style={{
             ...styles.surface,
             backgroundColor: colors.accent,
-            height: '60%',
-            elevation: 2,
+            height: '63%',
           }}>
           <View
             style={{
-              flex: 1,
               flexDirection: 'row',
               alignSelf: 'flex-end',
+              marginBottom: 5,
             }}>
             <View style={{marginRight: 5}}>
               <TouchableOpacity onPress={() => setGraphType('line')}>
@@ -170,7 +175,7 @@ const Home = (props: Props) => {
       </View>
     );
   }
-};
+}
 
 const localStyles = StyleSheet.create({
   grContainer: {
@@ -200,16 +205,7 @@ const localStyles = StyleSheet.create({
     ...styles.grPercent,
     backgroundColor: '#c52a0d',
     fontSize: 45,
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
     letterSpacing: 1,
   },
 });
-
-const mapStateToProps = (state: app_state) => {
-  return {
-    counter: state.portReducer.counter,
-    inr: state.portReducer.inr,
-  };
-};
-
-export default connect(mapStateToProps)(Home);

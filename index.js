@@ -13,7 +13,6 @@ import configureStore from './src/store';
 import Loading from './src/components/loading';
 
 const {store, persistor} = configureStore();
-
 const PortApp = () => (
   <Provider store={store}>
     <PersistGate loading={<Loading />} persistor={persistor}>

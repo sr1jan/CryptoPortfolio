@@ -1,21 +1,20 @@
 import React from 'react';
 import {View, Text} from 'react-native';
+import {useSelector, shallowEqual} from 'react-redux';
 import {useTheme} from 'react-native-paper';
 import {styles} from '../styles/styles';
-import {token_prop} from '../types';
+import {token_prop, app_state} from '../types';
 import {
   numberWithCommas,
   valueDisplay,
   currencyConversion,
 } from '../helpers/currency';
 
-export const Profit = ({
-  item,
-  priceData,
-}: {
-  item: token_prop;
-  priceData: object;
-}) => {
+export const Profit = ({item}: {item: token_prop}) => {
+  const priceData: any = useSelector<app_state>(
+    state => state.portReducer.priceData,
+    shallowEqual,
+  );
   const {colors} = useTheme();
   return (
     <View style={styles.coinView}>
@@ -43,13 +42,11 @@ export const Profit = ({
   );
 };
 
-export const Loss = ({
-  item,
-  priceData,
-}: {
-  item: token_prop;
-  priceData: object;
-}) => {
+export const Loss = ({item}: {item: token_prop}) => {
+  const priceData: any = useSelector<app_state>(
+    state => state.portReducer.priceData,
+    shallowEqual,
+  );
   const {colors} = useTheme();
   return (
     <View style={styles.coinView}>

@@ -1,7 +1,7 @@
 import React, {useRef, useContext} from 'react';
-import {View, Text} from 'react-native';
+import {View} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
-import {useTheme, Surface} from 'react-native-paper';
+import {useTheme, Surface, Text} from 'react-native-paper';
 import {token_prop} from '../types';
 import {styles} from '../styles/styles';
 
@@ -11,7 +11,6 @@ import {SearchCoinContext} from '../context/searchCoinContext';
 
 interface Props {
   token: token_prop[];
-  priceData: object;
 }
 
 const DisplayPL = (props: Props) => {
@@ -25,7 +24,6 @@ const DisplayPL = (props: Props) => {
         style={{
           ...styles.surface,
           flexDirection: 'row',
-          elevation: 2,
           height: 70,
           width: '95%',
           justifyContent: 'space-between',
@@ -43,11 +41,7 @@ const DisplayPL = (props: Props) => {
           </Text>
         </View>
         <View style={{marginRight: 10}}>
-          {item.returns >= 0 ? (
-            <Profit item={item} priceData={props.priceData} />
-          ) : (
-            <Loss item={item} priceData={props.priceData} />
-          )}
+          {item.returns >= 0 ? <Profit item={item} /> : <Loss item={item} />}
         </View>
       </Surface>
     );
@@ -61,9 +55,10 @@ const DisplayPL = (props: Props) => {
     );
   };
 
-  const results = props.token.filter(val =>
-    val.coin.startsWith(query.toLowerCase()),
-  );
+  const results =
+    query === ''
+      ? props.token
+      : props.token.filter(val => val.coin.startsWith(query.toLowerCase()));
   return (
     <View style={{flex: 1}}>
       <FlatList
@@ -71,14 +66,11 @@ const DisplayPL = (props: Props) => {
         data={results}
         renderItem={renderItem}
         getItemLayout={(data, index) => ({
-          length: 70,
-          offset: 70 * index,
+          length: 75,
+          offset: 75 * index,
           index,
         })}
         initialNumToRender={10}
-        /* ItemSeparatorComponent={() => ( */
-        /*   <View style={{...styles.separator, backgroundColor: '#000'}} /> */
-        /* )} */
         ref={flatList}
         onContentSizeChange={() => {
           query === '' &&

@@ -37,11 +37,10 @@ const DropDownList = (props: Props) => {
         keyExtractor={index => index.toString()}
         data={results}
         getItemLayout={(data, index) => ({
-          length: 31,
-          offset: 31 * index,
+          length: 27,
+          offset: 27 * index,
           index,
         })}
-        initialNumToRender={3}
         renderItem={({item}) => <Item title={item} />}
         ItemSeparatorComponent={() => (
           <View style={{...styles.separator, backgroundColor: '#000'}} />

@@ -8,11 +8,10 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {app_state} from '../types';
 
-import {SearchBar} from '../components/searchBar';
-import Setting from '../screens/Stack/setting';
+import Setting from '../screens/setting';
+import SearchCoins from '../screens/searchCoin';
 import {BottomTabs} from './bottomTabs';
 import {CoinInputContext} from '../context/coinInputContext';
-import {ThemeContext} from '../context/themeContext';
 
 const Stack = createStackNavigator();
 
@@ -24,13 +23,8 @@ export const HomeStack = () => {
   const counter: number = useSelector<app_state>(
     state => state.portReducer.counter,
   );
-  const [showSearchBar, toggleSearchBar] = useState(false);
   const {colors, dark} = useTheme();
   const {toggleModal} = useContext(CoinInputContext);
-
-  const setSearchBar = () => {
-    toggleSearchBar(!showSearchBar);
-  };
 
   return (
     <Stack.Navigator
@@ -47,16 +41,18 @@ export const HomeStack = () => {
               : scene.route.name;
           return (
             <Appbar.Header style={{backgroundColor: colors.background}}>
-              {previous ? (
+              {previous && (
                 <Appbar.BackAction
                   onPress={navigation.goBack}
                   color={colors.onSurface}
                 />
-              ) : (
+              )}
+              {!previous && (
                 <BorderlessButton
+                  rippleColor={colors.accent}
                   style={{marginLeft: 10}}
                   onPress={() => navigation.navigate('Settings')}>
-                  <Icon name="cogs" size={25} color={colors.onSurface} />
+                  <Icon name="tune" size={27} color={colors.onSurface} />
                 </BorderlessButton>
               )}
               {title === 'Settings' && <Appbar.Content title="Settings" />}
@@ -66,6 +62,7 @@ export const HomeStack = () => {
                   <Appbar.Content title="" />
                   <Appbar.Action
                     icon={dark ? 'lighthouse' : 'lighthouse-on'}
+                    size={27}
                     color={colors.onSurface}
                     onPress={() =>
                       dispatch({
@@ -86,14 +83,15 @@ export const HomeStack = () => {
                     }}
                     title={
                       returns > 0 ? (
-                        <Icon name="trending-up" color="#32CD32" size={35} />
+                        <Icon name="trending-up" color="#32CD32" size={38} />
                       ) : (
-                        <Icon name="trending-down" color="#c52a0d" size={35} />
+                        <Icon name="trending-down" color="#c52a0d" size={38} />
                       )
                     }
                   />
                   <Appbar.Action
                     icon={dark ? 'lighthouse' : 'lighthouse-on'}
+                    size={27}
                     color={colors.onSurface}
                     onPress={() =>
                       dispatch({
@@ -106,21 +104,15 @@ export const HomeStack = () => {
               )}
               {title === 'Portfolio' && (
                 <React.Fragment>
-                  {!showSearchBar ? (
-                    <Appbar.Action
-                      icon="magnify"
-                      size={25}
-                      color={colors.onSurface}
-                      onPress={() => toggleSearchBar(!showSearchBar)}
-                    />
-                  ) : (
-                    <View style={{flex: 1}}>
-                      <SearchBar toggleSearchBar={setSearchBar} />
-                    </View>
-                  )}
+                  <Appbar.Action
+                    icon="magnify"
+                    size={27}
+                    color={colors.onSurface}
+                    onPress={() => navigation.push('SearchCoins')}
+                  />
                   <Appbar.Action
                     icon="plus-circle"
-                    size={32}
+                    size={27}
                     color={colors.onSurface}
                     onPress={toggleModal}
                   />
@@ -144,6 +136,11 @@ export const HomeStack = () => {
         name="Settings"
         component={Setting}
         options={{headerTitle: 'Settings'}}
+      />
+      <Stack.Screen
+        name="SearchCoins"
+        component={SearchCoins}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   );

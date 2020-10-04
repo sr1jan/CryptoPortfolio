@@ -2,9 +2,11 @@ import {createStore, combineReducers} from 'redux';
 import {persistStore, persistReducer} from 'redux-persist';
 import FilesystemStorage from 'redux-persist-filesystem-storage';
 import portReducer from './reducers/portReducer';
+import returnsReducer from './reducers/returnsReducer';
 
 const rootReducer = combineReducers({
   portReducer: portReducer,
+  returnsReducer: returnsReducer,
 });
 
 const persistConfig = {

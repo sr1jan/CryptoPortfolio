@@ -12,8 +12,8 @@ import {
 
 import {app_state} from '../types';
 import {CoinInputContext} from '../context/coinInputContext';
-import {SearchCoinContext} from '../context/searchCoinContext';
 import {HomeStack} from './homeStack';
+import {BackgroundTasks} from '../backgroundTasks';
 
 const MyRNDarkTheme = {
   dark: true,
@@ -52,10 +52,6 @@ const MyPaperDarkTheme = {
 export default function Nav() {
   const theme = useSelector<app_state>(state => state.portReducer.theme);
   const [coinInputModal, setCoinInputModal] = useState<boolean>(false);
-  const [query, setQuery] = useState<string>('');
-
-  const changeQuery = q => setQuery(q);
-
   const toggleModal = () => {
     setCoinInputModal(coinInputModal => !coinInputModal);
   };
@@ -64,14 +60,16 @@ export default function Nav() {
   const rnTheme = theme === 'dark' ? MyRNDarkTheme : RNDefaultTheme;
 
   return (
-    <CoinInputContext.Provider value={{toggleModal, coinInputModal}}>
-      <SearchCoinContext.Provider value={{changeQuery, query}}>
-        <PaperProvider theme={paperTheme}>
-          <NavigationContainer theme={rnTheme}>
-            <HomeStack />
-          </NavigationContainer>
-        </PaperProvider>
-      </SearchCoinContext.Provider>
-    </CoinInputContext.Provider>
+    <>
+      <BackgroundTasks>
+        <CoinInputContext.Provider value={{toggleModal, coinInputModal}}>
+          <PaperProvider theme={paperTheme}>
+            <NavigationContainer theme={rnTheme}>
+              <HomeStack />
+            </NavigationContainer>
+          </PaperProvider>
+        </CoinInputContext.Provider>
+      </BackgroundTasks>
+    </>
   );
 }

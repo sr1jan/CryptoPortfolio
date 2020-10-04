@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
     width: '95%',
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 6,
+    elevation: 4,
   },
   addCoinHomeText: {
     color: 'grey',
@@ -61,7 +61,6 @@ export const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: 'bold',
     letterSpacing: 0.5,
-    paddingHorizontal: 3,
   },
   coinList: {
     flexDirection: 'row',
@@ -148,23 +147,23 @@ export const styles = StyleSheet.create({
   },
   coinInput: {
     textAlign: 'center',
-    fontSize: 25,
+    fontSize: 20,
     fontFamily: 'monospace',
     color: '#fff',
   },
   dropDownBox: {
-    height: 85,
+    height: 80,
     paddingHorizontal: 50,
   },
   dropDownView: {
-    height: 30,
+    height: 26,
     backgroundColor: '#393e46',
     justifyContent: 'center',
     alignItems: 'center',
   },
   dropDownText: {
     fontFamily: 'monospace',
-    fontSize: 14,
+    fontSize: 12,
     color: '#fff',
     textAlign: 'center',
   },

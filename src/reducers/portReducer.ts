@@ -1,23 +1,14 @@
 import {
-  ADD_COIN,
-  UPDATE_PRICES,
-  CLEAR_PORT,
-  ADD_PRICE_DATA,
-  LOAD_DATA,
-  SET_THEME,
-  DELETE_COIN,
-} from '../actions/types';
-import {
   port_state,
+  portActionTypes,
+  totalPort,
+  token_prop,
   addPriceDataType,
-  actionTypes,
   addCoinType,
   updatePriceType,
-  token_prop,
-  loadDataType,
   deleteCoinType,
-  setTheme,
-  totalPort,
+  setThemeType,
+  setCurrencyType,
 } from '../types';
 
 const InitialState: port_state = {
@@ -35,22 +26,10 @@ const InitialState: port_state = {
 
 const portReducer = (
   state: port_state = InitialState,
-  action: actionTypes,
+  action: portActionTypes,
 ): port_state => {
   switch (action.type) {
-    case LOAD_DATA:
-      const {coinDetailList, storedCounter, portData, marketData} = <
-        loadDataType
-      >action;
-      return {
-        ...state,
-        token: state.token.concat(coinDetailList),
-        counter: storedCounter,
-        inr: portData,
-        priceData: marketData,
-      };
-
-    case ADD_COIN:
+    case 'ADD_COIN':
       const {coinDetail, counter} = <addCoinType>action;
       return {
         ...state,
@@ -67,7 +46,7 @@ const portReducer = (
         },
       };
 
-    case UPDATE_PRICES:
+    case 'UPDATE_PRICES':
       const {newCoinDetail, idx} = <updatePriceType>action;
       let newTotalReturns: number = state.inr.totalPortAmount;
       const newReturns = newCoinDetail.inr.returns;
@@ -88,14 +67,14 @@ const portReducer = (
         },
       };
 
-    case ADD_PRICE_DATA:
+    case 'ADD_PRICE_DATA':
       const {data} = <addPriceDataType>action;
       return {
         ...state,
         priceData: data,
       };
 
-    case DELETE_COIN:
+    case 'DELETE_COIN':
       const {index} = <deleteCoinType>action;
       const coin = state.token[index];
       const inr = state.inr;
@@ -115,14 +94,21 @@ const portReducer = (
         },
       };
 
-    case SET_THEME:
-      const {theme} = <setTheme>action;
+    case 'SET_THEME':
+      const {theme} = <setThemeType>action;
       return {
         ...state,
         theme: theme,
       };
 
-    case CLEAR_PORT:
+    case 'SET_CURRENCY':
+      const {currency} = <setCurrencyType>action;
+      return {
+        ...state,
+        currency: currency,
+      };
+
+    case 'CLEAR_PORT':
       const tokensEmpty: token_prop[] = [];
       const totalPortEmpty: totalPort = {
         totalInvestment: 0,
@@ -135,7 +121,6 @@ const portReducer = (
         counter: 0,
         inr: totalPortEmpty,
         priceData: {},
-        currency: '',
       };
 
     default:

@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, BackHandler} from 'react-native';
+import {View, BackHandler, KeyboardAvoidingView, Keyboard} from 'react-native';
 import {
   RectButton,
   BorderlessButton,
   TextInput,
 } from 'react-native-gesture-handler';
-import {useTheme} from 'react-native-paper';
+import {useTheme, Text} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import {styles} from '../styles/styles';
@@ -56,109 +56,120 @@ const CoinInput = (props: Props) => {
 
   const tobj = token_object;
   return (
-    <View
-      style={{
-        ...styles.mainContent,
-        alignItems: 'stretch',
-        backgroundColor: colors.background,
-      }}>
-      <View style={{alignSelf: 'flex-end', marginRight: 30, marginBottom: 10}}>
-        <BorderlessButton onPress={props.toggleModal}>
-          <Icon name="close" size={30} color={colors.accent} />
-        </BorderlessButton>
-      </View>
+    <KeyboardAvoidingView behavior="height">
+      <View
+        style={{
+          backgroundColor: colors.background,
+          marginHorizontal: 20,
+          paddingBottom: 25,
+        }}>
+        <View
+          style={{
+            alignSelf: 'flex-end',
+            marginRight: 15,
+            marginBottom: 5,
+            marginTop: 15,
+          }}>
+          <BorderlessButton onPress={props.toggleModal}>
+            <Icon name="close" size={30} color={colors.accent} />
+          </BorderlessButton>
+        </View>
 
-      <View style={{justifyContent: 'center'}}>
-        <TextInput
-          value={token_object.coin}
-          placeholder="Coin: BTC"
-          placeholderTextColor={colors.placeholder}
-          selectionColor={colors.text}
-          keyboardType="visible-password"
-          onFocus={() => showCoins(true)}
-          onChangeText={value => {
-            setTokenObj({...token_object, coin: value});
-          }}
-          onEndEditing={() => showCoins(false)}
-          style={{...styles.coinInput, color: colors.text}}
-        />
-        {coinsVisible && (
-          <DropDownList
-            value={token_object.coin}
-            data={coins}
-            setValue={setCoin}
-          />
-        )}
-      </View>
-
-      {!coinsVisible && (
         <View style={{justifyContent: 'center'}}>
           <TextInput
-            value={token_object.market}
-            placeholder="Market: USDT"
+            value={token_object.coin}
+            placeholder="Coin: BTC"
             placeholderTextColor={colors.placeholder}
             selectionColor={colors.text}
             keyboardType="visible-password"
-            onFocus={() => showMarkets(true)}
+            onFocus={() => showCoins(true)}
             onChangeText={value => {
-              setTokenObj({...token_object, market: value});
+              setTokenObj({...token_object, coin: value});
             }}
-            onEndEditing={() => showMarkets(false)}
+            onEndEditing={() => showCoins(false)}
             style={{...styles.coinInput, color: colors.text}}
           />
-          {marketsVisible && (
+          {coinsVisible && (
             <DropDownList
-              value={token_object.market}
-              data={markets}
-              setValue={setMarket}
+              value={token_object.coin}
+              data={coins}
+              setValue={setCoin}
             />
           )}
         </View>
-      )}
 
-      {!coinsVisible && !marketsVisible && (
-        <View>
-          <TextInput
-            placeholder="Amount: 0.0131"
-            placeholderTextColor={colors.placeholder}
-            selectionColor={colors.text}
-            onChangeText={value => (tobj.amount = parseFloat(value))}
-            onEndEditing={() =>
-              setTokenObj({...token_object, amount: tobj.amount})
-            }
-            style={{...styles.coinInput, color: colors.text}}
-            keyboardType="numeric"
-          />
-
-          <TextInput
-            placeholder="Price: 7500"
-            placeholderTextColor={colors.placeholder}
-            selectionColor={colors.text}
-            onChangeText={value => (tobj.price = parseFloat(value))}
-            onEndEditing={() =>
-              setTokenObj({...token_object, price: tobj.price})
-            }
-            style={{...styles.coinInput, color: colors.text}}
-            keyboardType="numeric"
-          />
-
-          <View
-            style={{
-              alignSelf: 'center',
-              marginTop: 15,
-            }}>
-            <RectButton
-              underlayColor={colors.text}
-              style={{backgroundColor: colors.accent, borderRadius: 3}}
-              onPress={() => props.submit(tobj)}>
-              <Text style={{...styles.submitText, color: colors.text}}>
-                Submit
-              </Text>
-            </RectButton>
+        {!coinsVisible && (
+          <View style={{justifyContent: 'center'}}>
+            <TextInput
+              value={token_object.market}
+              placeholder="Market: USDT"
+              placeholderTextColor={colors.placeholder}
+              selectionColor={colors.text}
+              keyboardType="visible-password"
+              onFocus={() => showMarkets(true)}
+              onChangeText={value => {
+                setTokenObj({...token_object, market: value});
+              }}
+              onEndEditing={() => showMarkets(false)}
+              style={{...styles.coinInput, color: colors.text}}
+            />
+            {marketsVisible && (
+              <DropDownList
+                value={token_object.market}
+                data={markets}
+                setValue={setMarket}
+              />
+            )}
           </View>
-        </View>
-      )}
-    </View>
+        )}
+
+        {!coinsVisible && !marketsVisible && (
+          <View>
+            <TextInput
+              placeholder="Amount: 0.0131"
+              placeholderTextColor={colors.placeholder}
+              selectionColor={colors.text}
+              onChangeText={value => (tobj.amount = parseFloat(value))}
+              onEndEditing={() =>
+                setTokenObj({...token_object, amount: tobj.amount})
+              }
+              style={{...styles.coinInput, color: colors.text}}
+              keyboardType="numeric"
+            />
+
+            <TextInput
+              placeholder="Price: 7500"
+              placeholderTextColor={colors.placeholder}
+              selectionColor={colors.text}
+              onChangeText={value => (tobj.price = parseFloat(value))}
+              onEndEditing={() =>
+                setTokenObj({...token_object, price: tobj.price})
+              }
+              style={{...styles.coinInput, color: colors.text}}
+              keyboardType="numeric"
+            />
+
+            <View
+              style={{
+                alignSelf: 'center',
+                marginTop: 15,
+              }}>
+              <RectButton
+                underlayColor={colors.text}
+                style={{backgroundColor: colors.accent, borderRadius: 3}}
+                onPress={() => {
+                  Keyboard.dismiss();
+                  props.submit(tobj);
+                }}>
+                <Text style={{...styles.submitText, color: colors.text}}>
+                  Submit
+                </Text>
+              </RectButton>
+            </View>
+          </View>
+        )}
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 

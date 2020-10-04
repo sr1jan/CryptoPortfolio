@@ -1,19 +1,26 @@
 import React, {useEffect} from 'react';
-import {View, Text, BackHandler} from 'react-native';
-import {BorderlessButton} from 'react-native-gesture-handler';
-import {TextInput, useTheme} from 'react-native-paper';
+import {BackHandler} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {useTheme, Searchbar} from 'react-native-paper';
 import {SearchCoinContext} from '../context/searchCoinContext';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-export const SearchBar = ({toggleSearchBar}: {toggleSearchBar: () => void}) => {
+export const SearchBar = () => {
+  const navigation = useNavigation();
+  /* const searchRef = useRef(null); */
   const {colors, dark} = useTheme();
   const {changeQuery, query} = React.useContext(SearchCoinContext);
+
+  /*   useEffect(() => { */
+  /*     console.log(searchRef.current.isFocused()); */
+  /*     searchRef.current.focus(); */
+  /*   }, []); */
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       () => {
-        toggleSearchBar();
+        changeQuery('');
+        navigation.goBack();
         return true;
       },
     );
@@ -21,38 +28,17 @@ export const SearchBar = ({toggleSearchBar}: {toggleSearchBar: () => void}) => {
   }, []);
 
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginLeft: 35,
-      }}>
-      {query !== '' && (
-        <BorderlessButton
-          onPress={() => changeQuery('')}
-          style={{marginRight: 3, marginTop: 3}}>
-          <Icon name="close" color={colors.accent} size={20} />
-        </BorderlessButton>
-      )}
-      <TextInput
-        label="coin"
-        placeholder="search.."
-        value={query}
-        onChangeText={q => changeQuery(q)}
-        mode="outlined"
-        selectionColor={colors.onSurface}
-        theme={{colors: {primary: dark ? colors.primary : '#000'}}}
-        onEndEditing={toggleSearchBar}
-        style={{
-          width: 70,
-          height: 25,
-          fontSize: 11,
-          fontFamily: 'monospace',
-          marginBottom: 2,
-          marginRight: 10,
-        }}
-      />
-    </View>
+    <Searchbar
+      // ref={ref => (searchRef.current = ref)}
+      style={{backgroundColor: colors.background}}
+      placeholder="Search coin..."
+      icon="arrow-left"
+      onIconPress={() => {
+        changeQuery('');
+        navigation.goBack();
+      }}
+      onChangeText={q => changeQuery(q)}
+      value={query}
+    />
   );
 };

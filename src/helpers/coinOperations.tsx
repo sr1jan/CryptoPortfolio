@@ -57,12 +57,11 @@ export const AddNewCoin = async (props: AddCoinProps) => {
     let json: object;
     try {
       json = await fetchData();
-      props.priceDataUpdate(json);
     } catch (e) {
-      props.setLoading(false);
       if (Object.keys(props.priceData).length !== 0) {
         json = props.priceData;
       } else {
+        props.setLoading(false);
         Alert.alert(
           'SERVER ERROR',
           'Failed to fetch data from the market, try again after sometime',
@@ -107,6 +106,7 @@ export const AddNewCoin = async (props: AddCoinProps) => {
       inr: inr,
     };
 
+    props.priceDataUpdate(json);
     props.addCoin(token_object, token_object.id);
     props.setLoading(false);
   };
@@ -147,6 +147,7 @@ export const UpdateCoins = async (props: UpdateCoinProps) => {
       inr: {...token_object.inr, returns: inrReturns},
     };
     props.updatePrices(token_object, idx);
-    props.priceDataUpdate(json);
   });
+
+  props.priceDataUpdate(json);
 };

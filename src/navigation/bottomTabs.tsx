@@ -3,8 +3,8 @@ import {createMaterialBottomTabNavigator} from '@react-navigation/material-botto
 import {useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import Home from '../screens/Stack/home';
-import Portfolio from '../screens/Stack/portfolio';
+import Home from '../screens/home';
+import Portfolio from '../screens/portfolio';
 
 const Tab = createMaterialBottomTabNavigator();
 

@@ -2,7 +2,7 @@ import React, {useState, useEffect, useContext} from 'react';
 import {View} from 'react-native';
 import {Modal, Portal, useTheme} from 'react-native-paper';
 
-import {styles} from '../../styles/styles';
+import {styles} from '../styles/styles';
 import {
   token_prop,
   app_state,
@@ -10,24 +10,24 @@ import {
   updatePriceType,
   addPriceDataType,
   totalPort,
-} from '../../types';
+} from '../types';
 
 import {connect} from 'react-redux';
-import {addCoin, updatePrices, addPriceData} from '../../actions/port';
+import {addCoin, updatePrices, addPriceData} from '../actions/port';
 
-import Loading from '../../components/loading';
-import CoinInput from '../../components/coinInput';
-import DisplayPL from '../../components/displayPL';
-import NewCoin from '../../components/newCoin';
+import Loading from '../components/loading';
+import CoinInput from '../components/coinInput';
+import DisplayPL from '../components/displayPL';
+import NewCoin from '../components/newCoin';
 import {
   storeCoinDetail,
   storeCounter,
   storeTotalPort,
   storeMarketData,
-} from '../../helpers/asyncStorage';
-import {AddNewCoin, UpdateCoins} from '../../helpers/coinOperations';
+} from '../helpers/asyncStorage';
+import {AddNewCoin, UpdateCoins} from '../helpers/coinOperations';
 
-import {CoinInputContext} from '../../context/coinInputContext';
+import {CoinInputContext} from '../context/coinInputContext';
 
 interface Props {
   token: token_prop[];
@@ -53,7 +53,7 @@ const Portfolio = (props: Props) => {
         priceDataUpdate: props.priceDataUpdate,
         updatePrices: props.updatePrices,
       });
-    }, 10000);
+    }, 60000);
 
     return () => {
       clearInterval(_interval);
@@ -77,17 +77,12 @@ const Portfolio = (props: Props) => {
       style={{...styles.container, backgroundColor: theme.colors.background}}>
       <View style={{flex: 1}}>
         {!loading && !props.counter && <NewCoin />}
-        {props.counter > 0 && (
-          <DisplayPL token={props.token} priceData={props.priceData} />
-        )}
+        {props.counter > 0 && <DisplayPL token={props.token} />}
         {loading && <Loading />}
       </View>
       {coinInputModal && (
         <Portal>
-          <Modal
-            visible={coinInputModal}
-            onDismiss={toggleModal}
-            contentContainerStyle={{flex: 1}}>
+          <Modal visible={coinInputModal} onDismiss={toggleModal}>
             <CoinInput submit={submit} toggleModal={toggleModal} />
           </Modal>
         </Portal>
