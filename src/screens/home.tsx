@@ -165,7 +165,7 @@ export default function Home() {
           Your portofolio is empty!
         </Text>
         <TouchableOpacity
-          onPress={() => navigation.navigate('Portfolio')}
+          onPress={() => navigation.navigate('Portfolio', {addCoin: true})}
           style={{
             ...styles.addCoinHomeTouchable,
             backgroundColor: colors.accent,

@@ -115,6 +115,8 @@ export const AddNewCoin = async (props: AddCoinProps) => {
 };
 
 export const UpdateCoins = async (props: UpdateCoinProps) => {
+  if (props.token.length < 1) return;
+
   let json: object;
   try {
     json = await fetchData();

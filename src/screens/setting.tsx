@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Linking} from 'react-native';
 import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
-import {useTheme, Surface, Text, Title, Paragraph} from 'react-native-paper';
+import {useTheme, Surface, Text, Paragraph} from 'react-native-paper';
 import {styles} from '../styles/styles';
 
 import {settingSections} from '../data/settingsData';
@@ -27,7 +27,7 @@ export default function Setting() {
           flexDirection: 'row',
           alignItems: 'stretch',
           justifyContent: 'space-between',
-          marginBottom: 5,
+          marginLeft: 10,
         }}>
         {props.description !== undefined ? (
           <View
@@ -57,11 +57,19 @@ export default function Setting() {
           marginHorizontal: 11,
           backgroundColor: colors.accent,
           paddingHorizontal: 12,
+          paddingBottom: 10,
         }}>
         <View style={{padding: 2}}>
-          <Title style={{color: colors.placeholder, marginBottom: 5}}>
+          <Text
+            style={{
+              color: colors.placeholder,
+              marginBottom: 10,
+              letterSpacing: 1,
+              fontSize: 12,
+              fontWeight: '100',
+            }}>
             {props.heading}
-          </Title>
+          </Text>
           <FlatList
             data={props.data}
             keyExtractor={item => item.title}
@@ -72,7 +80,16 @@ export default function Setting() {
                 button={item.button}
               />
             )}
-            ItemSeparatorComponent={() => <View style={{marginBottom: 5}} />}
+            ItemSeparatorComponent={() => (
+              <View
+                style={{
+                  borderWidth: 0.2,
+                  borderColor: colors.background,
+                  marginLeft: 10,
+                  marginVertical: 10,
+                }}
+              />
+            )}
           />
         </View>
       </Surface>
@@ -85,7 +102,7 @@ export default function Setting() {
       <View
         style={{
           alignItems: 'center',
-          marginTop: 10,
+          marginTop: 15,
         }}>
         <TouchableOpacity onPress={async () => await Linking.openURL(url)}>
           <Text

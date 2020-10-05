@@ -97,7 +97,7 @@ export const ReturnsGraph = (props: Props) => {
       )}
       <ScrollView
         horizontal={true}
-        style={{marginLeft: 5, marginBottom: 10}}
+        style={{marginLeft: 5}}
         ref={ref => (scrollRef.current = ref)}
         onContentSizeChange={() =>
           scrollRef.current.scrollToEnd({animated: true})

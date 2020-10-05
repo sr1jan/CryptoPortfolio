@@ -1,11 +1,26 @@
 import React from 'react';
-import {DeletePorfolioButton, ThemeSwitchButton} from '../components/buttons';
+import {
+  DeletePorfolioButton,
+  ThemeSwitchButton,
+  SearchCoinButton,
+  AddCoinButton,
+} from '../components/buttons';
 
 const portData = [
   {
     title: 'Delete Portfolio',
     description: 'This will delete all of your data.',
     button: <DeletePorfolioButton />,
+  },
+  {
+    title: 'Search Coins',
+    description: 'Filter coins using their abbreviation.',
+    button: <SearchCoinButton />,
+  },
+  {
+    title: 'Add Coin',
+    description: 'Add a coin to your portfolio.',
+    button: <AddCoinButton />,
   },
 ];
 

@@ -8,6 +8,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {AlertModal} from './alertModal';
 
+const ICON_SIZE = 32;
+
 export const DeletePorfolioButton = () => {
   const dispatch = useDispatch();
   const {colors} = useTheme();
@@ -40,7 +42,11 @@ export const DeletePorfolioButton = () => {
 
   return (
     <TouchableOpacity onPress={deleteConfirm}>
-      <Icon name="delete-forever" size={40} color={colors.notification} />
+      <Icon
+        name="delete-forever"
+        size={ICON_SIZE}
+        color={colors.notification}
+      />
     </TouchableOpacity>
   );
 };
@@ -58,5 +64,28 @@ export const ThemeSwitchButton = () => {
       value={dark ? false : true}
       onValueChange={onToggleSwitch}
     />
+  );
+};
+
+export const SearchCoinButton = () => {
+  const navigation = useNavigation();
+  const {colors} = useTheme();
+
+  return (
+    <TouchableOpacity onPress={() => navigation.navigate('SearchCoins')}>
+      <Icon name="magnify" size={ICON_SIZE} color={colors.notification} />
+    </TouchableOpacity>
+  );
+};
+
+export const AddCoinButton = () => {
+  const navigation = useNavigation();
+  const {colors} = useTheme();
+
+  return (
+    <TouchableOpacity
+      onPress={() => navigation.navigate('Portfolio', {addCoin: true})}>
+      <Icon name="plus" size={ICON_SIZE} color={colors.notification} />
+    </TouchableOpacity>
   );
 };

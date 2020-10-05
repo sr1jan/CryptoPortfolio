@@ -1,6 +1,8 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {View} from 'react-native';
 import {useTheme} from 'react-native-paper';
+import {connect, useDispatch} from 'react-redux';
+import {useRoute} from '@react-navigation/native';
 
 import {
   token_prop,
@@ -12,7 +14,6 @@ import {
 } from '../types';
 import {styles} from '../styles/styles';
 
-import {connect, useDispatch} from 'react-redux';
 import {addCoin, updatePrices, addPriceData} from '../actions/port';
 
 import Loading from '../components/loading';
@@ -34,14 +35,20 @@ interface Props {
 }
 
 const Portfolio = (props: Props) => {
+  const route = useRoute();
   const dispatch = useDispatch();
   const theme = useTheme();
   const {toggleModal, coinInputModal} = useContext(CoinInputContext);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    if (props.counter < 1) return;
+    if (route.params !== undefined) {
+      toggleModal();
+    }
+  }, [route.params]);
 
+  useEffect(() => {
+    if (props.counter < 1) return;
     const _interval = setInterval(async () => {
       await UpdateCoins({
         token: props.token,
