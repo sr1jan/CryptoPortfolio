@@ -70,7 +70,7 @@ const CoinInput = (props: Props) => {
         }}>
         <View
           style={{
-            backgroundColor: colors.accent,
+            backgroundColor: colors.background,
             marginHorizontal: 35,
             paddingTop: 20,
             paddingBottom: 30,
@@ -173,9 +173,8 @@ const CoinInput = (props: Props) => {
                 <TouchableOpacity
                   activeOpacity={0.7}
                   style={{
-                    borderColor: colors.background,
                     borderRadius: 3,
-                    elevation: 1.5,
+                    elevation: 1,
                   }}
                   onPress={() => {
                     Keyboard.dismiss();

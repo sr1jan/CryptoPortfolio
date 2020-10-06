@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
+import {material} from 'react-native-typography';
 import {useTheme} from 'react-native-paper';
 import {FlatList, RectButton} from 'react-native-gesture-handler';
 import {styles} from '../styles/styles';
@@ -17,8 +18,13 @@ const DropDownList = (props: Props) => {
     return (
       <TouchableOpacity
         onPress={() => props.setValue(title)}
-        style={{...styles.dropDownView, backgroundColor: colors.background}}>
-        <Text style={{...styles.dropDownText, color: colors.text}}>
+        style={{...styles.dropDownView, backgroundColor: colors.accent}}>
+        <Text
+          style={{
+            ...material.captionObject,
+            textAlign: 'center',
+            color: colors.text,
+          }}>
           {title.toUpperCase()}
         </Text>
       </TouchableOpacity>

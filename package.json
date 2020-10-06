@@ -10,15 +10,11 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@react-native-community/async-storage": "^1.12.0",
     "@react-native-community/masked-view": "^0.1.10",
-    "@react-navigation/drawer": "^5.9.2",
     "@react-navigation/material-bottom-tabs": "^5.2.18",
-    "@react-navigation/material-top-tabs": "^5.2.18",
     "@react-navigation/native": "^5.7.5",
     "@react-navigation/stack": "^5.9.2",
     "@types/react-redux": "^7.1.9",
-    "d3-array": "^2.8.0",
     "d3-scale": "^3.2.3",
     "d3-shape": "^2.0.0",
     "lodash": "^4.17.20",
@@ -34,6 +30,7 @@
     "react-native-svg": "^7.0.3",
     "react-native-svg-charts": "^5.4.0",
     "react-native-tab-view": "^2.15.1",
+    "react-native-typography": "^1.4.1",
     "react-native-vector-icons": "^7.1.0",
     "react-redux": "^7.2.1",
     "redux": "^4.0.5",
