@@ -2,13 +2,13 @@ import React, {useState, useEffect, useContext, useRef} from 'react';
 import {
   View,
   Text,
+  TextInput,
   Keyboard,
   Modal,
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
 import {material} from 'react-native-typography';
-import {TextInput} from 'react-native-gesture-handler';
 import {useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -174,7 +174,7 @@ const CoinInput = (props: Props) => {
                   activeOpacity={0.7}
                   style={{
                     borderRadius: 3,
-                    elevation: 1,
+                    elevation: 2,
                   }}
                   onPress={() => {
                     Keyboard.dismiss();

@@ -7,7 +7,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {styles} from '../styles/styles';
-import {AlertModal} from './alertModal';
+import AlertModal from './alertModal';
 
 const ICON_SIZE = 32;
 

@@ -15,7 +15,9 @@ import {
 import {styles} from '../styles/styles';
 
 import {addCoin, updatePrices, addPriceData} from '../actions/port';
+import {alertModalType} from '../types';
 
+import AlertModal from '../components/alertModal';
 import Loading from '../components/loading';
 import CoinInput from '../components/coinInput';
 import DisplayPL from '../components/displayPL';
@@ -40,6 +42,19 @@ const Portfolio = (props: Props) => {
   const theme = useTheme();
   const {toggleModal, coinInputModal} = useContext(CoinInputContext);
   const [loading, setLoading] = useState<boolean>(false);
+  const [dialog, setDialog] = useState<alertModalType>({
+    visible: false,
+    title: '',
+    description: '',
+    actText: '',
+    suppressText: '',
+    act: () => {},
+    suppress: () => {},
+  });
+
+  const callDialog = (values: alertModalType) => {
+    setDialog(values);
+  };
 
   useEffect(() => {
     if (route.params !== undefined) {
@@ -77,6 +92,7 @@ const Portfolio = (props: Props) => {
       addCoin: props.addCoin,
       toggleModal: toggleModal,
       priceData: props.priceData,
+      callDialog: callDialog,
     });
   };
 
@@ -89,6 +105,17 @@ const Portfolio = (props: Props) => {
         {loading && <Loading />}
       </View>
       {coinInputModal && <CoinInput submit={submit} />}
+      {dialog.visible && (
+        <AlertModal
+          title={dialog.title}
+          description={dialog.description}
+          act={dialog.act !== undefined ? dialog.act : () => {}}
+          actText={dialog.actText !== undefined ? dialog.actText : ''}
+          suppress={dialog.suppress}
+          suppressText={dialog.suppressText}
+          visible={dialog.visible}
+        />
+      )}
     </View>
   );
 };

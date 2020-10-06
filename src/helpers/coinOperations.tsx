@@ -2,6 +2,7 @@ import {Alert} from 'react-native';
 import {token_prop} from '../types';
 import {pairs} from '../data/pairs';
 import {currencyConversion} from './currency';
+import {alertModalType} from '../types';
 
 export const fetchData = async () => {
   const URL = 'https://api.wazirx.com/api/v2/tickers';
@@ -18,6 +19,7 @@ interface AddCoinProps {
   addCoin: (token_prop, number) => void;
   toggleModal: () => void;
   priceData: object;
+  callDialog: (alertModalType) => void;
 }
 
 interface UpdateCoinProps {
@@ -38,12 +40,24 @@ export const AddNewCoin = async (props: AddCoinProps) => {
       token_object.coin === '' ||
       token_object.market === ''
     ) {
-      Alert.alert('Error', 'Please fill in all the required details');
+      const dialog = {
+        title: 'Uh-Oh!',
+        description: 'Please fill in all the required details',
+        suppressText: 'OK',
+        suppress: () => props.callDialog({visible: false}),
+        visible: true,
+      };
+      props.callDialog(dialog);
     } else if (pairs.indexOf(token_object.coin + token_object.market) === -1) {
-      Alert.alert(
-        'Error',
-        'Could not find the specified coin/market. Please try something else.',
-      );
+      const dialog = {
+        title: 'Uh-Oh!',
+        description:
+          'Could not find coin/market pair. Please try something else.',
+        suppressText: 'OK',
+        suppress: () => props.callDialog({visible: false}),
+        visible: true,
+      };
+      props.callDialog(dialog);
     } else {
       token_object.id = props.counter + 1;
       token_object.boughtVal = token_object.amount * token_object.price;
@@ -62,10 +76,15 @@ export const AddNewCoin = async (props: AddCoinProps) => {
         json = props.priceData;
       } else {
         props.setLoading(false);
-        Alert.alert(
-          'SERVER ERROR',
-          'Failed to fetch data from the market, try again after sometime',
-        );
+        const dialog = {
+          title: 'Server Error',
+          description:
+            'Failed to fetch data from the market, try again after sometime',
+          suppressText: 'OK',
+          suppress: () => props.callDialog({visible: false}),
+          visible: true,
+        };
+        props.callDialog(dialog);
         return;
       }
     }

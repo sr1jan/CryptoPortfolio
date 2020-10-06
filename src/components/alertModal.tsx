@@ -2,18 +2,9 @@ import React, {useState} from 'react';
 import {View, Text, Modal, TouchableOpacity} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {material} from 'react-native-typography';
+import {alertModalType} from '../types';
 
-interface Props {
-  title: string;
-  description: string;
-  act: () => void;
-  suppress: () => void;
-  actText: string;
-  suppressText: string;
-  visible: boolean;
-}
-
-export const AlertModal = (props: Props) => {
+const AlertModal = (props: alertModalType) => {
   const {colors} = useTheme();
 
   return (
@@ -38,8 +29,10 @@ export const AlertModal = (props: Props) => {
             paddingVertical: 25,
             elevation: 10,
           }}>
-          <View style={{marginBottom: 23}}>
+          <View style={{marginBottom: 23, alignSelf: 'flex-start'}}>
             <Text
+              adjustsFontSizeToFit
+              numberOfLines={1}
               style={{
                 ...material.titleObject,
                 fontSize: 20,
@@ -49,6 +42,8 @@ export const AlertModal = (props: Props) => {
               {props.title}
             </Text>
             <Text
+              adjustsFontSizeToFit
+              numberOfLines={2}
               style={{
                 ...material.subheadingObject,
                 fontSize: 14,
@@ -96,3 +91,5 @@ export const AlertModal = (props: Props) => {
     </Modal>
   );
 };
+
+export default AlertModal;

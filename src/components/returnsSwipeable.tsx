@@ -7,7 +7,7 @@ import {styles} from '../styles/styles';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 
-import {AlertModal} from './alertModal';
+import AlertModal from './alertModal';
 
 export const SwipeableReturns = props => {
   const swipeRef = useRef();

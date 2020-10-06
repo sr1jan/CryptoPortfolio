@@ -117,3 +117,13 @@ export interface deleteReturnsType {
 }
 
 export type returnsActionTypes = addReturnsType | deleteReturnsType;
+
+export interface alertModalType {
+  title: string;
+  description: string;
+  act?: () => void;
+  actText?: string;
+  suppress: () => void;
+  suppressText: string;
+  visible: boolean;
+}
