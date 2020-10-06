@@ -41,6 +41,8 @@ buck-out
 /.lsp-buck-out
 /ReactAndroid/src/main/jni/prebuilt/lib/
 /ReactAndroid/src/main/gen
+*.keystore
+
 
 # Android Studio
 .project
