@@ -6,14 +6,8 @@ import {SearchCoinContext} from '../context/searchCoinContext';
 
 export const SearchBar = () => {
   const navigation = useNavigation();
-  /* const searchRef = useRef(null); */
   const {colors, dark} = useTheme();
   const {changeQuery, query} = React.useContext(SearchCoinContext);
-
-  /*   useEffect(() => { */
-  /*     console.log(searchRef.current.isFocused()); */
-  /*     searchRef.current.focus(); */
-  /*   }, []); */
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
@@ -29,7 +23,7 @@ export const SearchBar = () => {
 
   return (
     <Searchbar
-      // ref={ref => (searchRef.current = ref)}
+      autoFocus={true}
       style={{backgroundColor: colors.background}}
       placeholder="Search coin..."
       icon="arrow-left"
@@ -39,6 +33,7 @@ export const SearchBar = () => {
       }}
       onChangeText={q => changeQuery(q)}
       value={query}
+      theme={{colors: {primary: colors.text}}}
     />
   );
 };

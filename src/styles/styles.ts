@@ -1,4 +1,5 @@
 import {StyleSheet, I18nManager} from 'react-native';
+import {material} from 'react-native-typography';
 
 export const styles = StyleSheet.create({
   container: {
@@ -9,16 +10,12 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  title: {
-    fontSize: 22,
-    marginBottom: 10,
-  },
   surface: {
     padding: 5,
     width: '95%',
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 4,
+    elevation: 5,
   },
   addCoinHomeText: {
     color: 'grey',
@@ -46,7 +43,7 @@ export const styles = StyleSheet.create({
   },
   grContainer: {
     alignItems: 'flex-end',
-    marginBottom: 20,
+    marginBottom: 15,
   },
   grAmount: {
     fontSize: 11,
@@ -146,10 +143,10 @@ export const styles = StyleSheet.create({
     height: 40,
   },
   coinInput: {
+    ...material.captionObject,
+    fontSize: 14,
     textAlign: 'center',
-    fontSize: 20,
-    fontFamily: 'monospace',
-    color: '#fff',
+    letterSpacing: 1,
   },
   dropDownBox: {
     height: 80,
@@ -166,13 +163,6 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     color: '#fff',
     textAlign: 'center',
-  },
-  submitText: {
-    color: '#fff',
-    fontSize: 18,
-    fontFamily: 'monospace',
-    paddingVertical: 8,
-    paddingHorizontal: 35,
   },
   loading: {
     position: 'absolute',

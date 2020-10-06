@@ -1,7 +1,8 @@
 import React from 'react';
-import {View, Linking} from 'react-native';
+import {View, Text, Linking} from 'react-native';
 import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
-import {useTheme, Surface, Text, Paragraph} from 'react-native-paper';
+import {material} from 'react-native-typography';
+import {useTheme, Surface} from 'react-native-paper';
 import {styles} from '../styles/styles';
 
 import {settingSections} from '../data/settingsData';
@@ -20,12 +21,12 @@ interface rowItemProps {
 export default function Setting() {
   const {colors} = useTheme();
 
-  const RenderRowItem = (props: rowDataProps) => {
+  const RowItemChild = (props: rowDataProps) => {
     return (
       <View
         style={{
           flexDirection: 'row',
-          alignItems: 'stretch',
+          alignItems: 'center',
           justifyContent: 'space-between',
           marginLeft: 10,
         }}>
@@ -34,13 +35,27 @@ export default function Setting() {
             style={{
               flexDirection: 'column',
             }}>
-            <Text style={{color: colors.text}}>{props.title}</Text>
-            <Paragraph style={{color: colors.placeholder, fontSize: 10}}>
+            <Text
+              style={{
+                ...material.titleObject,
+                color: colors.text,
+                fontSize: 14,
+              }}>
+              {props.title}
+            </Text>
+            <Text
+              style={{
+                ...material.subheadingObject,
+                color: colors.placeholder,
+                fontSize: 12,
+              }}>
               {props.description}
-            </Paragraph>
+            </Text>
           </View>
         ) : (
-          <Text style={{color: colors.text}}>{props.title}</Text>
+          <Text style={{...material.titleObject, color: colors.text}}>
+            {props.title}
+          </Text>
         )}
         {props.button}
       </View>
@@ -62,11 +77,10 @@ export default function Setting() {
         <View style={{padding: 2}}>
           <Text
             style={{
+              ...material.captionObject,
               color: colors.placeholder,
               marginBottom: 10,
-              letterSpacing: 1,
-              fontSize: 12,
-              fontWeight: '100',
+              letterSpacing: 1.2,
             }}>
             {props.heading}
           </Text>
@@ -74,7 +88,7 @@ export default function Setting() {
             data={props.data}
             keyExtractor={item => item.title}
             renderItem={({item}) => (
-              <RenderRowItem
+              <RowItemChild
                 title={item.title}
                 description={item.description}
                 button={item.button}
@@ -107,10 +121,10 @@ export default function Setting() {
         <TouchableOpacity onPress={async () => await Linking.openURL(url)}>
           <Text
             style={{
+              ...material.captionObject,
               color: colors.notification,
-              fontSize: 12,
-              fontFamily: 'monospace',
               textDecorationLine: 'underline',
+              letterSpacing: 1,
             }}>
             contact developer
           </Text>

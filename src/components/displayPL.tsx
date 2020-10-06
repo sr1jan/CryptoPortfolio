@@ -2,6 +2,7 @@ import React, {useRef, useContext} from 'react';
 import {View} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {useTheme, Surface, Text} from 'react-native-paper';
+import {material} from 'react-native-typography';
 import {token_prop} from '../types';
 import {styles} from '../styles/styles';
 
@@ -33,10 +34,16 @@ const DisplayPL = (props: Props) => {
           marginTop: index > 0 ? 5 : 10,
         }}>
         <View style={{marginLeft: 10, alignItems: 'flex-start'}}>
-          <Text style={{...styles.coinTitle, color: colors.text}}>
+          <Text
+            style={{...material.titleObject, color: colors.text, fontSize: 17}}>
             {item.coin.toUpperCase()}
           </Text>
-          <Text style={{...styles.coinSub, color: 'grey'}}>
+          <Text
+            style={{
+              ...material.subheadingObject,
+              color: colors.placeholder,
+              fontSize: 12,
+            }}>
             {item.market.toUpperCase()}
           </Text>
         </View>

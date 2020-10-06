@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text} from 'react-native';
 import {useSelector, shallowEqual} from 'react-redux';
 import {useTheme} from 'react-native-paper';
+import {material} from 'react-native-typography';
 import {styles} from '../styles/styles';
 import {token_prop, app_state} from '../types';
 import {
@@ -19,11 +20,21 @@ export const Profit = ({item}: {item: token_prop}) => {
   return (
     <View style={styles.coinView}>
       <View style={{justifyContent: 'center', alignItems: 'flex-end'}}>
-        <Text style={{...styles.profit, color: colors.text}}>
+        <Text
+          style={{
+            ...material.body1Object,
+            color: colors.text,
+            marginRight: 4,
+          }}>
           + {numberWithCommas(item.returns)}
         </Text>
         {item.market !== 'inr' && (
-          <Text style={styles.profitConversion}>
+          <Text
+            style={{
+              ...material.captionObject,
+              color: '#32CD32',
+              marginRight: 4,
+            }}>
             {valueDisplay(
               currencyConversion({
                 amount: item.returns,
@@ -36,7 +47,15 @@ export const Profit = ({item}: {item: token_prop}) => {
         )}
       </View>
       <View style={styles.profitBox}>
-        <Text style={styles.profitPercent}>{item.percent.toFixed(2)}%</Text>
+        <Text
+          style={{
+            ...material.body2Object,
+            color: '#fff',
+            padding: 6,
+            backgroundColor: '#32CD32',
+          }}>
+          {item.percent.toFixed(2)}%
+        </Text>
       </View>
     </View>
   );
@@ -51,11 +70,17 @@ export const Loss = ({item}: {item: token_prop}) => {
   return (
     <View style={styles.coinView}>
       <View style={{justifyContent: 'center', alignItems: 'flex-end'}}>
-        <Text style={{...styles.loss, color: colors.text}}>
+        <Text
+          style={{...material.body1Object, color: colors.text, marginRight: 4}}>
           - {numberWithCommas(Math.abs(item.returns))}
         </Text>
         {item.market !== 'inr' && (
-          <Text style={styles.lossConversion}>
+          <Text
+            style={{
+              ...material.captionObject,
+              color: '#c52a0d',
+              marginRight: 4,
+            }}>
             {valueDisplay(
               Math.abs(
                 currencyConversion({
@@ -70,7 +95,13 @@ export const Loss = ({item}: {item: token_prop}) => {
         )}
       </View>
       <View style={styles.lossBox}>
-        <Text style={styles.lossPercent}>
+        <Text
+          style={{
+            ...material.body2Object,
+            color: '#fff',
+            padding: 6,
+            backgroundColor: '#c52a0d',
+          }}>
           {Math.abs(item.percent).toFixed(2)}%
         </Text>
       </View>

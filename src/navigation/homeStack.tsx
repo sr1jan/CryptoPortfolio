@@ -49,7 +49,6 @@ export const HomeStack = () => {
               )}
               {!previous && (
                 <BorderlessButton
-                  rippleColor={colors.accent}
                   style={{marginLeft: 10}}
                   onPress={() => navigation.navigate('Settings')}>
                   <Icon name="tune" size={27} color={colors.onSurface} />
