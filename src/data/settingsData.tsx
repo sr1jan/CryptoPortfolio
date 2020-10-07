@@ -4,6 +4,7 @@ import {
   ThemeSwitchButton,
   SearchCoinButton,
   AddCoinButton,
+  ChangeCurrencyButton,
 } from '../components/buttons';
 
 const portData = [
@@ -24,11 +25,16 @@ const portData = [
   },
 ];
 
-const appearanceData = [
+const preferencesData = [
   {
     title: 'Change Theme',
     description: 'Switch between dark and light theme.',
     button: <ThemeSwitchButton />,
+  },
+  {
+    title: 'Set Currency',
+    description: 'Choose from the available currencies.',
+    button: <ChangeCurrencyButton />,
   },
 ];
 
@@ -38,7 +44,7 @@ export const settingSections = [
     data: portData,
   },
   {
-    heading: 'Appearance',
-    data: appearanceData,
+    heading: 'Preferences',
+    data: preferencesData,
   },
 ];

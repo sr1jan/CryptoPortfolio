@@ -14,13 +14,21 @@ export interface port_state {
     totalPortAmount: number;
     totalPortPercent: number;
   };
+  usdt: {
+    totalInvestment: number;
+    totalPortAmount: number;
+    totalPortPercent: number;
+  };
 }
 
 export interface returns_state {
   inr: {
     returns: number[];
-    time: string[];
   };
+  usdt: {
+    returns: number[];
+  };
+  time: string[];
 }
 
 export interface token_prop {
@@ -33,6 +41,10 @@ export interface token_prop {
   returns: number;
   percent: number;
   inr: {
+    cap: number;
+    returns: number;
+  };
+  usdt: {
     cap: number;
     returns: number;
   };
@@ -108,7 +120,10 @@ export type portActionTypes =
 
 export interface addReturnsType {
   type: string;
-  value: number;
+  value: {
+    inr: number;
+    usdt: number;
+  };
   time: string;
 }
 

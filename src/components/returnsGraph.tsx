@@ -34,7 +34,7 @@ const HorizontalLine = ({y, data}) => {
 
 const currencySign = {
   ['inr']: '\u20b9',
-  ['usd']: '\u0024',
+  ['usdt']: '\u0024',
 };
 
 export const ReturnsGraph = (props: Props) => {
@@ -46,10 +46,10 @@ export const ReturnsGraph = (props: Props) => {
     state => state.portReducer.currency,
   );
   const totalReturns: any = useSelector<app_state>(
-    state => state.portReducer.inr.totalPortAmount,
+    state => state.portReducer[currency].totalPortAmount,
   );
   const returns: any = useSelector<app_state>(
-    state => state.returnsReducer.inr.returns,
+    state => state.returnsReducer[currency].returns,
     shallowEqual,
   );
 

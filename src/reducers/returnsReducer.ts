@@ -3,8 +3,11 @@ import {returns_state, returnsActionTypes, addReturnsType} from '../types';
 const InitialState: returns_state = {
   inr: {
     returns: [],
-    time: [],
   },
+  usdt: {
+    returns: [],
+  },
+  time: [],
 };
 
 const returnsReducer = (
@@ -16,18 +19,23 @@ const returnsReducer = (
       const {value, time} = <addReturnsType>action;
       return {
         ...state,
+        time: state.time.concat(time),
         inr: {
-          ...state.inr,
-          returns: state.inr.returns.concat(value),
-          time: state.inr.time.concat(time),
+          returns: state.inr.returns.concat(value.inr),
+        },
+        usdt: {
+          returns: state.usdt.returns.concat(value.usdt),
         },
       };
 
     case 'DELETE_RETURNS':
       return {
+        time: [],
         inr: {
           returns: [],
-          time: [],
+        },
+        usdt: {
+          returns: [],
         },
       };
 

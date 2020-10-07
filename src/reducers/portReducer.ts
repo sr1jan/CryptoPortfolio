@@ -22,6 +22,11 @@ const InitialState: port_state = {
     totalPortAmount: 0,
     totalPortPercent: 0,
   },
+  usdt: {
+    totalInvestment: 0,
+    totalPortAmount: 0,
+    totalPortPercent: 0,
+  },
 };
 
 const portReducer = (
@@ -44,17 +49,36 @@ const portReducer = (
               (state.inr.totalInvestment + coinDetail.inr.cap)) *
             100,
         },
+        usdt: {
+          ...state.usdt,
+          totalInvestment: state.usdt.totalInvestment + coinDetail.usdt.cap,
+          totalPortAmount: state.usdt.totalPortAmount + coinDetail.usdt.returns,
+          totalPortPercent:
+            ((state.usdt.totalPortAmount + coinDetail.usdt.returns) /
+              (state.usdt.totalInvestment + coinDetail.usdt.cap)) *
+            100,
+        },
       };
 
     case 'UPDATE_PRICES':
       const {newCoinDetail, idx} = <updatePriceType>action;
-      let newTotalReturns: number = state.inr.totalPortAmount;
-      const newReturns = newCoinDetail.inr.returns;
-      const oldReturns = state.token[idx].inr.returns;
-      const diff = Math.abs(Math.abs(newReturns) - Math.abs(oldReturns));
-      if (newReturns > oldReturns)
-        newTotalReturns = state.inr.totalPortAmount + diff;
-      else newTotalReturns = state.inr.totalPortAmount - diff;
+      const inrDiff = Math.abs(
+        Math.abs(newCoinDetail.inr.returns) -
+          Math.abs(state.token[idx].inr.returns),
+      );
+      const usdtDiff = Math.abs(
+        Math.abs(newCoinDetail.usdt.returns) -
+          Math.abs(state.token[idx].usdt.returns),
+      );
+      let inrNewTotalReturns = 0;
+      let usdtNewTotalReturns = 0;
+      if (newCoinDetail.returns > state.token[idx].returns) {
+        inrNewTotalReturns = state.inr.totalPortAmount + inrDiff;
+        usdtNewTotalReturns = state.usdt.totalPortAmount + usdtDiff;
+      } else {
+        inrNewTotalReturns = state.inr.totalPortAmount - inrDiff;
+        usdtNewTotalReturns = state.usdt.totalPortAmount - usdtDiff;
+      }
 
       state.token[idx] = newCoinDetail;
       return {
@@ -62,8 +86,15 @@ const portReducer = (
         token: state.token,
         inr: {
           ...state.inr,
-          totalPortAmount: newTotalReturns,
-          totalPortPercent: (newTotalReturns / state.inr.totalInvestment) * 100,
+          totalPortAmount: inrNewTotalReturns,
+          totalPortPercent:
+            (inrNewTotalReturns / state.inr.totalInvestment) * 100,
+        },
+        usdt: {
+          ...state.usdt,
+          totalPortAmount: usdtNewTotalReturns,
+          totalPortPercent:
+            (usdtNewTotalReturns / state.usdt.totalInvestment) * 100,
         },
       };
 
@@ -77,10 +108,14 @@ const portReducer = (
     case 'DELETE_COIN':
       const {index} = <deleteCoinType>action;
       const coin = state.token[index];
-      const inr = state.inr;
-      const newPort = inr.totalInvestment - coin.inr.cap;
-      const newPortReturns = inr.totalPortAmount - coin.inr.returns;
-      const newPortPercent = (newPortReturns / newPort) * 100;
+      const inrNewPort = state.inr.totalInvestment - coin.inr.cap;
+      const inrNewPortReturns = state.inr.totalPortAmount - coin.inr.returns;
+      const inrNewPortPercent = (inrNewPortReturns / inrNewPort) * 100;
+
+      const usdtNewPort = state.usdt.totalInvestment - coin.usdt.cap;
+      const usdtNewPortReturns = state.usdt.totalPortAmount - coin.usdt.returns;
+      const usdtNewPortPercent = (usdtNewPortReturns / usdtNewPort) * 100;
+
       state.token.splice(index, 1);
       return {
         ...state,
@@ -88,9 +123,15 @@ const portReducer = (
         counter: state.counter - 1,
         inr: {
           ...state.inr,
-          totalInvestment: newPort,
-          totalPortAmount: newPortReturns,
-          totalPortPercent: newPortPercent,
+          totalInvestment: inrNewPort,
+          totalPortAmount: inrNewPortReturns,
+          totalPortPercent: inrNewPortPercent,
+        },
+        usdt: {
+          ...state.usdt,
+          totalInvestment: usdtNewPort,
+          totalPortAmount: usdtNewPortReturns,
+          totalPortPercent: usdtNewPortPercent,
         },
       };
 
@@ -120,6 +161,7 @@ const portReducer = (
         token: tokensEmpty,
         counter: 0,
         inr: totalPortEmpty,
+        usdt: totalPortEmpty,
         priceData: {},
       };
 

@@ -3,6 +3,7 @@ import {View, Text, Modal, TouchableOpacity} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {material} from 'react-native-typography';
 import {alertModalType} from '../types';
+import {styles} from '../styles/styles';
 
 const AlertModal = (props: alertModalType) => {
   const {colors} = useTheme();
@@ -14,20 +15,11 @@ const AlertModal = (props: alertModalType) => {
       transparent={true}
       statusBarTranslucent={true}
       onRequestClose={props.suppress}>
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'stretch',
-          justifyContent: 'center',
-          backgroundColor: 'rgba(0,0,0,0.5)',
-        }}>
+      <View style={styles.modalMain}>
         <View
           style={{
+            ...styles.modalView,
             backgroundColor: colors.background,
-            marginHorizontal: 26,
-            paddingHorizontal: 20,
-            paddingVertical: 25,
-            elevation: 10,
           }}>
           <View style={{marginBottom: 23, alignSelf: 'flex-start'}}>
             <Text

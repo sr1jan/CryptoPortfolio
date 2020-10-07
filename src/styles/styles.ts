@@ -196,4 +196,16 @@ export const styles = StyleSheet.create({
     width: 30,
     marginHorizontal: 10,
   },
+  modalMain: {
+    flex: 1,
+    alignItems: 'stretch',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalView: {
+    marginHorizontal: 26,
+    paddingHorizontal: 20,
+    paddingVertical: 25,
+    elevation: 10,
+  },
 });

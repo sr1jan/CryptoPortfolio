@@ -34,6 +34,7 @@ export default function Setting() {
           <View
             style={{
               flexDirection: 'column',
+              width: '85%',
             }}>
             <Text
               style={{
@@ -44,6 +45,8 @@ export default function Setting() {
               {props.title}
             </Text>
             <Text
+              adjustsFontSizeToFit
+              numberOfLines={2}
               style={{
                 ...material.subheadingObject,
                 color: colors.placeholder,

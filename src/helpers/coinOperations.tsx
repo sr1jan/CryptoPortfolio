@@ -28,12 +28,52 @@ interface UpdateCoinProps {
   updatePrices: (token_prop, number) => void;
 }
 
+export const convertCurrency = (token_object: token_prop, json: object) => {
+  let inr =
+    token_object.market === 'inr'
+      ? {cap: token_object.boughtVal, returns: token_object.returns}
+      : {
+          cap: currencyConversion({
+            amount: token_object.boughtVal,
+            from: token_object.market,
+            to: 'inr',
+            priceData: json,
+          }),
+          returns: currencyConversion({
+            amount: token_object.returns,
+            from: token_object.market,
+            to: 'inr',
+            priceData: json,
+          }),
+        };
+
+  let usdt =
+    token_object.market === 'usdt'
+      ? {cap: token_object.boughtVal, returns: token_object.returns}
+      : {
+          cap: currencyConversion({
+            amount: token_object.boughtVal,
+            from: token_object.market,
+            to: 'usdt',
+            priceData: json,
+          }),
+          returns: currencyConversion({
+            amount: token_object.returns,
+            from: token_object.market,
+            to: 'usdt',
+            priceData: json,
+          }),
+        };
+
+  return {inr, usdt};
+};
+
 export const AddNewCoin = async (props: AddCoinProps) => {
   let token_object = props.token_object;
+  token_object.coin = token_object.coin.toLowerCase();
+  token_object.market = token_object.market.toLowerCase();
 
   const submit = async () => {
-    token_object.coin = token_object.coin.toLowerCase();
-    token_object.market = token_object.market.toLowerCase();
     if (
       token_object.amount === 0 ||
       token_object.price === 0 ||
@@ -69,12 +109,13 @@ export const AddNewCoin = async (props: AddCoinProps) => {
 
   const newCoin = async () => {
     let json: object;
-    try {
-      json = await fetchData();
-    } catch (e) {
-      if (Object.keys(props.priceData).length !== 0) {
-        json = props.priceData;
-      } else {
+
+    if (Object.keys(props.priceData).length !== 0) {
+      json = props.priceData;
+    } else {
+      try {
+        json = await fetchData();
+      } catch (e) {
         props.setLoading(false);
         const dialog = {
           title: 'Server Error',
@@ -95,34 +136,14 @@ export const AddNewCoin = async (props: AddCoinProps) => {
     const curVal = curPrice * token_object.amount;
     const returns = curVal - boughtVal;
     const percent = (returns / boughtVal) * 100;
-    const inr = {
-      cap: 0,
-      returns: 0,
-    };
 
-    if (token_object.market === 'inr') {
-      inr.cap = boughtVal;
-      inr.returns = returns;
-    } else {
-      inr.cap = currencyConversion({
-        amount: boughtVal,
-        from: token_object.market,
-        to: 'inr',
-        priceData: json,
-      });
-      inr.returns = currencyConversion({
-        amount: returns,
-        from: token_object.market,
-        to: 'inr',
-        priceData: json,
-      });
-    }
-
+    const {inr, usdt} = convertCurrency(token_object, json);
     token_object = {
       ...token_object,
       returns: returns,
       percent: percent,
       inr: inr,
+      usdt: usdt,
     };
 
     props.priceDataUpdate(json);
@@ -150,22 +171,35 @@ export const UpdateCoins = async (props: UpdateCoinProps) => {
     const returns = curVal - token_object.boughtVal;
     if (returns.toFixed(2) === token_object.returns.toFixed(2)) return;
     const percent = (returns / token_object.boughtVal) * 100;
+
     let inrReturns = 0;
-    if (token_object.market === 'inr') {
-      inrReturns = returns;
-    } else {
-      inrReturns = currencyConversion({
-        amount: returns,
-        from: 'usdt',
-        to: 'inr',
-        priceData: json,
-      });
-    }
+    let usdtReturns = 0;
+
+    inrReturns =
+      token_object.market === 'inr'
+        ? returns
+        : currencyConversion({
+            amount: returns,
+            from: token_object.market,
+            to: 'inr',
+            priceData: json,
+          });
+    usdtReturns =
+      token_object.market === 'usdt'
+        ? returns
+        : currencyConversion({
+            amount: returns,
+            from: token_object.market,
+            to: 'usdt',
+            priceData: json,
+          });
+
     token_object = {
       ...token_object,
       returns: returns,
       percent: percent,
       inr: {...token_object.inr, returns: inrReturns},
+      usdt: {...token_object.usdt, returns: usdtReturns},
     };
     props.updatePrices(token_object, idx);
   });

@@ -12,42 +12,42 @@ import {ReturnsGraph} from '../components/returnsGraph';
 
 import {valueDisplay} from '../helpers/currency';
 
-const Profit = ({inr}: {inr: totalPort}) => {
+const Profit = ({value, currency}: {value: totalPort; currency: string}) => {
   return (
     <View style={localStyles.grContainer}>
       <Text
         style={localStyles.grProfitAmount}
         adjustsFontSizeToFit
         numberOfLines={1}>
-        {valueDisplay(inr.totalPortAmount)}
+        {valueDisplay(value.totalPortAmount, currency)}
       </Text>
       <View style={styles.profitBox}>
         <Text
           style={localStyles.grProfitPercent}
           adjustsFontSizeToFit
           numberOfLines={1}>
-          {inr.totalPortPercent.toFixed(2)}%
+          {value.totalPortPercent.toFixed(2)}%
         </Text>
       </View>
     </View>
   );
 };
 
-const Loss = ({inr}, {inr: totalPort}) => {
+const Loss = ({value, currency}: {value: totalPort; currency: string}) => {
   return (
     <View style={localStyles.grContainer}>
       <Text
         style={localStyles.grLossAmount}
         adjustsFontSizeToFit
         numberOfLines={1}>
-        {valueDisplay(Math.abs(inr.totalPortAmount))}
+        {valueDisplay(Math.abs(value.totalPortAmount), currency)}
       </Text>
       <View style={styles.lossBox}>
         <Text
           style={localStyles.grLossPercent}
           adjustsFontSizeToFit
           numberOfLines={1}>
-          {Math.abs(inr.totalPortPercent).toFixed(2)}%
+          {Math.abs(value.totalPortPercent).toFixed(2)}%
         </Text>
       </View>
     </View>
@@ -59,24 +59,28 @@ export default function Home() {
   const counter: any = useSelector<app_state>(
     state => state.portReducer.counter,
   );
+  const currency: any = useSelector<app_state>(
+    state => state.portReducer.currency,
+  );
   const inr: any = useSelector<app_state>(state => state.portReducer.inr);
+  const usdt: any = useSelector<app_state>(state => state.portReducer.usdt);
   const {colors, dark} = useTheme();
   const navigation = useNavigation();
   const [graphType, setGraphType] = useState<'line' | 'bar'>('line');
 
-  useEffect(() => {
-    dispatch({type: 'SET_CURRENCY', currency: 'inr'});
-  }, []);
+  /*   useEffect(() => { */
+  /*     dispatch({type: 'SET_CURRENCY', currency: 'inr'}); */
+  /*   }, []); */
 
   useEffect(() => {
     if (counter < 1) return;
     const date = new Date();
     dispatch({
       type: 'ADD_RETURNS',
-      value: inr.totalPortAmount,
+      value: {inr: inr.totalPortAmount, usdt: usdt.totalPortAmount},
       time: date.toString().slice(0, 24),
     });
-  }, [inr.totalPortAmount]);
+  }, [inr.totalPortAmount, usdt.totalPortAmount]);
 
   if (counter > 0) {
     return (
@@ -97,10 +101,15 @@ export default function Home() {
             backgroundColor: colors.accent,
             height: '29%',
           }}>
-          {Math.sign(inr.totalPortAmount) === 1 ? (
-            <Profit inr={inr} />
+          {Math.sign(
+            currency === 'inr' ? inr.totalPortAmount : usdt.totalPortAmount,
+          ) === 1 ? (
+            <Profit
+              value={currency === 'inr' ? inr : usdt}
+              currency={currency}
+            />
           ) : (
-            <Loss inr={inr} />
+            <Loss value={currency === 'inr' ? inr : usdt} currency={currency} />
           )}
         </Surface>
 

@@ -14,15 +14,28 @@ export function currencyConversion({
   to: string;
   priceData: object;
 }): number {
-  const name = from + to;
   let price: string;
-  price = priceData[name].last;
-  const converted: number = amount * parseFloat(price);
+  let name: string;
+  let converted: number;
+  try {
+    name = from.toLowerCase() + to.toLowerCase();
+    price = priceData[name].last;
+    converted = amount * parseFloat(price);
+  } catch (e) {
+    name = to.toLowerCase() + from.toLowerCase();
+    price = priceData[name].last;
+    converted = amount / parseFloat(price);
+  }
   return converted;
 }
 
-export function valueDisplay(value: number) {
-  const symbol: string = '₹';
+export function valueDisplay(value: number, currency: string) {
+  const currencySign = {
+    ['inr']: '\u20b9',
+    ['usdt']: '\u0024',
+  };
+
+  const symbol: string = currencySign[currency];
   const amount: string = numberWithCommas(value);
 
   return `${symbol} ${amount}`;

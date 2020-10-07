@@ -16,7 +16,11 @@ export const Profit = ({item}: {item: token_prop}) => {
     state => state.portReducer.priceData,
     shallowEqual,
   );
+  const currency: any = useSelector<app_state>(
+    state => state.portReducer.currency,
+  );
   const {colors} = useTheme();
+
   return (
     <View style={styles.coinView}>
       <View style={{justifyContent: 'center', alignItems: 'flex-end'}}>
@@ -28,7 +32,7 @@ export const Profit = ({item}: {item: token_prop}) => {
           }}>
           + {numberWithCommas(item.returns)}
         </Text>
-        {item.market !== 'inr' && (
+        {item.market !== currency && (
           <Text
             style={{
               ...material.captionObject,
@@ -39,9 +43,10 @@ export const Profit = ({item}: {item: token_prop}) => {
               currencyConversion({
                 amount: item.returns,
                 from: item.market,
-                to: 'inr',
+                to: currency,
                 priceData: priceData,
               }),
+              currency,
             )}
           </Text>
         )}
@@ -66,6 +71,9 @@ export const Loss = ({item}: {item: token_prop}) => {
     state => state.portReducer.priceData,
     shallowEqual,
   );
+  const currency: any = useSelector<app_state>(
+    state => state.portReducer.currency,
+  );
   const {colors} = useTheme();
   return (
     <View style={styles.coinView}>
@@ -74,7 +82,7 @@ export const Loss = ({item}: {item: token_prop}) => {
           style={{...material.body1Object, color: colors.text, marginRight: 4}}>
           - {numberWithCommas(Math.abs(item.returns))}
         </Text>
-        {item.market !== 'inr' && (
+        {item.market !== currency && (
           <Text
             style={{
               ...material.captionObject,
@@ -86,10 +94,11 @@ export const Loss = ({item}: {item: token_prop}) => {
                 currencyConversion({
                   amount: item.returns,
                   from: item.market,
-                  to: 'inr',
+                  to: currency,
                   priceData: priceData,
                 }),
               ),
+              currency,
             )}
           </Text>
         )}

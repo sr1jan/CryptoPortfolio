@@ -17,7 +17,7 @@ import {styles} from '../styles/styles';
 import {addCoin, updatePrices, addPriceData} from '../actions/port';
 import {alertModalType} from '../types';
 
-import AlertModal from '../components/alertModal';
+import AlertModal from '../modals/alertModal';
 import Loading from '../components/loading';
 import CoinInput from '../components/coinInput';
 import DisplayPL from '../components/displayPL';
@@ -29,7 +29,6 @@ import {CoinInputContext} from '../context/coinInputContext';
 interface Props {
   token: token_prop[];
   counter: number;
-  inr: totalPort;
   priceData: object;
   addCoin: (coinDetail: token_prop, counter: number) => addCoinType;
   updatePrices: (coinDetail: token_prop, idx: number) => updatePriceType;
@@ -83,7 +82,7 @@ const Portfolio = (props: Props) => {
     dispatch({type: 'CLEAR_PORT'});
   }, [props.counter]);
 
-  const submit = async (token_object: token_prop) => {
+  const submit = (token_object: token_prop) => {
     AddNewCoin({
       token_object: token_object,
       counter: props.counter,
@@ -124,7 +123,6 @@ const mapStateToProps = (state: app_state) => {
   return {
     token: state.portReducer.token,
     counter: state.portReducer.counter,
-    inr: state.portReducer.inr,
     priceData: state.portReducer.priceData,
   };
 };

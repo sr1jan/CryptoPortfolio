@@ -40,6 +40,7 @@ const CoinInput = (props: Props) => {
     returns: 0,
     percent: 0,
     inr: {cap: 0, returns: 0},
+    usdt: {cap: 0, returns: 0},
   });
 
   const setCoin = (value: string) => {
@@ -174,7 +175,8 @@ const CoinInput = (props: Props) => {
                   activeOpacity={0.7}
                   style={{
                     borderRadius: 3,
-                    elevation: 2,
+                    borderWidth: 0.5,
+                    borderColor: colors.accent,
                   }}
                   onPress={() => {
                     Keyboard.dismiss();
