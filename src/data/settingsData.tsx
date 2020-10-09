@@ -5,23 +5,21 @@ import {
   SearchCoinButton,
   AddCoinButton,
   ChangeCurrencyButton,
+  ExportData,
+  TwitterButton,
+  MailButton,
 } from '../components/buttons';
 
 const portData = [
   {
-    title: 'Delete Portfolio',
-    description: 'This will delete all of your data.',
-    button: <DeletePorfolioButton />,
+    title: 'Add Coin',
+    description: 'Add a coin to your portfolio.',
+    button: <AddCoinButton />,
   },
   {
     title: 'Search Coins',
     description: 'Filter coins using their abbreviation.',
     button: <SearchCoinButton />,
-  },
-  {
-    title: 'Add Coin',
-    description: 'Add a coin to your portfolio.',
-    button: <AddCoinButton />,
   },
 ];
 
@@ -38,6 +36,32 @@ const preferencesData = [
   },
 ];
 
+const accountData = [
+  {
+    title: 'Export Data',
+    description: 'Export portfolio data as a JSON file.',
+    button: <ExportData />,
+  },
+  {
+    title: 'Delete Portfolio',
+    description: 'This will delete all of your data.',
+    button: <DeletePorfolioButton />,
+  },
+];
+
+const contactData = [
+  {
+    title: 'DM',
+    description: 'Informal approach.',
+    button: <TwitterButton />,
+  },
+  {
+    title: 'Mail',
+    description: 'Formal approach.',
+    button: <MailButton />,
+  },
+];
+
 export const settingSections = [
   {
     heading: 'Portfolio',
@@ -46,5 +70,13 @@ export const settingSections = [
   {
     heading: 'Preferences',
     data: preferencesData,
+  },
+  {
+    heading: 'Account',
+    data: accountData,
+  },
+  {
+    heading: 'Get in touch',
+    data: contactData,
   },
 ];

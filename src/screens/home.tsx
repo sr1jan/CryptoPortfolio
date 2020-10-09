@@ -1,58 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, StatusBar} from 'react-native';
-import {useSelector, useDispatch} from 'react-redux';
+import {View, StatusBar} from 'react-native';
+import {useSelector, useDispatch, shallowEqual} from 'react-redux';
 import {useTheme, ActivityIndicator, Surface, Text} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {styles} from '../styles/styles';
-import {totalPort, app_state, token_prop} from '../types';
+import {app_state, token_prop} from '../types';
 import {ReturnsGraph} from '../components/returnsGraph';
-
-import {valueDisplay} from '../helpers/currency';
-
-const Profit = ({value, currency}: {value: totalPort; currency: string}) => {
-  return (
-    <View style={localStyles.grContainer}>
-      <Text
-        style={localStyles.grProfitAmount}
-        adjustsFontSizeToFit
-        numberOfLines={1}>
-        {valueDisplay(value.totalPortAmount, currency)}
-      </Text>
-      <View style={styles.profitBox}>
-        <Text
-          style={localStyles.grProfitPercent}
-          adjustsFontSizeToFit
-          numberOfLines={1}>
-          {value.totalPortPercent.toFixed(2)}%
-        </Text>
-      </View>
-    </View>
-  );
-};
-
-const Loss = ({value, currency}: {value: totalPort; currency: string}) => {
-  return (
-    <View style={localStyles.grContainer}>
-      <Text
-        style={localStyles.grLossAmount}
-        adjustsFontSizeToFit
-        numberOfLines={1}>
-        {valueDisplay(Math.abs(value.totalPortAmount), currency)}
-      </Text>
-      <View style={styles.lossBox}>
-        <Text
-          style={localStyles.grLossPercent}
-          adjustsFontSizeToFit
-          numberOfLines={1}>
-          {Math.abs(value.totalPortPercent).toFixed(2)}%
-        </Text>
-      </View>
-    </View>
-  );
-};
+import {Profit, Loss} from '../components/returnsHeading';
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -62,15 +19,17 @@ export default function Home() {
   const currency: any = useSelector<app_state>(
     state => state.portReducer.currency,
   );
-  const inr: any = useSelector<app_state>(state => state.portReducer.inr);
-  const usdt: any = useSelector<app_state>(state => state.portReducer.usdt);
+  const inr: any = useSelector<app_state>(
+    state => state.portReducer.inr,
+    shallowEqual,
+  );
+  const usdt: any = useSelector<app_state>(
+    state => state.portReducer.usdt,
+    shallowEqual,
+  );
   const {colors, dark} = useTheme();
   const navigation = useNavigation();
   const [graphType, setGraphType] = useState<'line' | 'bar'>('line');
-
-  /*   useEffect(() => { */
-  /*     dispatch({type: 'SET_CURRENCY', currency: 'inr'}); */
-  /*   }, []); */
 
   useEffect(() => {
     if (counter < 1) return;
@@ -95,6 +54,7 @@ export default function Home() {
           barStyle={dark ? 'light-content' : 'dark-content'}
           animated={true}
         />
+
         <Surface
           style={{
             ...styles.surface,
@@ -187,36 +147,3 @@ export default function Home() {
     );
   }
 }
-
-const localStyles = StyleSheet.create({
-  grContainer: {
-    ...styles.grContainer,
-    alignItems: 'center',
-  },
-  grProfitAmount: {
-    ...styles.grAmount,
-    color: '#32CD32',
-    fontSize: 40,
-    letterSpacing: 1,
-  },
-  grProfitPercent: {
-    ...styles.grPercent,
-    backgroundColor: '#32CD32',
-    fontSize: 40,
-    paddingHorizontal: 10,
-    letterSpacing: 1,
-  },
-  grLossAmount: {
-    ...styles.grAmount,
-    color: '#c52a0d',
-    fontSize: 40,
-    letterSpacing: 1,
-  },
-  grLossPercent: {
-    ...styles.grPercent,
-    backgroundColor: '#c52a0d',
-    fontSize: 40,
-    paddingHorizontal: 10,
-    letterSpacing: 1,
-  },
-});

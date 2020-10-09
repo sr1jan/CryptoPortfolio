@@ -1,10 +1,11 @@
 import React, {useRef, useState} from 'react';
-import {Animated, Alert} from 'react-native';
+import {View, Animated, Alert} from 'react-native';
 import {useDispatch} from 'react-redux';
 import {RectButton} from 'react-native-gesture-handler';
+import {useTheme} from 'react-native-paper';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import {styles} from '../styles/styles';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 
 import AlertModal from '../modals/alertModal';
@@ -13,6 +14,7 @@ export const SwipeableReturns = props => {
   const swipeRef = useRef();
   const dispatch = useDispatch();
   const [visible, toggleAlert] = useState(false);
+  const {colors} = useTheme();
 
   const toggleAlertModal = () => toggleAlert(!visible);
 
@@ -34,21 +36,21 @@ export const SwipeableReturns = props => {
     });
     return (
       <>
-        <RectButton
+        <View
           style={{
             ...styles.rightAction,
             marginVertical: 5,
             marginHorizontal: 10,
             marginTop: props.index > 0 ? 5 : 10,
-            width: '95%',
+            width: '94%',
           }}>
           <AnimatedIcon
             name="delete-forever"
             size={30}
-            color="#fff"
+            color={colors.notification}
             style={[styles.actionIcon, {transform: [{translateX: scale}]}]}
           />
-        </RectButton>
+        </View>
         {visible && (
           <AlertModal
             title="Are you sure?"
@@ -70,7 +72,7 @@ export const SwipeableReturns = props => {
       friction={1.2}
       onSwipeableRightOpen={toggleAlertModal}
       renderRightActions={renderRightActions}
-      rightThreshold={150}
+      rightThreshold={100}
       {...props}
     />
   );

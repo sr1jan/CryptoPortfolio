@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext, useRef} from 'react';
+import React, {useState, useContext, useRef} from 'react';
 import {
   View,
   Text,
@@ -6,7 +6,6 @@ import {
   Keyboard,
   Modal,
   TouchableOpacity,
-  Dimensions,
 } from 'react-native';
 import {material} from 'react-native-typography';
 import {useTheme} from 'react-native-paper';
@@ -36,11 +35,12 @@ const CoinInput = (props: Props) => {
     market: '',
     amount: 0,
     price: 0,
-    boughtVal: 0,
+    capital: 0,
     returns: 0,
     percent: 0,
     inr: {cap: 0, returns: 0},
     usdt: {cap: 0, returns: 0},
+    date: '',
   });
 
   const setCoin = (value: string) => {
@@ -141,7 +141,6 @@ const CoinInput = (props: Props) => {
           {!coinsVisible && !marketsVisible && (
             <View>
               <TextInput
-                label="Amount"
                 placeholder="Amount: 0.0131"
                 placeholderTextColor={colors.placeholder}
                 selectionColor={colors.text}
@@ -154,7 +153,6 @@ const CoinInput = (props: Props) => {
               />
 
               <TextInput
-                label="Price"
                 placeholder="Price: 7500"
                 placeholderTextColor={colors.placeholder}
                 selectionColor={colors.text}

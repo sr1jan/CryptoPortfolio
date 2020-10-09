@@ -1,8 +1,9 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {View} from 'react-native';
+import {View, Alert} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {connect, useDispatch} from 'react-redux';
 import {useRoute} from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {
   token_prop,

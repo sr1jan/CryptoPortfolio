@@ -1,16 +1,14 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {View, ScrollView, Alert} from 'react-native';
+import {View, ScrollView} from 'react-native';
 import {useSelector, shallowEqual} from 'react-redux';
 import {useTheme} from 'react-native-paper';
 import {YAxis, LineChart, BarChart, Grid} from 'react-native-svg-charts';
-import {Line, Text} from 'react-native-svg';
+import {Line} from 'react-native-svg';
 import * as shape from 'd3-shape';
 import {scaleLinear} from 'd3-scale';
 
 import {app_state} from '../types';
-
-const PROFIT = '#32CD32';
-const LOSS = '#c52a0d';
+import {PROFIT_COLOR, LOSS_COLOR} from '../styles/styles';
 
 interface Props {
   graphType: string;
@@ -70,9 +68,7 @@ export const ReturnsGraph = (props: Props) => {
     data = data.concat(returns);
   }
 
-  /* console.log(...data); */
-  /* console.log(totalReturns); */
-  const contentInset = {top: 10, bottom: 10, left: 10, right: 10};
+  const contentInset = {top: 25, bottom: 25, left: 10, right: 10};
   return (
     <View
       style={{
@@ -83,15 +79,13 @@ export const ReturnsGraph = (props: Props) => {
       {props.graphType !== 'pie' && (
         <YAxis
           data={data}
-          numberOfTicks={12}
+          numberOfTicks={10}
           contentInset={contentInset}
           svg={{
             fill: colors.onSurface,
             fontSize: 10,
           }}
           scale={scaleLinear}
-          animation={true}
-          animationDuration={300}
           formatLabel={value => `${currencySign[currency]} ${value.toFixed(2)}`}
         />
       )}
@@ -106,9 +100,12 @@ export const ReturnsGraph = (props: Props) => {
           {props.graphType === 'line' && (
             <LineChart
               style={{flex: 1}}
-              numberOfTicks={12}
+              numberOfTicks={10}
               data={data}
-              svg={{stroke: totalReturns > 0 ? PROFIT : LOSS, strokeWidth: 1.5}}
+              svg={{
+                stroke: totalReturns > 0 ? PROFIT_COLOR : LOSS_COLOR,
+                strokeWidth: 1.5,
+              }}
               yScale={scaleLinear}
               animate={true}
               animationDuration={300}
@@ -129,12 +126,10 @@ export const ReturnsGraph = (props: Props) => {
             <BarChart
               style={{flex: 1}}
               spacingInner={0.2}
-              numberOfTicks={12}
+              numberOfTicks={10}
               data={data}
               yScale={scaleLinear}
-              svg={{fill: totalReturns > 0 ? PROFIT : LOSS}}
-              animate={true}
-              animationDuration={300}
+              svg={{fill: totalReturns > 0 ? PROFIT_COLOR : LOSS_COLOR}}
               contentInset={contentInset}>
               <Grid
                 svg={{

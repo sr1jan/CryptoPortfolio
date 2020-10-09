@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {View, Text, Linking} from 'react-native';
 import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
 import {material} from 'react-native-typography';
 import {useTheme, Surface} from 'react-native-paper';
+import qs from 'qs';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {styles} from '../styles/styles';
-
 import {settingSections} from '../data/settingsData';
 
 interface rowDataProps {
@@ -16,10 +17,12 @@ interface rowDataProps {
 interface rowItemProps {
   heading: string;
   data: rowDataProps[];
+  index: number;
 }
 
 export default function Setting() {
   const {colors} = useTheme();
+  const settingsRef = useRef();
 
   const RowItemChild = (props: rowDataProps) => {
     return (
@@ -73,9 +76,10 @@ export default function Setting() {
           alignItems: 'stretch',
           width: '94%',
           marginHorizontal: 11,
+          marginTop: props.index > 0 ? 0 : 10,
           backgroundColor: colors.accent,
           paddingHorizontal: 12,
-          paddingBottom: 10,
+          paddingBottom: 5,
         }}>
         <View style={{padding: 2}}>
           <Text
@@ -114,23 +118,22 @@ export default function Setting() {
   };
 
   const SettingFooter = () => {
-    const url = 'https://twitter.com/sr1jann';
     return (
       <View
         style={{
           alignItems: 'center',
-          marginTop: 15,
+          marginTop: 10,
+          marginBottom: 10,
         }}>
-        <TouchableOpacity onPress={async () => await Linking.openURL(url)}>
-          <Text
-            style={{
-              ...material.captionObject,
-              color: colors.notification,
-              textDecorationLine: 'underline',
-              letterSpacing: 1,
-            }}>
-            contact developer
-          </Text>
+        <TouchableOpacity
+          onPress={() =>
+            settingsRef.current.scrollToIndex({index: 0, animated: true})
+          }>
+          <Icon
+            name="arrow-up-circle-outline"
+            color={colors.accent}
+            size={50}
+          />
         </TouchableOpacity>
       </View>
     );
@@ -141,14 +144,13 @@ export default function Setting() {
       style={{
         flex: 1,
         alignItems: 'stretch',
-        justifyContent: 'flex-start',
-        marginTop: 10,
       }}>
       <FlatList
+        ref={ref => (settingsRef.current = ref)}
         data={settingSections}
         keyExtractor={item => item.heading}
-        renderItem={({item}) => (
-          <RowItem heading={item.heading} data={item.data} />
+        renderItem={({item, index}) => (
+          <RowItem heading={item.heading} data={item.data} index={index} />
         )}
         ItemSeparatorComponent={() => <View style={{marginBottom: 10}} />}
         ListFooterComponent={() => <SettingFooter />}

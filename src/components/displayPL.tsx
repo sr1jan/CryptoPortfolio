@@ -1,6 +1,7 @@
 import React, {useRef, useContext} from 'react';
 import {View} from 'react-native';
-import {FlatList} from 'react-native-gesture-handler';
+import {useNavigation} from '@react-navigation/native';
+import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
 import {useTheme, Surface, Text} from 'react-native-paper';
 import {material} from 'react-native-typography';
 import {token_prop} from '../types';
@@ -15,48 +16,61 @@ interface Props {
 }
 
 const DisplayPL = (props: Props) => {
+  const navigation = useNavigation();
+  const flatList = useRef(null);
+  const touchableRef = useRef(null);
   const {query} = useContext(SearchCoinContext);
   const {colors} = useTheme();
-  const flatList = useRef(null);
 
   const Row = ({item, index}: {item: token_prop; index: number}) => {
     return (
-      <Surface
-        style={{
-          ...styles.surface,
-          flexDirection: 'row',
-          height: 70,
-          width: '95%',
-          justifyContent: 'space-between',
-          backgroundColor: colors.accent,
-          marginHorizontal: 10,
-          marginBottom: 5,
-          marginTop: index > 0 ? 5 : 10,
+      <TouchableOpacity
+        ref={touchableRef}
+        activeOpacity={0.7}
+        onPress={() => {
+          navigation.navigate('CoinDetail', {index: index});
         }}>
-        <View style={{marginLeft: 10, alignItems: 'flex-start'}}>
-          <Text
-            style={{...material.titleObject, color: colors.text, fontSize: 17}}>
-            {item.coin.toUpperCase()}
-          </Text>
-          <Text
-            style={{
-              ...material.subheadingObject,
-              color: colors.placeholder,
-              fontSize: 12,
-            }}>
-            {item.market.toUpperCase()}
-          </Text>
-        </View>
-        <View style={{marginRight: 10}}>
-          {item.returns >= 0 ? <Profit item={item} /> : <Loss item={item} />}
-        </View>
-      </Surface>
+        <Surface
+          style={{
+            ...styles.surface,
+            flexDirection: 'row',
+            height: 70,
+            width: '94%',
+            justifyContent: 'space-between',
+            backgroundColor: colors.accent,
+            marginHorizontal: 11,
+            marginBottom: 5,
+            marginTop: index > 0 ? 5 : 10,
+          }}>
+          <View style={{marginLeft: 10, alignItems: 'flex-start'}}>
+            <Text
+              style={{
+                ...material.titleObject,
+                color: colors.text,
+                fontSize: 17,
+              }}>
+              {item.coin.toUpperCase()}
+            </Text>
+            <Text
+              style={{
+                ...material.subheadingObject,
+                color: colors.placeholder,
+                fontSize: 12,
+              }}>
+              {item.market.toUpperCase()}
+            </Text>
+          </View>
+          <View style={{marginRight: 10}}>
+            {item.returns >= 0 ? <Profit item={item} /> : <Loss item={item} />}
+          </View>
+        </Surface>
+      </TouchableOpacity>
     );
   };
 
   const renderItem = ({item, index}: {item: token_prop; index: number}) => {
     return (
-      <SwipeableReturns index={index}>
+      <SwipeableReturns token={item} index={index}>
         <Row item={item} index={index} />
       </SwipeableReturns>
     );

@@ -3,10 +3,11 @@ import {token_prop} from '../types';
 import {pairs} from '../data/pairs';
 import {currencyConversion} from './currency';
 import {alertModalType} from '../types';
+import RNFetchBlob from 'rn-fetch-blob';
 
 export const fetchData = async () => {
   const URL = 'https://api.wazirx.com/api/v2/tickers';
-  const response = await fetch(URL);
+  const response = await RNFetchBlob.fetch('GET', URL);
   const json = await response.json();
   return json;
 };
@@ -31,10 +32,10 @@ interface UpdateCoinProps {
 export const convertCurrency = (token_object: token_prop, json: object) => {
   let inr =
     token_object.market === 'inr'
-      ? {cap: token_object.boughtVal, returns: token_object.returns}
+      ? {cap: token_object.capital, returns: token_object.returns}
       : {
           cap: currencyConversion({
-            amount: token_object.boughtVal,
+            amount: token_object.capital,
             from: token_object.market,
             to: 'inr',
             priceData: json,
@@ -49,10 +50,10 @@ export const convertCurrency = (token_object: token_prop, json: object) => {
 
   let usdt =
     token_object.market === 'usdt'
-      ? {cap: token_object.boughtVal, returns: token_object.returns}
+      ? {cap: token_object.capital, returns: token_object.returns}
       : {
           cap: currencyConversion({
-            amount: token_object.boughtVal,
+            amount: token_object.capital,
             from: token_object.market,
             to: 'usdt',
             priceData: json,
@@ -100,7 +101,8 @@ export const AddNewCoin = async (props: AddCoinProps) => {
       props.callDialog(dialog);
     } else {
       token_object.id = props.counter + 1;
-      token_object.boughtVal = token_object.amount * token_object.price;
+      token_object.capital = token_object.amount * token_object.price;
+      token_object.date = new Date().toString().slice(0, 15);
       props.toggleModal();
       props.setLoading(true);
       await newCoin();
@@ -131,17 +133,18 @@ export const AddNewCoin = async (props: AddCoinProps) => {
     }
 
     const name = token_object.coin + token_object.market;
-    const boughtVal = token_object.boughtVal;
+    const capital = token_object.capital;
     const curPrice = json[name].last;
     const curVal = curPrice * token_object.amount;
-    const returns = curVal - boughtVal;
-    const percent = (returns / boughtVal) * 100;
+    const returns = curVal - capital;
+    const percent = (returns / capital) * 100;
+
+    token_object.returns = returns;
+    token_object.percent = percent;
 
     const {inr, usdt} = convertCurrency(token_object, json);
     token_object = {
       ...token_object,
-      returns: returns,
-      percent: percent,
       inr: inr,
       usdt: usdt,
     };
@@ -168,9 +171,9 @@ export const UpdateCoins = async (props: UpdateCoinProps) => {
     const name = token_object.coin + token_object.market;
     const curPrice = json[name].last;
     const curVal = curPrice * token_object.amount;
-    const returns = curVal - token_object.boughtVal;
+    const returns = curVal - token_object.capital;
     if (returns.toFixed(2) === token_object.returns.toFixed(2)) return;
-    const percent = (returns / token_object.boughtVal) * 100;
+    const percent = (returns / token_object.capital) * 100;
 
     let inrReturns = 0;
     let usdtReturns = 0;

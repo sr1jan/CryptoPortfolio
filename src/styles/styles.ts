@@ -1,6 +1,15 @@
 import {StyleSheet, I18nManager} from 'react-native';
 import {material} from 'react-native-typography';
 
+export const PROFIT_COLOR = '#32CD32';
+export const LOSS_COLOR = '#c52a0d';
+
+export const currencySign = {
+  ['inr']: '\u20b9',
+  ['usdt']: '\u0024',
+  ['btc']: '\u20bf',
+};
+
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -12,10 +21,10 @@ export const styles = StyleSheet.create({
   },
   surface: {
     padding: 5,
-    width: '95%',
+    width: '94%',
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 5,
+    elevation: 4,
   },
   addCoinHomeText: {
     color: 'grey',
@@ -181,16 +190,16 @@ export const styles = StyleSheet.create({
   rightAction: {
     alignItems: 'center',
     flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
-    backgroundColor: '#dd2c00',
+    // backgroundColor: '#dd2c00',
     justifyContent: 'flex-end',
     height: 70,
   },
   leftAction: {
-    flex: 1,
     backgroundColor: '#388e3c',
     justifyContent: 'flex-end',
     alignItems: 'center',
     flexDirection: I18nManager.isRTL ? 'row' : 'row-reverse',
+    height: 70,
   },
   actionIcon: {
     width: 30,

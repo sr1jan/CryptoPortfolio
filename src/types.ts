@@ -37,7 +37,7 @@ export interface token_prop {
   market: string;
   amount: number;
   price: number;
-  boughtVal: number;
+  capital: number;
   returns: number;
   percent: number;
   inr: {
@@ -48,6 +48,7 @@ export interface token_prop {
     cap: number;
     returns: number;
   };
+  date: string;
 }
 
 export interface theme_prop {
