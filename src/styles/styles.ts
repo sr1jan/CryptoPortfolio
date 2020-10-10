@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
     width: '94%',
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 4,
+    elevation: 2,
   },
   addCoinHomeText: {
     color: 'grey',

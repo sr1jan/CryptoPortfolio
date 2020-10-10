@@ -34,7 +34,7 @@ export default function CoinDetail({route, navigation}) {
         style={{
           ...styles.surface,
           backgroundColor: colors.accent,
-          height: '18%',
+          height: '15%',
         }}>
         {token.returns > 0 ? <Profit item={token} /> : <Loss item={token} />}
       </Surface>
@@ -44,7 +44,7 @@ export default function CoinDetail({route, navigation}) {
           ...styles.surface,
           alignItems: 'stretch',
           backgroundColor: colors.accent,
-          height: '70%',
+          height: '63%',
           paddingHorizontal: 10,
         }}>
         <CoinDetailInfo token={token} />

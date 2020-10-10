@@ -9,7 +9,7 @@ import {material} from 'react-native-typography';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import qs from 'qs';
 
-import {app_state} from '../types';
+import {app_state, port_state, returns_state} from '../types';
 import {styles} from '../styles/styles';
 import AlertModal from '../modals/alertModal';
 import ActionModal from '../modals/actionModal';
@@ -232,8 +232,10 @@ export const ExportData = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState({visible: false, msg: ''});
   const [file, setFile] = useState('');
-  const portData: any = useSelector<app_state>(state => state.portReducer);
-  const returnsData: any = useSelector<app_state>(
+  const portData: port_state = useSelector<app_state>(
+    state => state.portReducer,
+  );
+  const returnsData: returns_state = useSelector<app_state>(
     state => state.returnsReducer,
   );
 
@@ -270,12 +272,15 @@ export const ExportData = () => {
 
     const granted = await requestPermission();
     if (!granted) {
-      setError({visible: true, msg: 'Permissions required for export!'});
+      setError({visible: true, msg: 'Permissions required to export data!'});
       return;
     }
 
     if (portData.counter < 1) {
-      setError({visible: true, msg: 'No data to export, add a coin.'});
+      setError({
+        visible: true,
+        msg: 'No data to export, try adding coins.',
+      });
       return;
     }
 
@@ -318,7 +323,7 @@ export const ExportData = () => {
     } catch (e) {
       console.log(e);
       setLoading(false);
-      setError({visible: true, msg: 'Something went wrong, try later!'});
+      setError({visible: true, msg: 'Something went wrong, try again later!'});
       return;
     }
 

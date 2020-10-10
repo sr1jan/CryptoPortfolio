@@ -32,24 +32,26 @@ const SnackBar = (props: snackBarType) => {
           style={{
             ...styles.modalView,
             paddingVertical: 10,
-            paddingHorizontal: 20,
-            marginHorizontal: 20,
+            paddingHorizontal: 10,
+            marginHorizontal: 15,
             marginBottom: 20,
             borderRadius: 3,
-            elevation: 5,
+            elevation: 2,
             backgroundColor: colors.background,
           }}>
           <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              justifyContent: 'space-around',
+              justifyContent: 'space-between',
             }}>
             <Text
               style={{
-                ...material.titleObject,
+                ...material.body1Object,
                 color: colors.placeholder,
-                fontSize: 15,
+                fontSize: 14,
+                letterSpacing: 0.3,
+                marginRight: 5,
               }}>
               {props.msgText}
             </Text>
@@ -59,9 +61,10 @@ const SnackBar = (props: snackBarType) => {
                   style={{
                     ...material.buttonObject,
                     color: colors.notification,
-                    fontSize: 15,
+                    fontSize: 14,
+                    letterSpacing: 1,
                   }}>
-                  {props.actText}
+                  {props.actText.toUpperCase()}
                 </Text>
               </TouchableOpacity>
             )}
@@ -73,9 +76,10 @@ const SnackBar = (props: snackBarType) => {
                     props.actText === undefined
                       ? colors.notification
                       : colors.placeholder,
-                  fontSize: 15,
+                  fontSize: 14,
+                  letterSpacing: 1,
                 }}>
-                Hide
+                HIDE
               </Text>
             </TouchableOpacity>
           </View>

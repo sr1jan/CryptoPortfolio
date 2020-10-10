@@ -16,7 +16,7 @@ export default function CoinDetailInfo(token) {
     <View
       style={{
         alignSelf: 'stretch',
-        paddingHorizontal: 10,
+        paddingHorizontal: 25,
         paddingVertical: 10,
       }}>
       {token_arr.map((pair, index) => {
@@ -31,13 +31,13 @@ export default function CoinDetailInfo(token) {
                 backgroundColor: colors.background,
                 paddingVertical: 6,
                 paddingHorizontal: 8,
-                marginTop: index > 0 ? 8 : 0,
+                marginTop: index > 0 ? 5 : 0,
               }}>
               <Text
                 style={{
                   ...material.body1Object,
                   color: colors.text,
-                  fontSize: 18,
+                  fontSize: 15,
                   letterSpacing: 0.8,
                 }}>
                 {pair[0].toUpperCase()}
@@ -46,7 +46,7 @@ export default function CoinDetailInfo(token) {
                 style={{
                   ...material.body1Object,
                   color: colors.text,
-                  fontSize: 18,
+                  fontSize: 15,
                   letterSpacing: 0.8,
                 }}>
                 {/* sorry for below code, will change later*/}

@@ -1,18 +1,11 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {View, Alert} from 'react-native';
+import {View} from 'react-native';
 import {useTheme} from 'react-native-paper';
-import {connect, useDispatch} from 'react-redux';
+import {useDispatch, useSelector, shallowEqual} from 'react-redux';
 import {useRoute} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import {
-  token_prop,
-  app_state,
-  addCoinType,
-  updatePriceType,
-  addPriceDataType,
-  totalPort,
-} from '../types';
+import {token_prop, app_state} from '../types';
 import {styles} from '../styles/styles';
 
 import {addCoin, updatePrices, addPriceData} from '../actions/port';
@@ -27,16 +20,7 @@ import NewCoin from '../components/newCoin';
 import {AddNewCoin, UpdateCoins} from '../helpers/coinOperations';
 import {CoinInputContext} from '../context/coinInputContext';
 
-interface Props {
-  token: token_prop[];
-  counter: number;
-  priceData: object;
-  addCoin: (coinDetail: token_prop, counter: number) => addCoinType;
-  updatePrices: (coinDetail: token_prop, idx: number) => updatePriceType;
-  priceDataUpdate: (data: object) => addPriceDataType;
-}
-
-const Portfolio = (props: Props) => {
+const Portfolio = () => {
   const route = useRoute();
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -52,8 +36,30 @@ const Portfolio = (props: Props) => {
     suppress: () => {},
   });
 
+  const token: token_prop[] = useSelector<app_state>(
+    state => state.portReducer.token,
+  );
+  const counter: number = useSelector<app_state>(
+    state => state.portReducer.counter,
+  );
+  const priceData: object = useSelector<app_state>(
+    state => state.portReducer.priceData,
+  );
+
   const callDialog = (values: alertModalType) => {
     setDialog(values);
+  };
+
+  const priceDataUpdate = (data: object) => {
+    dispatch({type: 'ADD_PRICE_DATA', data: data});
+  };
+
+  const updatePrices = (coinDetail: token_prop, idx: number) => {
+    dispatch({type: 'UPDATE_PRICES', newCoinDetail: coinDetail, idx: idx});
+  };
+
+  const addCoin = (coinDetail: token_prop, counter: number) => {
+    dispatch({type: 'ADD_COIN', coinDetail: coinDetail, counter: counter});
   };
 
   useEffect(() => {
@@ -63,35 +69,35 @@ const Portfolio = (props: Props) => {
   }, [route.params]);
 
   useEffect(() => {
-    if (props.counter < 1) return;
+    if (counter < 1) return;
     const _interval = setInterval(async () => {
       await UpdateCoins({
-        token: props.token,
-        priceDataUpdate: props.priceDataUpdate,
-        updatePrices: props.updatePrices,
+        token: token,
+        priceDataUpdate: priceDataUpdate,
+        updatePrices: updatePrices,
       });
     }, 60000);
 
     return () => {
       clearInterval(_interval);
     };
-  }, [props.counter]);
+  }, [counter]);
 
   useEffect(() => {
-    if (props.counter > 0) return;
+    if (counter > 0) return;
     dispatch({type: 'DELETE_RETURNS'});
     dispatch({type: 'CLEAR_PORT'});
-  }, [props.counter]);
+  }, [counter]);
 
   const submit = (token_object: token_prop) => {
     AddNewCoin({
       token_object: token_object,
-      counter: props.counter,
+      counter: counter,
       setLoading: setLoading,
-      priceDataUpdate: props.priceDataUpdate,
-      addCoin: props.addCoin,
+      priceDataUpdate: priceDataUpdate,
+      addCoin: addCoin,
       toggleModal: toggleModal,
-      priceData: props.priceData,
+      priceData: priceData,
       callDialog: callDialog,
     });
   };
@@ -100,8 +106,8 @@ const Portfolio = (props: Props) => {
     <View
       style={{...styles.container, backgroundColor: theme.colors.background}}>
       <View style={{flex: 1}}>
-        {!loading && !props.counter && !coinInputModal && <NewCoin />}
-        {props.counter > 0 && <DisplayPL token={props.token} />}
+        {!loading && !counter && !coinInputModal && <NewCoin />}
+        {counter > 0 && <DisplayPL token={token} />}
         {loading && <Loading />}
       </View>
       {coinInputModal && <CoinInput submit={submit} />}
@@ -120,25 +126,4 @@ const Portfolio = (props: Props) => {
   );
 };
 
-const mapStateToProps = (state: app_state) => {
-  return {
-    token: state.portReducer.token,
-    counter: state.portReducer.counter,
-    priceData: state.portReducer.priceData,
-  };
-};
-
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    addCoin: (coinDetail: token_prop, counter: number) =>
-      dispatch(addCoin(coinDetail, counter)),
-    updatePrices: (coinDetail: token_prop, idx: number) =>
-      dispatch(updatePrices(coinDetail, idx)),
-    priceDataUpdate: (data: object) => dispatch(addPriceData(data)),
-  };
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Portfolio);
+export default Portfolio;

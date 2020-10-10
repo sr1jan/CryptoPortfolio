@@ -8,7 +8,7 @@ import * as shape from 'd3-shape';
 import {scaleLinear} from 'd3-scale';
 
 import {app_state} from '../types';
-import {PROFIT_COLOR, LOSS_COLOR} from '../styles/styles';
+import {PROFIT_COLOR, LOSS_COLOR, currencySign} from '../styles/styles';
 
 interface Props {
   graphType: string;
@@ -28,11 +28,6 @@ const HorizontalLine = ({y, data}) => {
       strokeWidth={2}
     />
   );
-};
-
-const currencySign = {
-  ['inr']: '\u20b9',
-  ['usdt']: '\u0024',
 };
 
 export const ReturnsGraph = (props: Props) => {
@@ -76,19 +71,17 @@ export const ReturnsGraph = (props: Props) => {
         width: '95%',
         flexDirection: 'row',
       }}>
-      {props.graphType !== 'pie' && (
-        <YAxis
-          data={data}
-          numberOfTicks={10}
-          contentInset={contentInset}
-          svg={{
-            fill: colors.onSurface,
-            fontSize: 10,
-          }}
-          scale={scaleLinear}
-          formatLabel={value => `${currencySign[currency]} ${value.toFixed(2)}`}
-        />
-      )}
+      <YAxis
+        data={data}
+        numberOfTicks={10}
+        contentInset={contentInset}
+        svg={{
+          fill: colors.onSurface,
+          fontSize: 10,
+        }}
+        scale={scaleLinear}
+        formatLabel={value => `${currencySign[currency]} ${value.toFixed(2)}`}
+      />
       <ScrollView
         horizontal={true}
         style={{marginLeft: 5}}

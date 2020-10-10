@@ -173,7 +173,7 @@ const CoinInput = (props: Props) => {
                   activeOpacity={0.7}
                   style={{
                     borderRadius: 3,
-                    borderWidth: 0.5,
+                    borderWidth: 0.8,
                     borderColor: colors.accent,
                   }}
                   onPress={() => {
