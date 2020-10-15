@@ -23,8 +23,8 @@ interface Props {
 }
 
 const CoinInput = (props: Props) => {
-  const coinRef = useRef();
-  const marketRef = useRef();
+  const coinRef = useRef<TextInput>(null);
+  const marketRef = useRef<TextInput>(null);
   const {colors} = useTheme();
   const {toggleModal, coinInputModal} = useContext(CoinInputContext);
   const [coinsVisible, showCoins] = useState<boolean>(false);
@@ -44,13 +44,13 @@ const CoinInput = (props: Props) => {
   });
 
   const setCoin = (value: string) => {
-    coinRef.current.blur();
+    coinRef.current?.blur();
     showCoins(false);
     setTokenObj({...token_object, coin: value.toUpperCase()});
   };
 
   const setMarket = (value: string) => {
-    marketRef.current.blur();
+    marketRef.current?.blur();
     showMarkets(false);
     setTokenObj({...token_object, market: value.toUpperCase()});
   };
@@ -77,20 +77,20 @@ const CoinInput = (props: Props) => {
             paddingBottom: 30,
             elevation: 10,
           }}>
-          <View
-            style={{
-              alignSelf: 'flex-end',
-              marginRight: 20,
-              padding: 10,
-            }}>
-            <TouchableOpacity onPress={toggleModal}>
+
+            <TouchableOpacity 
+              onPress={toggleModal}
+              style={{
+                alignSelf: 'flex-end',
+                marginRight: 20,
+                padding: 10,
+              }}>
               <Icon name="close" color={colors.placeholder} size={20} />
             </TouchableOpacity>
-          </View>
 
           <View style={{justifyContent: 'center'}}>
             <TextInput
-              ref={ref => (coinRef.current = ref)}
+              ref={coinRef}
               value={token_object.coin}
               placeholder="Coin: BTC"
               placeholderTextColor={colors.placeholder}
@@ -115,7 +115,7 @@ const CoinInput = (props: Props) => {
           {!coinsVisible && (
             <View style={{justifyContent: 'center'}}>
               <TextInput
-                ref={ref => (marketRef.current = ref)}
+                ref={marketRef}
                 value={token_object.market}
                 placeholder="Market: USDT"
                 placeholderTextColor={colors.placeholder}
@@ -170,9 +170,9 @@ const CoinInput = (props: Props) => {
                   marginTop: 15,
                 }}>
                 <TouchableOpacity
-                  activeOpacity={0.7}
                   style={{
-                    borderWidth: 0.2,
+                    borderWidth: 1,
+                    borderRadius: 3,
                     borderColor: colors.placeholder,
                   }}
                   onPress={() => {

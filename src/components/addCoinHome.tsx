@@ -10,7 +10,7 @@ export const AddCoinHome = () => {
   const navigation = useNavigation();
   const {colors} = useTheme();
   return (
-    <View>
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text
         style={{
           color: colors.placeholder,
