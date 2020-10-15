@@ -1,11 +1,11 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState, useRef, MutableRefObject} from 'react';
 import {View, ScrollView} from 'react-native';
 import {useSelector, shallowEqual} from 'react-redux';
 import {useTheme} from 'react-native-paper';
 import {YAxis, LineChart, BarChart, Grid} from 'react-native-svg-charts';
 import {Line} from 'react-native-svg';
 import * as shape from 'd3-shape';
-import {scaleLinear} from 'd3-scale';
+import {scaleLinear, scaleTime} from 'd3-scale';
 
 import {app_state} from '../types';
 import {PROFIT_COLOR, LOSS_COLOR, currencySign} from '../styles/styles';
@@ -14,11 +14,10 @@ interface Props {
   graphType: string;
 }
 
-const HorizontalLine = ({y, data}) => {
+const AverageLine = ({y, data}) => {
   const avg = data.reduce((a, b) => a + b) / data.length;
   return (
     <Line
-      key={'zero-axis'}
       x1={'0%'}
       x2={'100%'}
       y1={y(avg)}
@@ -30,29 +29,43 @@ const HorizontalLine = ({y, data}) => {
   );
 };
 
+const LatestValueLine = ({y, data, colors}) => {
+  return (
+    <Line
+      x1={'0%'}
+      x2={'97%'}
+      y1={y(data[data.length-1])}
+      y2={y(data[data.length-1])}
+      stroke={colors.text}
+      strokeWidth={0.5}
+      strokeOpacity={0.5}
+    />
+  );
+};
+
 export const ReturnsGraph = (props: Props) => {
   const {colors, dark} = useTheme();
   /* const [data, setData] = useState([10, 20, 4, 5, 40, 20, 11, 8, 22]); */
-  const scrollRef = useRef();
+  const scrollRef = useRef<ScrollView>(null);
 
-  const currency: any = useSelector<app_state>(
+  const currency: string = useSelector<app_state, string>(
     state => state.portReducer.currency,
   );
-  const totalReturns: any = useSelector<app_state>(
+  const totalReturns: number = useSelector<app_state, number>(
     state => state.portReducer[currency].totalPortAmount,
   );
-  const returns: any = useSelector<app_state>(
+  const returns: number[] = useSelector<app_state, number[]>(
     state => state.returnsReducer[currency].returns,
     shallowEqual,
   );
 
-  /* useEffect(() => { */
-  /*   const _data = setInterval(() => { */
-  /*     setData(d => d.concat(Math.floor(Math.random() * (50 - 5)))); */
-  /*   }, 5000); */
+/*   useEffect(() => { */
+/*     const _data = setInterval(() => { */
+/*       setData(d => d.concat(Math.floor(Math.random() * (500 - 5)))); */
+/*     }, 5000); */
 
-  /*   return () => clearInterval(_data); */
-  /* }, []); */
+/*     return () => clearInterval(_data); */
+/*   }, []); */
 
   let data: number[] = [];
   if (returns.length > 25) {
@@ -85,9 +98,9 @@ export const ReturnsGraph = (props: Props) => {
       <ScrollView
         horizontal={true}
         style={{marginLeft: 5}}
-        ref={ref => (scrollRef.current = ref)}
+        ref={scrollRef}
         onContentSizeChange={() =>
-          scrollRef.current.scrollToEnd({animated: true})
+          scrollRef.current?.scrollToEnd({animated: true})
         }>
         <View style={{width: 300}}>
           {props.graphType === 'line' && (
@@ -100,8 +113,7 @@ export const ReturnsGraph = (props: Props) => {
                 strokeWidth: 1.5,
               }}
               yScale={scaleLinear}
-              animate={true}
-              animationDuration={300}
+              xScale={scaleTime}
               contentInset={contentInset}
               curve={shape.curveNatural}>
               <Grid
@@ -111,10 +123,10 @@ export const ReturnsGraph = (props: Props) => {
                   strokeOpacity: 0.5,
                 }}
               />
-              <HorizontalLine />
+              {/* <AverageLine /> */}
+              {/* <LatestValueLine colors={colors}/> */}
             </LineChart>
           )}
-
           {props.graphType === 'bar' && (
             <BarChart
               style={{flex: 1}}
@@ -122,6 +134,7 @@ export const ReturnsGraph = (props: Props) => {
               numberOfTicks={10}
               data={data}
               yScale={scaleLinear}
+              xScale={scaleTime}
               svg={{fill: totalReturns > 0 ? PROFIT_COLOR : LOSS_COLOR}}
               contentInset={contentInset}>
               <Grid

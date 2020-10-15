@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, MutableRefObject} from 'react';
 import {View, Text, Linking} from 'react-native';
 import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
 import {material} from 'react-native-typography';
@@ -22,7 +22,7 @@ interface rowItemProps {
 
 export default function Setting() {
   const {colors} = useTheme();
-  const settingsRef = useRef();
+  const settingsRef = useRef<FlatList<any>>(null);
 
   const RowItemChild = (props: rowDataProps) => {
     return (
@@ -127,7 +127,7 @@ export default function Setting() {
         }}>
         <TouchableOpacity
           onPress={() =>
-            settingsRef.current.scrollToIndex({index: 0, animated: true})
+            settingsRef.current?.scrollToIndex({index: 0, animated: true})
           }>
           <Icon
             name="arrow-up-circle-outline"
@@ -146,7 +146,7 @@ export default function Setting() {
         alignItems: 'stretch',
       }}>
       <FlatList
-        ref={ref => (settingsRef.current = ref)}
+        ref={settingsRef}
         data={settingSections}
         keyExtractor={item => item.heading}
         renderItem={({item, index}) => (

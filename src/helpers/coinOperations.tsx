@@ -102,6 +102,7 @@ export const AddNewCoin = async (props: AddCoinProps) => {
     } else {
       token_object.id = props.counter + 1;
       token_object.capital = token_object.amount * token_object.price;
+
       token_object.date = new Date().toString().slice(0, 15);
       props.toggleModal();
       props.setLoading(true);

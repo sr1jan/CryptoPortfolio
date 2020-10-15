@@ -1,18 +1,13 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, StyleSheet} from 'react-native';
-import {Text} from 'react-native-paper';
+import {useDispatch, useSelector, shallowEqual} from 'react-redux';
+import {Text, Surface, useTheme} from 'react-native-paper';
 
 import {styles} from '../styles/styles';
-import {totalPort} from '../types';
+import {totalPort, app_state} from '../types';
 import {valueDisplay} from '../helpers/currency';
 
-export const Profit = ({
-  value,
-  currency,
-}: {
-  value: totalPort;
-  currency: string;
-}) => {
+const Profit = ({value, currency}: {value: totalPort; currency: string}) => {
   return (
     <View style={localStyles.grContainer}>
       <Text
@@ -33,13 +28,7 @@ export const Profit = ({
   );
 };
 
-export const Loss = ({
-  value,
-  currency,
-}: {
-  value: totalPort;
-  currency: string;
-}) => {
+const Loss = ({value, currency}: {value: totalPort; currency: string}) => {
   return (
     <View style={localStyles.grContainer}>
       <Text
@@ -57,6 +46,55 @@ export const Loss = ({
         </Text>
       </View>
     </View>
+  );
+};
+
+export const ReturnsHeading = () => {
+  const dispatch = useDispatch();
+  const counter: number = useSelector<app_state, number>(
+    state => state.portReducer.counter,
+  );
+  const currency: string = useSelector<app_state, string>(
+    state => state.portReducer.currency,
+  );
+  const inr: totalPort = useSelector<app_state, totalPort>(
+    state => state.portReducer.inr,
+    shallowEqual,
+  );
+  const usdt: totalPort = useSelector<app_state, totalPort>(
+    state => state.portReducer.usdt,
+    shallowEqual,
+  );
+  const {colors, dark} = useTheme();
+
+  useEffect(() => {
+    if (counter < 1) return;
+    const time = `${new Date()
+      .toString()
+      .slice(0, 15)} ${new Date().toLocaleString().slice(11, 22)}`;
+
+    dispatch({
+      type: 'ADD_RETURNS',
+      value: {inr: inr.totalPortAmount, usdt: usdt.totalPortAmount},
+      time: time,
+    });
+  }, [inr.totalPortAmount, usdt.totalPortAmount]);
+
+  return (
+    <Surface
+      style={{
+        ...styles.surface,
+        backgroundColor: colors.accent,
+        height: '30%',
+      }}>
+      {Math.sign(
+        currency === 'inr' ? inr.totalPortAmount : usdt.totalPortAmount,
+      ) === 1 ? (
+        <Profit value={currency === 'inr' ? inr : usdt} currency={currency} />
+      ) : (
+        <Loss value={currency === 'inr' ? inr : usdt} currency={currency} />
+      )}
+    </Surface>
   );
 };
 

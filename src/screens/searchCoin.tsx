@@ -4,7 +4,7 @@ import {useSelector, shallowEqual} from 'react-redux';
 import {useTheme} from 'react-native-paper';
 
 import {styles} from '../styles/styles';
-import {app_state} from '../types';
+import {app_state, token_prop} from '../types';
 import DisplayPL from '../components/displayPL';
 import {SearchBar} from '../components/searchBar';
 import {SearchCoinContext} from '../context/searchCoinContext';
@@ -15,7 +15,7 @@ export default function SearchCoins() {
 
   const changeQuery = q => setQuery(q);
 
-  const token: any = useSelector<app_state>(
+  const token: token_prop[] = useSelector<app_state, token_prop[]>(
     state => state.portReducer.token,
     shallowEqual,
   );

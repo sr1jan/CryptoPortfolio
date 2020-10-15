@@ -52,12 +52,12 @@ const accountData = [
 const contactData = [
   {
     title: 'DM',
-    description: 'Informal approach.',
+    description: 'Mention the app when shooting a ping.',
     button: <TwitterButton />,
   },
   {
     title: 'Mail',
-    description: 'Formal approach.',
+    description: 'For those who prefer email.',
     button: <MailButton />,
   },
 ];

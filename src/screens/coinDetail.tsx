@@ -10,10 +10,10 @@ import CoinDetailInfo from '../components/coinDetailInfo';
 
 export default function CoinDetail({route, navigation}) {
   const {colors} = useTheme();
-  const currency: any = useSelector<app_state>(
+  const currency: string = useSelector<app_state, string>(
     state => state.portReducer.currency,
   );
-  const token: any = useSelector<app_state>(
+  const token: token_prop = useSelector<app_state, token_prop>(
     state => state.portReducer.token[route.params.index],
   );
 

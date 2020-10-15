@@ -12,10 +12,10 @@ import {CoinInputContext} from '../context/coinInputContext';
 
 export default function HomeStackHeader({scene, previous, navigation}) {
   const dispatch = useDispatch();
-  const returns: any = useSelector<app_state>(
+  const returns: number = useSelector<app_state, number>(
     state => state.portReducer.inr.totalPortAmount,
   );
-  const counter: any = useSelector<app_state>(
+  const counter: number = useSelector<app_state, number>(
     state => state.portReducer.counter,
   );
   const {colors, dark} = useTheme();

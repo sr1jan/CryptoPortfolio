@@ -50,7 +50,9 @@ const MyPaperDarkTheme = {
 };
 
 export default function Nav() {
-  const theme = useSelector<app_state>(state => state.portReducer.theme);
+  const theme: string = useSelector<app_state, string>(
+    state => state.portReducer.theme,
+  );
   const [coinInputModal, setCoinInputModal] = useState<boolean>(false);
   const toggleModal = () => {
     setCoinInputModal(coinInputModal => !coinInputModal);

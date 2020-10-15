@@ -8,7 +8,7 @@ import {app_state, token_prop} from './types';
 
 export const BackgroundTasks = props => {
   const dispatch = useDispatch();
-  const token: any = useSelector<app_state>(
+  const token: token_prop[] = useSelector<app_state, token_prop[]>(
     state => state.portReducer.token,
     isEqual,
   );

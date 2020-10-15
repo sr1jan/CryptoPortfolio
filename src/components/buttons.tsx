@@ -98,7 +98,7 @@ export const AddCoinButton = () => {
 };
 
 export const ChangeCurrencyButton = () => {
-  const currency: any = useSelector<app_state>(
+  const currency: string = useSelector<app_state, string>(
     state => state.portReducer.currency,
   );
   const dispatch = useDispatch();
@@ -232,10 +232,10 @@ export const ExportData = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState({visible: false, msg: ''});
   const [file, setFile] = useState('');
-  const portData: port_state = useSelector<app_state>(
+  const portData: port_state = useSelector<app_state, port_state>(
     state => state.portReducer,
   );
-  const returnsData: returns_state = useSelector<app_state>(
+  const returnsData: returns_state = useSelector<app_state, returns_state>(
     state => state.returnsReducer,
   );
 
@@ -247,7 +247,7 @@ export const ExportData = () => {
     if (!snackBar) return;
     const _snackTimeout = setTimeout(() => {
       setSnackBar(false);
-    }, 5000);
+    }, 8000);
     return () => clearTimeout(_snackTimeout);
   }, [snackBar]);
 

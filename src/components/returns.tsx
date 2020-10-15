@@ -12,11 +12,11 @@ import {
 } from '../helpers/currency';
 
 export const Profit = ({item}: {item: token_prop}) => {
-  const priceData: any = useSelector<app_state>(
+  const priceData: object = useSelector<app_state, object>(
     state => state.portReducer.priceData,
     shallowEqual,
   );
-  const currency: any = useSelector<app_state>(
+  const currency: string = useSelector<app_state, string>(
     state => state.portReducer.currency,
   );
   const {colors} = useTheme();
@@ -67,11 +67,11 @@ export const Profit = ({item}: {item: token_prop}) => {
 };
 
 export const Loss = ({item}: {item: token_prop}) => {
-  const priceData: any = useSelector<app_state>(
+  const priceData: object = useSelector<app_state, object>(
     state => state.portReducer.priceData,
     shallowEqual,
   );
-  const currency: any = useSelector<app_state>(
+  const currency: string = useSelector<app_state, string>(
     state => state.portReducer.currency,
   );
   const {colors} = useTheme();

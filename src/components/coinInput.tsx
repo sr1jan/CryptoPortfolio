@@ -172,9 +172,8 @@ const CoinInput = (props: Props) => {
                 <TouchableOpacity
                   activeOpacity={0.7}
                   style={{
-                    borderRadius: 3,
-                    borderWidth: 0.8,
-                    borderColor: colors.accent,
+                    borderWidth: 0.2,
+                    borderColor: colors.placeholder,
                   }}
                   onPress={() => {
                     Keyboard.dismiss();
@@ -184,9 +183,10 @@ const CoinInput = (props: Props) => {
                     style={{
                       ...material.buttonObject,
                       color: colors.text,
-                      fontSize: 15,
-                      paddingHorizontal: 30,
-                      paddingVertical: 10,
+                      fontSize: 14,
+                      paddingHorizontal: 25,
+                      paddingVertical: 7,
+                      letterSpacing: 1.5,
                     }}>
                     Submit
                   </Text>

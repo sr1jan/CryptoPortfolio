@@ -1,5 +1,6 @@
 import React from 'react';
 import {View} from 'react-native';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {useTheme} from 'react-native-paper';
 import {material} from 'react-native-typography';
@@ -9,6 +10,16 @@ import Setting from '../screens/setting';
 import SearchCoins from '../screens/searchCoin';
 import CoinDetail from '../screens/coinDetail';
 import {BottomTabs} from './bottomTabs';
+
+const getHeaderTitle = (route) => {
+  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
+  switch (routeName) {
+    case 'Home':
+      return 'Home';
+    case 'Portfolio':
+      return 'Portfolio';
+  }
+}
 
 const Stack = createStackNavigator();
 export const HomeStack = () => {
@@ -30,14 +41,9 @@ export const HomeStack = () => {
       <Stack.Screen
         name="Home"
         component={BottomTabs}
-        options={({route}) => {
-          const routeName = route.state
-            ? route.state.routes[route.state.index].name
-            : 'Home';
-          return {
-            headerTitle: routeName,
-          };
-        }}
+        options={({route}) => ({
+          headerTitle: getHeaderTitle(route),
+        })}
       />
       <Stack.Screen name="CoinDetail" component={CoinDetail} />
       <Stack.Screen

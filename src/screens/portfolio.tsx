@@ -36,13 +36,13 @@ const Portfolio = () => {
     suppress: () => {},
   });
 
-  const token: token_prop[] = useSelector<app_state>(
+  const token: token_prop[] = useSelector<app_state, token_prop[]>(
     state => state.portReducer.token,
   );
-  const counter: number = useSelector<app_state>(
+  const counter: number = useSelector<app_state, number>(
     state => state.portReducer.counter,
   );
-  const priceData: object = useSelector<app_state>(
+  const priceData: object = useSelector<app_state, object>(
     state => state.portReducer.priceData,
   );
 

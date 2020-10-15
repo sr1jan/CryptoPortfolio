@@ -17,15 +17,13 @@ interface Props {
 
 const DisplayPL = (props: Props) => {
   const navigation = useNavigation();
-  const flatList = useRef(null);
-  const touchableRef = useRef(null);
+  const flatList = useRef<FlatList<any>>(null);
   const {query} = useContext(SearchCoinContext);
   const {colors} = useTheme();
 
   const Row = ({item, index}: {item: token_prop; index: number}) => {
     return (
       <TouchableOpacity
-        ref={touchableRef}
         activeOpacity={0.7}
         onPress={() => {
           navigation.navigate('CoinDetail', {index: index});
@@ -95,7 +93,7 @@ const DisplayPL = (props: Props) => {
         ref={flatList}
         onContentSizeChange={() => {
           query === '' &&
-            flatList.current.scrollToIndex({
+            flatList.current?.scrollToIndex({
               index: props.token.length - 1,
               animated: true,
             });
