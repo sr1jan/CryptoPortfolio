@@ -21,46 +21,46 @@
 ## Screenshots
 
 <p align="center">
-  <img width="250" height="400" style="margin:1px; "src="./images/screenshots/dark/1.png" alt="CryptoPortfolio:Screenshot">
-  <img width="250" height="400" src="./images/screenshots/light/1.png" alt="CryptoPortfolio:Screenshot">
+  <img width="250" height="450" style="margin:1px; "src="./images/screenshots/dark/1.png" alt="CryptoPortfolio:Screenshot">
+  <img width="250" height="450" src="./images/screenshots/light/1.png" alt="CryptoPortfolio:Screenshot">
 </p>
 <br>
 <p align="center">
-  <img width="250" height="400" style="margin:1px; "src="./images/screenshots/dark/2.png" alt="CryptoPortfolio:Screenshot">
-  <img width="250" height="400" src="./images/screenshots/light/2.png" alt="CryptoPortfolio:Screenshot">
+  <img width="250" height="450" style="margin:1px; "src="./images/screenshots/dark/2.png" alt="CryptoPortfolio:Screenshot">
+  <img width="250" height="450" src="./images/screenshots/light/2.png" alt="CryptoPortfolio:Screenshot">
 </p>
 <br>
 <p align="center">
-  <img width="250" height="400" style="margin:1px; "src="./images/screenshots/dark/3.png" alt="CryptoPortfolio:Screenshot">
-  <img width="250" height="400" src="./images/screenshots/light/3.png" alt="CryptoPortfolio:Screenshot">
+  <img width="250" height="450" style="margin:1px; "src="./images/screenshots/dark/3.png" alt="CryptoPortfolio:Screenshot">
+  <img width="250" height="450" src="./images/screenshots/light/3.png" alt="CryptoPortfolio:Screenshot">
 </p>
 <br>
 <p align="center">
-  <img width="250" height="400" style="margin:1px; "src="./images/screenshots/dark/4.png" alt="CryptoPortfolio:Screenshot">
-  <img width="250" height="400" src="./images/screenshots/light/4.png" alt="CryptoPortfolio:Screenshot">
+  <img width="250" height="450" style="margin:1px; "src="./images/screenshots/dark/4.png" alt="CryptoPortfolio:Screenshot">
+  <img width="250" height="450" src="./images/screenshots/light/4.png" alt="CryptoPortfolio:Screenshot">
 </p>
 <br>
 <p align="center">
-  <img width="250" height="400" style="margin:1px; "src="./images/screenshots/dark/5.png" alt="CryptoPortfolio:Screenshot">
-  <img width="250" height="400" src="./images/screenshots/light/5.png" alt="CryptoPortfolio:Screenshot">
+  <img width="250" height="450" style="margin:1px; "src="./images/screenshots/dark/5.png" alt="CryptoPortfolio:Screenshot">
+  <img width="250" height="450" src="./images/screenshots/light/5.png" alt="CryptoPortfolio:Screenshot">
 </p>
 <br>
 <p align="center">
-  <img width="250" height="400" style="margin:1px; "src="./images/screenshots/dark/6.png" alt="CryptoPortfolio:Screenshot">
-  <img width="250" height="400" src="./images/screenshots/light/6.png" alt="CryptoPortfolio:Screenshot">
+  <img width="250" height="450" style="margin:1px; "src="./images/screenshots/dark/6.png" alt="CryptoPortfolio:Screenshot">
+  <img width="250" height="450" src="./images/screenshots/light/6.png" alt="CryptoPortfolio:Screenshot">
 </p>
 <br>
 <p align="center">
-  <img width="250" height="400" style="margin:1px; "src="./images/screenshots/dark/7.png" alt="CryptoPortfolio:Screenshot">
-  <img width="250" height="400" src="./images/screenshots/light/7.png" alt="CryptoPortfolio:Screenshot">
+  <img width="250" height="450" style="margin:1px; "src="./images/screenshots/dark/7.png" alt="CryptoPortfolio:Screenshot">
+  <img width="250" height="450" src="./images/screenshots/light/7.png" alt="CryptoPortfolio:Screenshot">
 </p>
 <br>
 
 ### Export Data as JSON
 
 <p align="center">
-  <img width="250" height="400" src="./images/screenshots/dark/export_1.png" alt="CryptoPortfolio:Screenshot:exportData">
-  <img width="250" height="400" src="./images/screenshots/dark/export_2.png" alt="CryptoPortfolio:Screenshot:exportData">
-  <img width="250" height="400" src="./images/screenshots/dark/export_3.png" alt="CryptoPortfolio:Screenshot:exportData">
+  <img width="250" height="450" src="./images/screenshots/dark/export_1.png" alt="CryptoPortfolio:Screenshot:exportData">
+  <img width="250" height="450" src="./images/screenshots/dark/export_2.png" alt="CryptoPortfolio:Screenshot:exportData">
+  <img width="250" height="450" src="./images/screenshots/dark/export_3.png" alt="CryptoPortfolio:Screenshot:exportData">
 </p>
 
