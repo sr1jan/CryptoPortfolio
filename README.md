@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-<img src="https://img.shields.io/badge/ReactNative-v4.12.0-%2300D1F7?style=flat&logo=react&labelColor=222831&color=00D1F7">
+<img src="https://img.shields.io/badge/ReactNative-v0.63.2-%2300D1F7?style=flat&logo=react&labelColor=222831&color=00D1F7">
 <img src="https://img.shields.io/badge/TypeScript-v3.9.7-%232F74C0?style=flat&logo=typescript&labelColor=222831&color=2F74C0">
 <img src="https://img.shields.io/badge/React%20Redux-v7.2.1-%235A329C?style=flat&logo=redux&color=5A329C&labelColor=222831">
 </p>
@@ -63,4 +63,3 @@
   <img width="250" height="450" src="./images/screenshots/dark/export_2.png" alt="CryptoPortfolio:Screenshot:exportData">
   <img width="250" height="450" src="./images/screenshots/dark/export_3.png" alt="CryptoPortfolio:Screenshot:exportData">
 </p>
-
